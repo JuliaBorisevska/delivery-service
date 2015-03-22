@@ -2,6 +2,7 @@ package entity;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
@@ -13,6 +14,7 @@ public class Status {
     private String title;
 
     @Id
+    @GeneratedValue
     @Column(name = "id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;

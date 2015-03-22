@@ -17,6 +17,7 @@ public class User {
     private Role roleByRoleId;
 
     @Id
+    @GeneratedValue
     @Column(name = "id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
