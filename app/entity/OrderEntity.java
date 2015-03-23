@@ -18,13 +18,13 @@ public class OrderEntity {
     private String description;
     private double totalPrice;
     @Constraints.Required
-    private int statusId;
+    private Status statusByStatusId;
     @Constraints.Required
-    private int userId;
+    private User userByUserId;
     @Constraints.Required
-    private int customerContactId;
+    private User customerByContactId;
     @Constraints.Required
-    private int recipientContactId;
+    private User recipientByContactId;
 
     @Id
     @Column(name = "id")
@@ -66,43 +66,43 @@ public class OrderEntity {
         this.totalPrice = totalPrice;
     }
 
-    @Basic
-    @Column(name = "status_id")
-    public int getStatusId() {
-        return statusId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    public User getUserByUserId() {
+        return userByUserId;
     }
 
-    public void setStatusId(int statusId) {
-        this.statusId = statusId;
+    public void setUserByUserId(User userByUserId) {
+        this.userByUserId = userByUserId;
     }
 
-    @Basic
-    @Column(name = "user_id")
-    public int getUserId() {
-        return userId;
+    @ManyToOne
+    @JoinColumn(name = "customer_contact_id", referencedColumnName = "id", nullable = false)
+    public User getCustomerByContactId() {
+        return customerByContactId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setCustomerByContactId(User customerByContactId) {
+        this.customerByContactId = customerByContactId;
     }
 
-    @Basic
-    @Column(name = "customer_contact_id")
-    public int getCustomerContactId() {
-        return customerContactId;
+    @ManyToOne
+    @JoinColumn(name = "recipient_contact_id", referencedColumnName = "id", nullable = false)
+    public User getRecipientByContactId() {
+        return recipientByContactId;
     }
 
-    public void setCustomerContactId(int customerContactId) {
-        this.customerContactId = customerContactId;
+    public void setRecipientByContactId(User recipientByContactId) {
+        this.recipientByContactId = recipientByContactId;
     }
 
-    @Basic
-    @Column(name = "recipient_contact_id")
-    public int getRecipientContactId() {
-        return recipientContactId;
+    @ManyToOne
+    @JoinColumn(name = "status_id", referencedColumnName = "id", nullable = false)
+    public Status getStatusByStatusId() {
+        return statusByStatusId;
     }
 
-    public void setRecipientContactId(int recipientContactId) {
-        this.recipientContactId = recipientContactId;
+    public void setStatusByStatusId(Status statusByStatusId) {
+        this.statusByStatusId = statusByStatusId;
     }
 }

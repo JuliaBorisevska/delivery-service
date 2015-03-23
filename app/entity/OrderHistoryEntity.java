@@ -16,11 +16,11 @@ public class OrderHistoryEntity {
     private Timestamp modificationDate;
     private String userComment;
     @Constraints.Required
-    private int orderId;
+    private OrderEntity orderByOrderId;
     @Constraints.Required
-    private int statusId;
+    private Status statusByStatusId;
     @Constraints.Required
-    private int userId;
+    private User userByUserId;
 
     @Id
     @Column(name = "id")
@@ -52,33 +52,33 @@ public class OrderHistoryEntity {
         this.userComment = userComment;
     }
 
-    @Basic
-    @Column(name = "order_id")
-    public int getOrderId() {
-        return orderId;
+    @ManyToOne
+    @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
+    public OrderEntity getOrderByOrderId() {
+        return orderByOrderId;
     }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
+    public void setOrderByOrderId(OrderEntity orderByOrderId) {
+        this.orderByOrderId = orderByOrderId;
     }
 
-    @Basic
-    @Column(name = "status_id")
-    public int getStatusId() {
-        return statusId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    public User getUserByUserId() {
+        return userByUserId;
     }
 
-    public void setStatusId(int statusId) {
-        this.statusId = statusId;
+    public void setUserByUserId(User userByUserId) {
+        this.userByUserId = userByUserId;
     }
 
-    @Basic
-    @Column(name = "user_id")
-    public int getUserId() {
-        return userId;
+    @ManyToOne
+    @JoinColumn(name = "status_id", referencedColumnName = "id", nullable = false)
+    public Status getStatusByStatusId() {
+        return statusByStatusId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setStatusByStatusId(Status statusByStatusId) {
+        this.statusByStatusId = statusByStatusId;
     }
 }
