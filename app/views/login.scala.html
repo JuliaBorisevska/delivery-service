@@ -1,35 +1,24 @@
-<!DOCTYPE html>
-<html>
-    <head lang="en">
-        <meta charset="UTF-8">
-        <link rel="stylesheet" type="text/css" href="st.css">
-        <title></title>
-    </head>
-    <body>
+@()
         <table class="login-form">
             <tr>
                 <td>
-                    <label for="login-input">Login</label>
+                    <label for="login-input">Логин:</label>
                 </td>
                 <td>
-                    <input type="text" id="login-input">
+                    <input type="text" id="login-input" name="login" data-bind="value: $root.loginVM.login">
                 </td>
             <tr>
                 <td>
-                    <label for="password-input">Password</label>
+                    <label for="password-input">Пароль:</label>
                 </td>
                 <td>
-                    <input type="text" id="password-input">
+                    <input type="text" id="password-input" name="password" data-bind="value: $root.loginVM.password">
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="#">Регистрация</a>
-                </td>
-                <td>
-                    <a href="#" class="button">Вход</a>
+                    <a href="#" class="button" name="loginButton" data-bind="click: $root.loginVM.loginButton">Вход</a>
                 </td>
             </tr>
         </table>
-    </body>
-</html>
+   
