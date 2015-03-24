@@ -5,17 +5,6 @@ html, body {
     font-size: 12px;
 }
 
-.login-form {
-    width: 100px;
-    height: 100px;
-    position: absolute;
-    top:0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-}
-
 #menu {
     width: 150px;
     margin: 0;
@@ -124,7 +113,7 @@ button:active, .button:active {
     top: 2px;
 }
 
-.right-buttons {
+.right-button {
     text-align: right;
     margin-right: 10%;
 }
