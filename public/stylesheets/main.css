@@ -6,8 +6,8 @@ html, body {
 }
 
 .login-form {
-    width: 100px;
-    height: 100px;
+    width: 40%;
+    height: 20%;
     position: absolute;
     top:0;
     bottom: 0;
@@ -16,39 +16,17 @@ html, body {
     margin: auto;
 }
 
-#menu {
-    width: 150px;
-    margin: 0;
-    overflow: hidden;
-    float: left;
-}
-
-#container {
-    width: 800px;
-    margin: 0;
-    background-color: #f0f0f0;
-    text-align: center;
-    overflow: hidden;
-}
-
 input[type="text"], input[type="email"], input[type="date"], textarea,
 input[type="tel"], input[type="number"], input[type="url"] {
-    border: 1px solid #eee;
-    padding: 3px 5px;
+    border: 1px solid #bfbfbf;
+    padding: 1%;
     border-radius: 6px;
     font-size: 12px;
-    width: 300px;
-}
-
-select {
-    border: 1px solid #eee;
-    padding: 3px 5px;
-    border-radius: 6px;
-    font-size: 12px;
+    width: 90%;
 }
 
 table {
-    border: 1px solid #dcdcdc;
+    border: 1px solid #bfbfbf;
     border-radius: 6px;
     margin: 5px auto;
     font-size: 12px;
@@ -59,46 +37,6 @@ tr, td, th {
     margin: 5px auto;
     padding: 5px;
     text-align: left;
-}
-
-.ref:link {
-    color: black;
-    text-decoration: underline;
-}
-
-.ref:visited {
-    color: black;
-    text-decoration: underline;
-}
-
-.ref:hover {
-    color: #666666;
-    text-decoration: none;
-}
-
-.title {
-    display: inline-block;
-    font-size: 25px;
-    font-style: oblique;
-    margin: 10px 0;
-    text-align: center;
-}
-
-p {
-    display: inline-block;
-    margin: 5px 0;
-}
-
-.item {
-    margin: 5px 0;
-}
-
-.avatar {
-    display: block;
-    width: 130px;
-    height: 130px;
-    text-align: left;
-    margin-left: 10%;
 }
 
 button, .button {
@@ -122,45 +60,4 @@ button:hover, .button:hover {
 button:active, .button:active {
     position: relative;
     top: 2px;
-}
-
-.right-buttons {
-    text-align: right;
-    margin-right: 10%;
-}
-
-.black_overlay{
-    display: none;
-    position: fixed;
-    top: 0%;
-    left: 0%;
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    z-index:1001;
-    -moz-opacity: 0.8;
-    opacity:.80;
-    filter: alpha(opacity=80);
-}
-
-.edit_dialog {
-    display: none;
-    position: fixed;
-    top: 25%;
-    left: 25%;
-    width: 520px;
-    height: auto;
-    border: 16px solid #e9e9e9;
-    background-color: white;
-    z-index: 1002;
-    overflow: hidden;
-    text-align: center;
-}
-
-.hidden {
-    display: none;
-}
-
-textarea {
-    height: 200px;
 }

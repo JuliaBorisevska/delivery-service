@@ -11,15 +11,15 @@
         @helper.requireJs(core = routes.Assets.at("javascripts/vendor/require.js").url, module = routes.Assets.at("javascripts/app").url)
     </head>
     <body>
-        <header>
-            <button>Logout</button>
-        </header>
-
+        <!-- ko if: $root.chosenSectionId() -->
+            <!-- ko if: $root.chosenSectionId().id !== "lgn" -->
+                <!-- ko if: $root.user() -->
+                Hello&nbsp;<span data-bind="text: $root.user().firstName"></span>
+                <!-- /ko -->
+            	<button>Logout</button>
+            <!-- /ko -->
        	@login()
         @list()
-
-        <footer>
-            <h1>Footer</h1>
-        </footer>
+		<!-- /ko -->
     </body>
 </html>
