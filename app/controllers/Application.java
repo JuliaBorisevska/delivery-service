@@ -46,7 +46,7 @@ public class Application extends BaseController {
         	// UserDTO userDTO = UserDTO.getUser(user);
         UserDTO userDTO = new UserDTO();
         userDTO.setFirstName("Юлия");
-        userDTO.setRole("ADMIN");
+        userDTO.setRole("Супервизор");
             return ok(Json.toJson(
                     new Reply<>(Status.SUCCESS, userDTO))
             );

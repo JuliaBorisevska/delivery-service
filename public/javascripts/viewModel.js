@@ -9,17 +9,29 @@ define(["application/viewModel/loginVM",
                 name: "Login",
                 id: "lgn"
             },
-            list = {
-                name: "List",
+            userlist = {
+                name: "Список пользователей",
                 id: "lst"
+            },
+        	orderlist = {
+                name: "Список заказов",
+                id: "ordlst"
+            },
+        	contactlist = {
+                    name: "Список контактов",
+                    id: "ctlst"
             };
+        self.roles = [{title: "Менеджер по приему заказов", menu: [contactlist]},
+                     {title: "Супервизор", menu: [contactlist, orderlist]},
+                     {title: "Администратор", menu: [contactlist]}
+                     ];
 
         self.loginVM = loginVM;
         self.listVM = listVM;
-        self.sections = [login, list];
+        self.sections = [login, userlist, orderlist, contactlist];
         self.chosenSectionId = ko.observable();
         self.user = ko.observable();
-
+        self.menu = ko.observable();
         self.goTo = function(sectionId) {
             location.hash = sectionId;
         };
@@ -29,7 +41,7 @@ define(["application/viewModel/loginVM",
                 var sectionId = this.params.section;
                 for(var ind in self.sections) {
                     if(self.sections.hasOwnProperty(ind) && self.sections[ind].id === sectionId) {
-                        self.chosenSectionId(self.sections[ind]);
+                    	self.chosenSectionId(self.sections[ind]);
                     }
                 }
             });
@@ -42,7 +54,13 @@ define(["application/viewModel/loginVM",
 
         $("body").on("authorized", function(evt, user) {
             self.user(user);
-            self.goTo("lst");
+            for(var item in self.roles) {
+                if(self.roles.hasOwnProperty(item) && self.roles[item].title === user.role) {
+                    self.menu(self.roles[item].menu);
+                	self.chosenSectionId(self.roles[item].menu[0]);
+                }
+            } 
+            self.goTo(self.chosenSectionId.id);
         });
 
         $.ajaxSetup({
