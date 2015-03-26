@@ -5,13 +5,15 @@ import play.data.validation.Constraints;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * Created by antonkw on 22.03.2015.
  */
 @Entity
 @Table(name = "order", schema = "", catalog = "delivery_service")
-public class OrderEntity {
+public class Order {
+
     @GeneratedValue
     private int id;
     private Timestamp orderDate;
@@ -25,6 +27,7 @@ public class OrderEntity {
     private User customerByContactId;
     @Constraints.Required
     private User recipientByContactId;
+    private List<OrderHistory> orderHistory;
 
     @Id
     @Column(name = "id")
@@ -104,5 +107,14 @@ public class OrderEntity {
 
     public void setStatusByStatusId(Status statusByStatusId) {
         this.statusByStatusId = statusByStatusId;
+    }
+
+    @OneToMany(mappedBy = "orderByOrderId")
+    public List<OrderHistory> getOrderHistory() {
+        return orderHistory;
+    }
+
+    public void setOrderHistory(List<OrderHistory> orderHistory) {
+        this.orderHistory = orderHistory;
     }
 }

@@ -10,13 +10,13 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "order_history", schema = "", catalog = "delivery_service")
-public class OrderHistoryEntity {
+public class OrderHistory {
     @GeneratedValue
     private int id;
     private Timestamp modificationDate;
     private String userComment;
     @Constraints.Required
-    private OrderEntity orderByOrderId;
+    private Order orderByOrderId;
     @Constraints.Required
     private Status statusByStatusId;
     @Constraints.Required
@@ -54,11 +54,11 @@ public class OrderHistoryEntity {
 
     @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
-    public OrderEntity getOrderByOrderId() {
+    public Order getOrderByOrderId() {
         return orderByOrderId;
     }
 
-    public void setOrderByOrderId(OrderEntity orderByOrderId) {
+    public void setOrderByOrderId(Order orderByOrderId) {
         this.orderByOrderId = orderByOrderId;
     }
 

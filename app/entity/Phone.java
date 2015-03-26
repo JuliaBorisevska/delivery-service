@@ -58,7 +58,7 @@ public class Phone {
         this.basicNumber = basicNumber;
     }
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "phone_type_id", referencedColumnName = "id", nullable = false)
     public PhoneType getPhoneTypeByPhoneTypeId() {
         return phoneTypeByPhoneTypeId;
@@ -78,7 +78,7 @@ public class Phone {
         this.userComment = userComment;
     }
 
-    @OneToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "contact_id", referencedColumnName = "id", nullable = false)
     public Contact getContactByContactId() {
         return contactByContactId;
