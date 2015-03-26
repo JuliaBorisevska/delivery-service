@@ -14,12 +14,37 @@
         <!-- ko if: $root.chosenSectionId() -->
             <!-- ko if: $root.chosenSectionId().id !== "lgn" -->
                 <!-- ko if: $root.user() -->
-                Hello&nbsp;<span data-bind="text: $root.user().firstName"></span>
-                <!-- /ko -->
-            	<button>Logout</button>
-            <!-- /ko -->
+                <div id="menu">
+                <ul data-bind="foreach: menu">
+                	<li data-bind="text: name">
+                	</li>
+                </ul>
+                </div>
+                <div id="greeting">
+                	<table id="greet">
+            			<tr>
+                			<td>
+                    			Добро пожаловать,&nbsp;<span data-bind="text: $root.user().firstName"></span>
+                			</td>
+                		</tr>
+            			<tr>
+                			<td>
+                    			Роль:&nbsp;<span data-bind="text: $root.user().role"></span>
+                			</td>
+            			</tr>
+            			<tr>
+                			<td>
+                    		<a href="#" class="button" name="logoutButton" data-bind="click: $root.loginVM.logoutButton">Выход</a>
+                			</td>
+           				</tr>
+        			</table>
+            	</div>
+            	<!-- /ko -->
+        	<!-- /ko -->
        	@login()
         @list()
+        @contactlist()
+        @orderlist()
 		<!-- /ko -->
     </body>
 </html>
