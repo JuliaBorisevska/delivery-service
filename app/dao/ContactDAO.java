@@ -51,4 +51,5 @@ public class ContactDAO extends AbstractDAO<Contact> {
 
         return q.getResultList();
     }
+
 }
