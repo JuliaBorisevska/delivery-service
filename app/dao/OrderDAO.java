@@ -60,4 +60,30 @@ public class OrderDAO extends AbstractDAO<Order> {
         return em.find(Order.class, orderId);
     }
 
+    public List<Order> getOrderListByCustomer(Integer pageNumber, Integer pageSize, Integer customerId){
+        EntityManager em = JPA.em();
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
+        Root<Order> from = criteriaQuery.from(Order.class);
+        CriteriaQuery<Order> select = criteriaQuery.select(from).where(criteriaBuilder.equal(from.get("customer_contact_id"), customerId));
+        TypedQuery<Order> q = em.createQuery(select);
+        q.setFirstResult((pageNumber - 1) * pageSize);
+        q.setMaxResults(pageSize);
+
+        return q.getResultList();
+    }
+    public List<Order> getOrderListByRecipient(Integer pageNumber, Integer pageSize, Integer recipientId){
+
+        EntityManager em = JPA.em();
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
+        Root<Order> from = criteriaQuery.from(Order.class);
+        CriteriaQuery<Order> select = criteriaQuery.select(from).where(criteriaBuilder.equal(from.get("recipient_contact_id"),recipientId));
+        TypedQuery<Order> q = em.createQuery(select);
+        q.setFirstResult((pageNumber - 1) * pageSize);
+        q.setMaxResults(pageSize);
+
+        return q.getResultList();
+    }
+
 }

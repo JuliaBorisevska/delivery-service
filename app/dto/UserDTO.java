@@ -1,6 +1,5 @@
 package dto;
 
-import entity.Role;
 import entity.User;
 
 public class UserDTO {

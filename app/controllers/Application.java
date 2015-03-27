@@ -1,23 +1,11 @@
 package controllers;
 
-import java.util.Map;
-
-import javax.persistence.EntityManager;
-
-import org.mindrot.jbcrypt.BCrypt;
-
-import controllers.BaseController.Reply;
-import controllers.BaseController.Status;
-import dao.UserDAO;
 import dto.UserDTO;
-import entity.Role;
-import entity.User;
-import play.*;
-import play.db.jpa.JPA;
-import play.db.jpa.Transactional;
 import play.libs.Json;
-import play.mvc.*;
-import views.html.*;
+import play.mvc.Result;
+import views.html.main;
+
+import java.util.Map;
 
 public class Application extends BaseController {
 
