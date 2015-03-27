@@ -9,10 +9,10 @@ import javax.persistence.*;
 @Table(name = "phone")
 public class Phone {
 
-    private int id;
-    private int countryCode;
-    private int operatorCode;
-    private int basicNumber;
+    private Integer id;
+    private Integer countryCode;
+    private Integer operatorCode;
+    private Integer basicNumber;
     private PhoneType phoneTypeByPhoneTypeId;
     private String userComment;
     private Contact contactByContactId;

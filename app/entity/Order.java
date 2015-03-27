@@ -15,10 +15,10 @@ import java.util.List;
 public class Order {
 
     @GeneratedValue
-    private int id;
+    private Integer id;
     private Timestamp orderDate;
     private String description;
-    private double totalPrice;
+    private Double totalPrice;
     @Constraints.Required
     private Status statusByStatusId;
     @Constraints.Required

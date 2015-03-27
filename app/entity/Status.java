@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Table(name = "status")
 public class Status {
 
-    private int id;
+    private Integer id;
     private String title;
 
     @Id

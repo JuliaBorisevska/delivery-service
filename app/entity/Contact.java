@@ -8,7 +8,7 @@ import java.util.List;
 @Table(name = "contact")
 public class Contact {
 
-    private int id;
+    private Integer id;
     private String firstName;
     private String lastName;
     private String middle_name;
@@ -17,8 +17,8 @@ public class Contact {
     private Company companyByCompanyId;
     private String town;
     private String street;
-    private int house;
-    private int flat;
+    private Integer house;
+    private Integer flat;
     private List<Phone> phones;
 
     @Id

@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Table(name = "phone_type")
 public class PhoneType {
 
-    private int id;
+    private Integer id;
     private String title;
 
     @Id
