@@ -2,6 +2,7 @@ package entity;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "contact")
@@ -18,6 +19,7 @@ public class Contact {
     private String street;
     private Integer house;
     private Integer flat;
+    private List<Phone> phones;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -80,7 +82,7 @@ public class Contact {
         this.email = email;
     }
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
     public Company getCompanyByCompanyId() {
         return companyByCompanyId;
@@ -128,5 +130,14 @@ public class Contact {
 
     public void setFlat(Integer flat) {
         this.flat = flat;
+    }
+
+    @OneToMany(mappedBy = "contactByContactId")
+    public List<Phone> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
     }
 }

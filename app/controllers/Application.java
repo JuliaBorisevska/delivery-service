@@ -22,9 +22,12 @@ import play.*;
 import play.Logger.ALogger;
 import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
+import dto.UserDTO;
 import play.libs.Json;
-import play.mvc.*;
-import views.html.*;
+import play.mvc.Result;
+import views.html.main;
+
+import java.util.Map;
 
 public class Application extends BaseController {
 	private static ALogger logger = Logger.of(Application.class);

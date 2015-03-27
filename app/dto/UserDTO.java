@@ -2,7 +2,6 @@ package dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import entity.Role;
 import entity.User;
 
 public class UserDTO {

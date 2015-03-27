@@ -57,7 +57,7 @@ public class User {
         this.password = password;
     }
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     public Role getRoleByRoleId() {
         return roleByRoleId;

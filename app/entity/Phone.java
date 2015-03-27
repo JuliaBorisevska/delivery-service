@@ -9,10 +9,10 @@ import javax.persistence.*;
 @Table(name = "phone")
 public class Phone {
 
-    private int id;
-    private int countryCode;
-    private int operatorCode;
-    private int basicNumber;
+    private Integer id;
+    private Integer countryCode;
+    private Integer operatorCode;
+    private Integer basicNumber;
     private PhoneType phoneTypeByPhoneTypeId;
     private String userComment;
     private Contact contactByContactId;
@@ -20,45 +20,45 @@ public class Phone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, insertable = true, updatable = true)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
     @Basic
     @Column(name = "country_code", nullable = false, insertable = true, updatable = true)
-    public int getCountryCode() {
+    public Integer getCountryCode() {
         return countryCode;
     }
 
-    public void setCountryCode(int countryCode) {
+    public void setCountryCode(Integer countryCode) {
         this.countryCode = countryCode;
     }
 
     @Basic
     @Column(name = "operator_code", nullable = false, insertable = true, updatable = true)
-    public int getOperatorCode() {
+    public Integer getOperatorCode() {
         return operatorCode;
     }
 
-    public void setOperatorCode(int operatorCode) {
+    public void setOperatorCode(Integer operatorCode) {
         this.operatorCode = operatorCode;
     }
 
     @Basic
     @Column(name = "basic_number", nullable = false, insertable = true, updatable = true)
-    public int getBasicNumber() {
+    public Integer getBasicNumber() {
         return basicNumber;
     }
 
-    public void setBasicNumber(int basicNumber) {
+    public void setBasicNumber(Integer basicNumber) {
         this.basicNumber = basicNumber;
     }
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "phone_type_id", referencedColumnName = "id", nullable = false)
     public PhoneType getPhoneTypeByPhoneTypeId() {
         return phoneTypeByPhoneTypeId;
@@ -78,7 +78,7 @@ public class Phone {
         this.userComment = userComment;
     }
 
-    @OneToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "contact_id", referencedColumnName = "id", nullable = false)
     public Contact getContactByContactId() {
         return contactByContactId;
