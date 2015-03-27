@@ -1,15 +1,50 @@
-@(title: String)(content: Html)
-
+@()
 <!DOCTYPE html>
-
 <html>
     <head>
-        <title>@title</title>
+        <title>Delivery Service</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <script src="@routes.Assets.at("javascripts/hello.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/vendor/knockout-3.1.0.js")" type="text/javascript"></script>
+        <script src="//code.jquery.com/jquery-1.11.0.min.js" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/vendor/sammy-latest.min.js")" type="text/javascript"></script>
+        @helper.requireJs(core = routes.Assets.at("javascripts/vendor/require.js").url, module = routes.Assets.at("javascripts/app").url)
     </head>
     <body>
-        @content
+        <!-- ko if: $root.chosenSectionId() -->
+            <!-- ko if: $root.chosenSectionId().id !== "lgn" -->
+                <!-- ko if: $root.user() -->
+                <div id="menu">
+                <ul data-bind="foreach: menu">
+                	<li data-bind="text: name">
+                	</li>
+                </ul>
+                </div>
+                <div id="greeting">
+                	<table id="greet">
+            			<tr>
+                			<td>
+                    			Добро пожаловать,&nbsp;<span data-bind="text: $root.user().firstName"></span>
+                			</td>
+                		</tr>
+            			<tr>
+                			<td>
+                    			Роль:&nbsp;<span data-bind="text: $root.user().role"></span>
+                			</td>
+            			</tr>
+            			<tr>
+                			<td>
+                    		<a href="#" class="button" name="logoutButton" data-bind="click: $root.loginVM.logoutButton">Выход</a>
+                			</td>
+           				</tr>
+        			</table>
+            	</div>
+            	<!-- /ko -->
+        	<!-- /ko -->
+       	@login()
+        @list()
+        @contactlist()
+        @orderlist()
+		<!-- /ko -->
     </body>
 </html>

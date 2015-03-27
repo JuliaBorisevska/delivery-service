@@ -1,0 +1,25 @@
+@()
+<!-- ko if: $root.chosenSectionId().id == "lgn" -->
+        <table class="login-form">
+            <tr>
+                <td>
+                    <label for="login-input">Логин:</label>
+                </td>
+                <td>
+                    <input type="text" id="login-input" name="login" data-bind="value: $root.loginVM.login">
+                </td>
+            <tr>
+                <td>
+                    <label for="password-input">Пароль:</label>
+                </td>
+                <td>
+                    <input type="text" id="password-input" name="password" data-bind="value: $root.loginVM.password">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="#" class="button" name="loginButton" data-bind="click: $root.loginVM.loginButton">Вход</a>
+                </td>
+            </tr>
+        </table>
+  <!-- /ko -->
