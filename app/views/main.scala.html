@@ -14,9 +14,12 @@
         <!-- ko if: $root.chosenSectionId() -->
             <!-- ko if: $root.chosenSectionId().id !== "lgn" -->
                 <!-- ko if: $root.user() -->
+                <div id="context">
                 <div id="menu">
                 <ul data-bind="foreach: menu">
-                	<li data-bind="text: name">
+                	<li data-bind="text: name,
+                					css: {selected: id == $root.chosenSectionId().id},
+                					click: $root.goTo">
                 	</li>
                 </ul>
                 </div>
@@ -39,12 +42,14 @@
            				</tr>
         			</table>
             	</div>
-            	<!-- /ko -->
+            	<div class="clr"></div>
+            	@list()
+        		@contactlist()
+        		@orderlist()
+        		</div>
+        		<!-- /ko -->
         	<!-- /ko -->
        	@login()
-        @list()
-        @contactlist()
-        @orderlist()
 		<!-- /ko -->
     </body>
 </html>

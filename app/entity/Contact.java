@@ -7,7 +7,7 @@ import java.sql.Date;
 @Table(name = "contact")
 public class Contact {
 
-    private int id;
+    private Integer id;
     private String firstName;
     private String lastName;
     private String middle_name;
@@ -16,17 +16,17 @@ public class Contact {
     private Company companyByCompanyId;
     private String town;
     private String street;
-    private int house;
-    private int flat;
+    private Integer house;
+    private Integer flat;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, insertable = true, updatable = true)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -112,21 +112,21 @@ public class Contact {
 
     @Basic
     @Column(name = "house", nullable = true, insertable = true, updatable = true)
-    public int getHouse() {
+    public Integer getHouse() {
         return house;
     }
 
-    public void setHouse(int house) {
+    public void setHouse(Integer house) {
         this.house = house;
     }
 
     @Basic
     @Column(name = "flat", nullable = true, insertable = true, updatable = true)
-    public int getFlat() {
+    public Integer getFlat() {
         return flat;
     }
 
-    public void setFlat(int flat) {
+    public void setFlat(Integer flat) {
         this.flat = flat;
     }
 }

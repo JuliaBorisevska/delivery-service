@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Table(name = "user")
 public class User {
 
-    private int id;
+    private Integer id;
     private Contact contactByContactId;
     private String login;
     private String password;
@@ -19,11 +19,11 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, insertable = true, updatable = true)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

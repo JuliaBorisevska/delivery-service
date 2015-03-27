@@ -1,39 +1,31 @@
-define(["application/viewModel/loginVM",
-        "application/viewModel/listVM"], function (loginVM, listVM) {
+define(["application/service/initService",
+        "application/util/callback",
+        "application/viewModel/loginVM",
+        "application/viewModel/listVM"], function (initService, Callback, loginVM, listVM) {
 
     "use strict";
 
     function ViewModel(){
-        var self = this,
-            login = {
-                name: "Login",
-                id: "lgn"
-            },
-            userlist = {
-                name: "Список пользователей",
-                id: "lst"
-            },
-        	orderlist = {
-                name: "Список заказов",
-                id: "ordlst"
-            },
-        	contactlist = {
-                    name: "Список контактов",
-                    id: "ctlst"
-            };
-        self.roles = [{title: "Менеджер по приему заказов", menu: [contactlist]},
-                     {title: "Супервизор", menu: [contactlist, orderlist]},
-                     {title: "Администратор", menu: [contactlist]}
-                     ];
-
+    	var self = this;
+    	self.sections = [{name: "Login", id: "lgn"}];
+    	initService.initSections(
+                new Callback(function(params){
+                    var reply = params.reply;
+                    if(reply.status === "SUCCESS") {
+                    	self.sections = reply.data;
+                    }
+                }, this, {}),
+                new Callback(function(params){
+                    alert(params.reply.responseJSON.data);
+                }, this, {})
+            );
         self.loginVM = loginVM;
         self.listVM = listVM;
-        self.sections = [login, userlist, orderlist, contactlist];
-        self.chosenSectionId = ko.observable();
+        self.chosenSectionId = ko.observable(self.sections[0]);
         self.user = ko.observable();
-        self.menu = ko.observable();
-        self.goTo = function(sectionId) {
-            location.hash = sectionId;
+        self.menu = ko.observableArray();
+        self.goTo = function(section) {
+            location.hash = section.id;
         };
 
         Sammy(function() {
@@ -45,7 +37,9 @@ define(["application/viewModel/loginVM",
                     }
                 }
             });
-
+            this.get(" ", function() {
+                location.hash = "lgn";
+            });
             this.get("/", function() {
                 location.hash = "lgn";
             });
@@ -54,13 +48,12 @@ define(["application/viewModel/loginVM",
 
         $("body").on("authorized", function(evt, user) {
             self.user(user);
-            for(var item in self.roles) {
-                if(self.roles.hasOwnProperty(item) && self.roles[item].title === user.role) {
-                    self.menu(self.roles[item].menu);
-                	self.chosenSectionId(self.roles[item].menu[0]);
-                }
-            } 
-            self.goTo(self.chosenSectionId.id);
+            self.menu.removeAll();
+            for(var item in user.menu) {
+            	self.menu.push(self.sections[user.menu[item]]);
+            }
+            self.chosenSectionId(self.menu()[0]);
+            self.goTo(self.chosenSectionId());
         });
 
         $.ajaxSetup({
