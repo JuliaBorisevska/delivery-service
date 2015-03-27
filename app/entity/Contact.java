@@ -24,11 +24,11 @@ public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, insertable = true, updatable = true)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -114,21 +114,21 @@ public class Contact {
 
     @Basic
     @Column(name = "house", nullable = true, insertable = true, updatable = true)
-    public int getHouse() {
+    public Integer getHouse() {
         return house;
     }
 
-    public void setHouse(int house) {
+    public void setHouse(Integer house) {
         this.house = house;
     }
 
     @Basic
     @Column(name = "flat", nullable = true, insertable = true, updatable = true)
-    public int getFlat() {
+    public Integer getFlat() {
         return flat;
     }
 
-    public void setFlat(int flat) {
+    public void setFlat(Integer flat) {
         this.flat = flat;
     }
 
