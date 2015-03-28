@@ -1,7 +1,6 @@
 package dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
-
 import entity.User;
 
 public class UserDTO {
@@ -16,7 +15,7 @@ public class UserDTO {
 		UserDTO dto = new UserDTO();
         dto.firstName = user.getContactByContactId().getFirstName();
 		dto.lastName = user.getContactByContactId().getLastName();
-		dto.middleName = user.getContactByContactId().getMiddle_name();
+		dto.middleName = user.getContactByContactId().getMiddleName();
 		dto.companyId = user.getContactByContactId().getCompanyByCompanyId().getId();
 		dto.roleTitle = user.getRoleByRoleId().getTitle();
         return dto;

@@ -15,7 +15,7 @@ public class DaoTest {
         Contact contact = new Contact();
         contact.setFirstName("Ivan");
         contact.setLastName("Ivanov");
-        contact.setMiddle_name("Ivanovich");
+        contact.setMiddleName("Ivanovich");
 
         contactDAO.create(contact);
     }

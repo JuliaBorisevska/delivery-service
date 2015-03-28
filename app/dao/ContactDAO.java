@@ -21,8 +21,14 @@ public class ContactDAO extends AbstractDAO<Contact> {
 
     @Override
     public void delete(Contact entity) {
+
+        delete(entity.getId().longValue());
+    }
+
+    public void delete(Long id) {
+
         EntityManager em = JPA.em();
-        Contact contact = em.find(Contact.class, entity.getId());
+        Contact contact = em.find(Contact.class, id);
         if(contact != null) {
             em.remove(contact);
         }
@@ -39,6 +45,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
     }
 
     public List<Contact> getContactList(Integer pageNumber, Integer pageSize) {
+
         EntityManager em = JPA.em();
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Contact> criteriaQuery = criteriaBuilder.createQuery(Contact.class);
@@ -50,5 +57,20 @@ public class ContactDAO extends AbstractDAO<Contact> {
         q.setMaxResults(pageSize);
 
         return q.getResultList();
+    }
+
+    public Contact findById(Long id) {
+
+        EntityManager em = JPA.em();
+        return em.find(Contact.class, id);
+    }
+
+    public static Long numberOfContacts() {
+
+        EntityManager em = JPA.em();
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        countQuery.select(criteriaBuilder.count(countQuery.from(Contact.class)));
+        return em.createQuery(countQuery).getSingleResult();
     }
 }

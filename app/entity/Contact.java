@@ -11,7 +11,7 @@ public class Contact {
     private Integer id;
     private String firstName;
     private String lastName;
-    private String middle_name;
+    private String middleName;
     private Date birthDay;
     private String email;
     private Company companyByCompanyId;
@@ -54,12 +54,12 @@ public class Contact {
 
     @Basic
     @Column(name = "midle_name", nullable = true, insertable = true, updatable = true)
-    public String getMiddle_name() {
-        return middle_name;
+    public String getMiddleName() {
+        return middleName;
     }
 
-    public void setMiddle_name(String middle_name) {
-        this.middle_name = middle_name;
+    public void setMiddleName(String middle_name) {
+        this.middleName = middle_name;
     }
 
     @Basic
