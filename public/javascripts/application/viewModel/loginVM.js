@@ -14,7 +14,7 @@ define(["application/service/authService",
                         var reply = params.reply,
                             data = reply.data;
                         if(reply.status === "SUCCESS") {
-                            $("body").trigger("authorized", new User(data.firstName, data.role));
+                            $("body").trigger("authorized", new User(data.firstName, data.roleTitle, data.menu));
                         }
                     }, this, {}),
                     new Callback(function(params){
@@ -22,12 +22,12 @@ define(["application/service/authService",
                     }, this, {})
                 );
             },
-            logout = function(root) {
+            logoutButton = function(root) {
                 authService.logout(
                     new Callback(function(){
-                        name("");
-                        password("");
-                        root.goTo("lgn");
+                        login("");
+                        password(""); 
+                        location.hash = "lgn";
                     }, this, {}),
                     new Callback(function(params) {
                         var message = params.responseText ? params.responseText : params.statusText;
@@ -40,7 +40,7 @@ define(["application/service/authService",
             login: login,
             password: password,
             loginButton: loginButton,
-            logout: logout
+            logoutButton: logoutButton
         }
     }
 
