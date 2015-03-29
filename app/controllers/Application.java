@@ -25,6 +25,7 @@ import play.db.jpa.Transactional;
 import dto.UserDTO;
 import play.libs.Json;
 import play.mvc.Result;
+import resource.MessageManager;
 import views.html.main;
 
 import java.util.Map;
@@ -39,10 +40,10 @@ public class Application extends BaseController {
     }
     
     public static Result getSectionsFromJson() {
-    	logger.info("Start getSections method");
+    	logger.info("Start getSectionsFromJson method");
     	try{
     		ObjectMapper mapper = new ObjectMapper();
-    		JsonNode rootNode = mapper.readTree(new File(FILE_CONFIG_NAME ));
+    		JsonNode rootNode = mapper.readTree(new File(FILE_CONFIG_NAME));
     		JsonNode sectionNode = rootNode.path("sections");
     		logger.info("Section node: {}", sectionNode.toString());
     		return ok(Json.toJson(
@@ -50,7 +51,7 @@ public class Application extends BaseController {
     	}catch(IOException e){
     		logger.error("Exception in index method ", e);
     		return badRequest(Json.toJson(
-                            new Reply<>(Status.ERROR, "Что-то пошло не так...")));
+                            new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
     	}
     }
 
@@ -66,7 +67,7 @@ public class Application extends BaseController {
     		User user = dao.findByLogin(login);
     		if(user == null) {
     		    return badRequest(Json.toJson(
-    		            new Reply<>(Status.ERROR, "User not found")));
+    		            new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
     		}
     		if(BCrypt.checkpw(password, user.getPassword())) {
     			UserDTO userDTO = UserDTO.getUser(user);
@@ -80,16 +81,21 @@ public class Application extends BaseController {
     					break;
     				}
     			}
+    			if (userDTO.getMenu()==null){
+    				//userDTO.setMenu(rootNode.path("default"));
+    				return badRequest(Json.toJson(
+                            new Reply<>(Status.ERROR, MessageManager.getProperty("role.error"))));
+    			}
     			return ok(Json.toJson(
                     new Reply<>(Status.SUCCESS, userDTO)));
     		}else {
                 return badRequest(Json.toJson(
-                        new Reply<>(Status.ERROR, "Wrong password")));
+                        new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
             }
     	}catch(IOException e){
     		logger.error("Exception in index method ", e);
     		return badRequest(Json.toJson(
-                            new Reply<>(Status.ERROR, "Что-то пошло не так...")));
+                            new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
     	}     
     }
 

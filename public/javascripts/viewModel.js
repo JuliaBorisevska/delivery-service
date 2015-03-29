@@ -7,7 +7,7 @@ define(["application/service/initService",
 
     function ViewModel(){
     	var self = this;
-    	self.sections = [{name: "Login", id: "lgn"}];
+    	self.sections = [{name: "Вход", id: "lgn"}];
     	initService.initSections(
                 new Callback(function(params){
                     var reply = params.reply;
