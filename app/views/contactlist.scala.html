@@ -1,3 +1,11 @@
 <!-- ko if: $root.chosenSectionId().id == "ctlst" -->
-        contactlist
+
+<ul data-bind="foreach: $root.listVM.books">
+        <li>
+                <span data-bind="text: name"></span>
+                <span data-bind="text: birthday"></span>
+                <span data-bind="text: address"></span>
+        </li>
+</ul>
+
 <!-- /ko -->
