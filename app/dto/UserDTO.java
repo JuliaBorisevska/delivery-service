@@ -17,8 +17,8 @@ public class UserDTO {
 		dto.lastName = user.getContactByContactId().getLastName();
 		dto.middleName = user.getContactByContactId().getMiddleName();
 		dto.companyId = user.getContactByContactId().getCompanyByCompanyId().getId();
-		dto.roleTitle = user.getRoleByRoleId().getTitle();
-        return dto;
+		dto.roleTitle = user.getRoleByRoleId().getName();
+		return dto;
     }
 
 	public String getFirstName() {

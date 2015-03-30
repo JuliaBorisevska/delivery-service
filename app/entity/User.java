@@ -1,6 +1,13 @@
 package entity;
 
+import be.objectify.deadbolt.core.models.Permission;
+import be.objectify.deadbolt.core.models.Role;
+import be.objectify.deadbolt.core.models.Subject;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @Author ValentineS.
@@ -8,22 +15,38 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "user")
-public class User {
+public class User implements Subject {
 
-    private Integer id;
+    private Long id;
     private Contact contactByContactId;
     private String login;
     private String password;
-    private Role roleByRoleId;
+    private SecurityRole roleByRoleId;
+
+    @Override
+    @Transient
+    public List<? extends Permission> getPermissions() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    @Transient
+    public List<? extends Role> getRoles() {
+        List<Role> roles = new ArrayList<>();
+        roles.add(roleByRoleId);
+        return roles;
+    }
+
+    ;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, insertable = true, updatable = true)
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -38,16 +61,6 @@ public class User {
     }
 
     @Basic
-    @Column(name = "login", nullable = false, insertable = true, updatable = true)
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    @Basic
     @Column(name = "password", nullable = false, insertable = true, updatable = true)
     public String getPassword() {
         return password;
@@ -59,11 +72,25 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
-    public Role getRoleByRoleId() {
+    public SecurityRole getRoleByRoleId() {
         return roleByRoleId;
     }
 
-    public void setRoleByRoleId(Role roleById) {
+    public void setRoleByRoleId(SecurityRole roleById) {
         this.roleByRoleId = roleById;
     }
+
+
+    @Basic
+    @Column(name = "login", nullable = false, insertable = true, updatable = true)
+    @Override
+    public String getIdentifier() {
+        return login;
+    }
+
+    public void setIdentifier(String login) {
+        this.login = login;
+    }
+
+
 }
