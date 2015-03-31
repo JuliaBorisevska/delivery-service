@@ -1,5 +1,7 @@
 package dao;
 
+import entity.Company;
+import entity.Contact;
 import entity.User;
 import play.db.jpa.JPA;
 
@@ -8,7 +10,11 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
+
+
+
 import java.util.List;
 
 public class UserDAO extends AbstractDAO<User> {
@@ -19,7 +25,6 @@ public class UserDAO extends AbstractDAO<User> {
 
 	@Override
 	public void delete(User entity) {
-		EntityManager em = JPA.em();
 		User user = em.find(User.class, entity.getId());
 		if(user != null) {
 			em.remove(entity);
@@ -29,21 +34,31 @@ public class UserDAO extends AbstractDAO<User> {
 
 	@Override
 	public void create(User entity) {
-		JPA.em().persist(entity);
+		em.persist(entity);
 	}
 
 	@Override
 	public void update(User entity) {
-		JPA.em().persist(entity);
+		em.persist(entity);
 	}
+	
+	public Long total(Company company) {
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        Root<User> from = countQuery.from(User.class);
+		Join<User, Contact> contact = from.join("contactByContactId");
+		Join<Contact, Company> comp = contact.join("companyByCompanyId");
+        countQuery.select(criteriaBuilder.count(from)).where(criteriaBuilder.equal(comp.get("id"), company.getId()));
+        return em.createQuery(countQuery).getSingleResult();
+    }
 
-	public static List<User> list(Integer pageNumber, Integer pageSize) {
-		EntityManager em = JPA.em();
+	public List<User> list(Integer pageNumber, Integer pageSize, Company company) {
 		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
 		CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
 		Root<User> from = criteriaQuery.from(User.class);
-
-		CriteriaQuery<User> select = criteriaQuery.select(from);
+		Join<User, Contact> contact = from.join("contactByContactId");
+		Join<Contact, Company> comp = contact.join("companyByCompanyId");
+		CriteriaQuery<User> select = criteriaQuery.select(from).where(criteriaBuilder.equal(comp.get("id"), company.getId()));
 		TypedQuery<User> q = em.createQuery(select);
 		q.setFirstResult((pageNumber - 1) * pageSize);
 		q.setMaxResults(pageSize);

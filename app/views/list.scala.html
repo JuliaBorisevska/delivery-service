@@ -1,3 +1,32 @@
 <!-- ko if: $root.chosenSectionId().id == "lst" -->
-        userlist
+        <table class="list">
+        	<thead>
+        		<tr>
+                    <th>&nbsp;</th>
+                    <th>
+                        Полное имя
+                    </th>
+                    <th>
+                        Логин
+                    </th>
+                    <th>
+                        Роль
+                    </th>
+                </tr>
+        	</thead>
+        	<tbody data-bind="foreach: userlistVM.users">
+        		<tr>
+                    <td><input type="checkbox"></td>
+                    <td data-bind="text: firstName"></td>
+                    <td data-bind="text: login"></td>
+                    <td data-bind="text: role"></td>
+               </tr>
+        	</tbody>
+        </table>
+       <!--  <div class="pagination">
+        
+            <a id="prev" href="#" data-bind="click: function (data, event) { navigate(event) }, css: { disabled: currentPage() === 0 }"><<</a>
+            <span class="current">1</span><a href="#?page=2">2</a><a href="#?page=3">3</a>…<a href="#?page=199">10</a><a href="#?page=200">11</a>
+            <a id="next"  href="#" data-bind="click: function (data, event) { navigate(event) }, css: { disabled: currentPage() === totalPages() - 1 }">>></a>
+        </div>  -->
 <!-- /ko -->

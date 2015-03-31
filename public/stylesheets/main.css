@@ -35,10 +35,15 @@ input[type="tel"], input[type="number"], input[type="url"] {
     width: 90%;
 }
 
+.list{
+	margin: 5%;
+	width: 90%;
+}
+
 table {
     border: 1px solid #bfbfbf;
     border-radius: 10px;
-   	width: 100%;
+   	width:100%;
     font-size: 12px;
 }
 
@@ -74,7 +79,7 @@ button:active, .button:active {
 
 #greeting{
 	float: right;
-	width: 20%;
+	width: 25%;
     height: 15%;
     top:0;
     right: 0;
@@ -92,7 +97,7 @@ button:active, .button:active {
 		top:4%;
 		position: absolute;
 		border-bottom:1px solid #6c4871;
-		width:64%;
+		width:60%;
 		height: 10%;
 		border-top:4px solid #6c4871;
 		overflow:hidden;
@@ -138,6 +143,45 @@ button:active, .button:active {
 	clear: both;
 	}
 	
+div.pagination {
+	width:50%;
+	padding:5px;
+	margin:5px;
+	text-align:center;
+	float:left;
+	clear:both;
+	font-size:10px;
+}
+
+div.pagination a {
+	padding: 2px 5px 2px 5px;
+	margin-right: 2px;
+	border: 1px solid #6c4871;
+	text-decoration: none; 
+	color: #6c4871;
+}
+
+div.pagination a:hover, div.pagination a:active {
+	border:1px solid #6c4871;
+	color: #fff;
+	background-color: #6c4871;
+}
+
+div.pagination a.current {
+	padding: 2px 5px 2px 5px;
+	margin-right: 2px;
+	border: 1px solid #6c4871;
+	font-weight: bold;
+	background-color: #6c4871;
+	color: #FFF;
+}
+
+div.pagination a.disabled {
+	padding: 2px 5px 2px 5px;
+	margin-right: 2px;
+	border: 1px solid #6c4871;
+	color: #ccc;
+}
 	
 	
 	

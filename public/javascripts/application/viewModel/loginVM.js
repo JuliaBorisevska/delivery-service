@@ -14,7 +14,7 @@ define(["application/service/authService",
                         var reply = params.reply,
                             data = reply.data;
                         if(reply.status === "SUCCESS") {
-                            $("body").trigger("authorized", new User(data.firstName, data.roleTitle, data.menu));
+                            $("body").trigger("authorized", new User(data.id, data.firstName, data.lastName, data.middleName, data.roleTitle, data.companyTitle, data.login, data.menu));
                         }
                     }, this, {}),
                     new Callback(function(params){

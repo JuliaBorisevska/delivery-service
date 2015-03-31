@@ -19,7 +19,7 @@
                 <ul data-bind="foreach: menu">
                 	<li data-bind="text: name,
                 					css: {selected: id == $root.chosenSectionId().id},
-                					click: $root.goTo">
+                					click: function(){$root.goTo(this)}">
                 	</li>
                 </ul>
                 </div>
@@ -27,12 +27,18 @@
                 	<table id="greet">
             			<tr>
                 			<td>
-                    			Добро пожаловать,&nbsp;<span data-bind="text: $root.user().firstName"></span>
+                    			Добро пожаловать,<br/>
+                    			<span data-bind="text: $root.user().firstName"></span>&nbsp;<span data-bind="text: $root.user().lastName"></span>
                 			</td>
                 		</tr>
             			<tr>
                 			<td>
                     			Роль:&nbsp;<span data-bind="text: $root.user().role"></span>
+                			</td>
+            			</tr>
+            			<tr>
+                			<td>
+                    			Компания:&nbsp;<span data-bind="text: $root.user().company"></span>
                 			</td>
             			</tr>
             			<tr>
