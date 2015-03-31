@@ -23,10 +23,13 @@
                </tr>
         	</tbody>
         </table>
-       <!--  <div class="pagination">
-        
-            <a id="prev" href="#" data-bind="click: function (data, event) { navigate(event) }, css: { disabled: currentPage() === 0 }"><<</a>
-            <span class="current">1</span><a href="#?page=2">2</a><a href="#?page=3">3</a>…<a href="#?page=199">10</a><a href="#?page=200">11</a>
-            <a id="next"  href="#" data-bind="click: function (data, event) { navigate(event) }, css: { disabled: currentPage() === totalPages() - 1 }">>></a>
-        </div>  -->
+        <div class="pagination">
+        	<a id="first" href="#" data-bind="click: function (data, event) { userlistVM.navigate(data,event); }, css: { disabled: userlistVM.currentPage() === 1 }">First</a>
+            <a id="prev" href="#" data-bind="click: function (data, event) { userlistVM.navigate(data,event); }, css: { disabled: userlistVM.currentPage() === 1 }"><<</a>
+			<!-- ko foreach: userlistVM.numbers -->
+             <a id="block" href="#" data-bind="click: function (data, event) { $root.userlistVM.navigate(data,event); }, text: $data, css: { current: $root.userlistVM.currentPage() == $data}"></a>
+			<!-- /ko -->
+            <a id="next" href="#" data-bind="click: function (data, event) { userlistVM.navigate(data,event); }, css: { disabled: userlistVM.currentPage() === userlistVM.totalPages()}">>></a>
+        	<a id="last" href="#" data-bind="click: function (data, event) { userlistVM.navigate(data,event); }, css: { disabled: userlistVM.currentPage() === userlistVM.totalPages()}">Last</a>
+        </div> 
 <!-- /ko -->
