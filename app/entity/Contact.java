@@ -12,7 +12,7 @@ public class Contact {
     private String firstName;
     private String lastName;
     private String middleName;
-    private Date birthDay;
+    private Date birthday;
     private String email;
     private Company companyByCompanyId;
     private String town;
@@ -53,7 +53,7 @@ public class Contact {
     }
 
     @Basic
-    @Column(name = "middle_name", nullable = true, insertable = true, updatable = true)
+    @Column(name = "midle_name", nullable = true, insertable = true, updatable = true)
     public String getMiddleName() {
         return middleName;
     }
@@ -64,12 +64,12 @@ public class Contact {
 
     @Basic
     @Column(name = "birth_date", nullable = true, insertable = true, updatable = true)
-    public Date getBirthDay() {
-        return birthDay;
+    public Date getBirthday() {
+        return birthday;
     }
 
-    public void setBirthDay(Date birthDay) {
-        this.birthDay = birthDay;
+    public void setBirthday(Date birthDay) {
+        this.birthday = birthDay;
     }
 
     @Basic
