@@ -1,15 +1,10 @@
 define(function() {
     "use strict";
-    function Contact (firstName, lastName, middleName, birthday, town, street, house, flat) {
+    function Contact (name, birthday, address) {
         var self = this;
-        self.firstName = firstName;
-        self.lastName = lastName;
-        self.middleName = middleName;
+        self.name = name;
         self.birthday = birthday;
-        self.town = town;
-        self.street = street;
-        self.house = house;
-        self.flat = flat;
+        self.address = address;
     }
 
     return Contact;

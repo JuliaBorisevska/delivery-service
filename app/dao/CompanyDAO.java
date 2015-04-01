@@ -28,6 +28,7 @@ public class CompanyDAO extends AbstractDAO<Company> {
 
     public void delete(Long id) {
 
+        EntityManager em = JPA.em();
         Company Company = em.find(Company.class, id);
         if(Company != null) {
             em.remove(Company);
@@ -36,16 +37,17 @@ public class CompanyDAO extends AbstractDAO<Company> {
 
     @Override
     public void create(Company entity) {
-        em.persist(entity);
+        JPA.em().persist(entity);
     }
 
     @Override
     public void update(Company entity) {
-        em.persist(entity);
+        JPA.em().persist(entity);
     }
 
     public List<Company> getCompanyList(Integer pageNumber, Integer pageSize) {
 
+        EntityManager em = JPA.em();
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Company> criteriaQuery = criteriaBuilder.createQuery(Company.class);
         Root<Company> from = criteriaQuery.from(Company.class);
@@ -60,11 +62,13 @@ public class CompanyDAO extends AbstractDAO<Company> {
 
     public Company findById(Long id) {
 
+        EntityManager em = JPA.em();
         return em.find(Company.class, id);
     }
 
     public Long numberOfCompanies() {
 
+        EntityManager em = JPA.em();
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
         countQuery.select(criteriaBuilder.count(countQuery.from(Company.class)));
@@ -74,6 +78,7 @@ public class CompanyDAO extends AbstractDAO<Company> {
     public Company findByName(String title) {
 
         try{
+            EntityManager em = JPA.em();
             CriteriaBuilder builder = em.getCriteriaBuilder();
             CriteriaQuery<Company> query = builder.createQuery(Company.class);
             Root<Company> u = query.from(Company.class);

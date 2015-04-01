@@ -28,7 +28,7 @@ public class UserController extends BaseController {
         }
         ///////////////////
         Company company = new Company();
-        company.setId(2);
+        company.setId(1);
         ///////////////////
         UserDAO dao = new UserDAO(JPA.em());
         Long total = dao.total(company);

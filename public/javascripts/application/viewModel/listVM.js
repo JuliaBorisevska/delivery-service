@@ -3,10 +3,9 @@ define(["application/service/contactService",
         "application/model/contact"], function(contactService, Callback, Contact) {
     "use strict";
 
-    function ContactListVM() {
+    function ListVM() {
         var self = this,
             contacts = ko.observableArray(),
-            PAGE_SIZE = 3,
             reply,
         list = function(page, pageSize) {
             contactService.list(page, pageSize,
@@ -17,8 +16,7 @@ define(["application/service/contactService",
                             //totalPages(reply.data.totalPages);
                             for(var i = 0, lth = reply.data.list.length; i < lth; i++) {
                                 var contact = reply.data.list[i];
-                                contacts.push(new Contact(contact.firstName, contact.lastName, contact.middleName,
-                                    contact.birthday, contact.town, contact.street, contact.house, contact.flat));
+                                addContact(contact.firstName, contact.birthday, contact.address);
                             }
                         }
                     }, self, {}
@@ -30,15 +28,16 @@ define(["application/service/contactService",
                     }, self, {}
                 )
             )
+        },
+        addContact = function(name, birthday, address) {
+            contacts.push(new Contact(name, birthday, address));
         };
 
         return {
-            contacts: contacts,
-            list: list,
-            PAGE_SIZE: PAGE_SIZE
+            list: list
         }
     }
 
-    return new ContactListVM();
+    return new ListVM();
 
 });
