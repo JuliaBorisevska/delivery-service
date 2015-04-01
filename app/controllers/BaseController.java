@@ -4,7 +4,6 @@ import play.mvc.Controller;
 
 public class BaseController extends Controller {
 
-
     public static class Reply<T> {
         public Status status;
         public T data;

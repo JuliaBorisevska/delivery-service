@@ -1,6 +1,7 @@
 package dao;
 
 import entity.Order;
+import play.db.jpa.JPA;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -20,14 +21,9 @@ public class OrderDAO extends AbstractDAO<Order> {
 
     @Override
     public void delete(Order entity) {
-        Order order = em.find(Order.class, entity.getId());
-        if(order!=null){
-            em.remove(order);
-        }
-    }
 
-    public void delete(Integer id){
-        Order order = em.find(Order.class, id);
+        EntityManager em = JPA.em();
+        Order order = em.find(Order.class, entity.getId());
         if(order!=null){
             em.remove(order);
         }
@@ -35,15 +31,17 @@ public class OrderDAO extends AbstractDAO<Order> {
 
     @Override
     public void create(Order entity) {
-        em.persist(entity);
+        JPA.em().persist(entity);
     }
 
     @Override
     public void update(Order entity) {
-        em.persist(entity);
+        JPA.em().persist(entity);
+
     }
 
     public List<Order> getOrderList(Integer pageNumber, Integer pageSize){
+        EntityManager em = JPA.em();
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
         Root<Order> from = criteriaQuery.from(Order.class);
@@ -57,10 +55,13 @@ public class OrderDAO extends AbstractDAO<Order> {
     }
 
     public Order getOrderById(Integer orderId){
+
+        EntityManager em = JPA.em();
         return em.find(Order.class, orderId);
     }
 
     public List<Order> getOrderListByCustomer(Integer pageNumber, Integer pageSize, Integer customerId){
+        EntityManager em = JPA.em();
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
         Root<Order> from = criteriaQuery.from(Order.class);
@@ -72,6 +73,8 @@ public class OrderDAO extends AbstractDAO<Order> {
         return q.getResultList();
     }
     public List<Order> getOrderListByRecipient(Integer pageNumber, Integer pageSize, Integer recipientId){
+
+        EntityManager em = JPA.em();
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
         Root<Order> from = criteriaQuery.from(Order.class);
@@ -82,14 +85,5 @@ public class OrderDAO extends AbstractDAO<Order> {
 
         return q.getResultList();
     }
-
-    public Long  getLength(){
-        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        countQuery.select(criteriaBuilder.count(countQuery.from(Order.class)));
-        Long lngth = em.createQuery(countQuery).getSingleResult();
-        return lngth;
-    }
-
 
 }

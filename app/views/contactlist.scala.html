@@ -1,11 +1,22 @@
 <!-- ko if: $root.chosenSectionId().id == "ctlst" -->
 
-<ul data-bind="foreach: $root.listVM.books">
-        <li>
-                <span data-bind="text: name"></span>
-                <span data-bind="text: birthday"></span>
-                <span data-bind="text: address"></span>
-        </li>
-</ul>
+<table class="list">
+        <thead>
+                <tr>
+                        <th>&nbsp;</th>
+                        <th>Полное имя</th>
+                        <th>День рождения</th>
+                        <th>Адрес</th>
+                </tr>
+        </thead>
+        <tbody data-bind="foreach: contactListVM.contacts">
+                <tr>
+                        <td><input type="checkbox"></td>
+                        <td data-bind="text: firstName"></td>
+                        <td data-bind="text: birthday"></td>
+                        <td data-bind="text: town"></td>
+                </tr>
+        </tbody>
+</table>
 
 <!-- /ko -->
