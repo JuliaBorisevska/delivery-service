@@ -16,7 +16,7 @@ define(["application/service/contactService",
                             //totalPages(reply.data.totalPages);
                             for(var i = 0, lth = reply.data.list.length; i < lth; i++) {
                                 var contact = reply.data.list[i];
-                                addContact(contact.firstName, contact.birthday, contact.address);
+                                addContact(contact.firstName, contact.birthDay, contact.town);
                             }
                         }
                     }, self, {}
@@ -34,7 +34,8 @@ define(["application/service/contactService",
         };
 
         return {
-            list: list
+            list: list,
+            contacts: contacts
         }
     }
 

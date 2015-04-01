@@ -35,7 +35,7 @@ define(["application/service/initService",
             	self.userlistVM.list(self.userlistVM.currentPage(), self.userlistVM.PAGE_SIZE);
             	break;
             case "ctlst":
-                self.contactListVM.list(1, self.contactListVM.PAGE_SIZE);
+                self.contactListVM.list(1, /*self.contactListVM.PAGE_SIZE*/ 3);
                 break;
             }
             location.hash = section.id;
