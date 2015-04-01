@@ -1,9 +1,9 @@
 define(["application/service/initService",
         "application/util/callback",
         "application/viewModel/loginVM",
-        "application/viewModel/listVM",
+        "application/viewModel/contactListVM",
         "application/viewModel/userlistVM"], 
-        function (initService, Callback, loginVM, listVM, userlistVM) {
+        function (initService, Callback, loginVM, contactListVM, userlistVM) {
 
     "use strict";
 
@@ -24,7 +24,7 @@ define(["application/service/initService",
                 }, this, {})
             );
         self.loginVM = loginVM;
-        self.listVM = listVM;
+        self.contactListVM = contactListVM;
         self.userlistVM = userlistVM;
         self.chosenSectionId = ko.observable(self.sections[0]);
         self.user = ko.observable();
@@ -34,6 +34,9 @@ define(["application/service/initService",
             case "lst":
             	self.userlistVM.list(self.userlistVM.currentPage(), self.userlistVM.PAGE_SIZE);
             	break;
+            case "ctlst":
+                self.contactListVM.list(1, self.contactListVM.PAGE_SIZE);
+                break;
             }
             location.hash = section.id;
         };
