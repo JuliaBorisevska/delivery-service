@@ -30,7 +30,7 @@ define(["application/service/contactService",
                     }, self, {}
                 )
             )
-        };
+        },
 
         return {
             contacts: contacts,
