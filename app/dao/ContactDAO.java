@@ -1,7 +1,6 @@
 package dao;
 
 import entity.Contact;
-import play.db.jpa.JPA;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -27,7 +26,6 @@ public class ContactDAO extends AbstractDAO<Contact> {
 
     public void delete(Long id) {
 
-        EntityManager em = JPA.em();
         Contact contact = em.find(Contact.class, id);
         if(contact != null) {
             em.remove(contact);
@@ -36,17 +34,16 @@ public class ContactDAO extends AbstractDAO<Contact> {
 
     @Override
     public void create(Contact entity) {
-        JPA.em().persist(entity);
+        em.persist(entity);
     }
 
     @Override
     public void update(Contact entity) {
-        JPA.em().persist(entity);
+        em.persist(entity);
     }
 
     public List<Contact> getContactList(Integer pageNumber, Integer pageSize) {
 
-        EntityManager em = JPA.em();
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Contact> criteriaQuery = criteriaBuilder.createQuery(Contact.class);
         Root<Contact> from = criteriaQuery.from(Contact.class);
@@ -61,13 +58,11 @@ public class ContactDAO extends AbstractDAO<Contact> {
 
     public Contact findById(Long id) {
 
-        EntityManager em = JPA.em();
         return em.find(Contact.class, id);
     }
 
-    public static Long numberOfContacts() {
+    public Long numberOfContacts() {
 
-        EntityManager em = JPA.em();
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
         countQuery.select(criteriaBuilder.count(countQuery.from(Contact.class)));
