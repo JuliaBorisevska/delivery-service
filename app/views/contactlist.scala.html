@@ -12,9 +12,18 @@
         <tbody data-bind="foreach: contactListVM.contacts">
                 <tr>
                         <td><input type="checkbox"></td>
-                        <td data-bind="text: firstName"></td>
+                        <td>
+                                <span data-bind="text: lastName">&nbsp;</span>
+                                <span data-bind="text: firstName">&nbsp;</span>
+                                <span data-bind="text: middleName"></span>
+                        </td>
                         <td data-bind="text: birthday"></td>
-                        <td data-bind="text: town"></td>
+                        <td>
+                                <span data-bind="text: town">,&nbsp;</span>
+                                <span data-bind="text: street">,&nbsp;</span>
+                                <span data-bind="text: house">,&nbsp;</span>
+                                <span data-bind="text: flat"></span>
+                        </td>
                 </tr>
         </tbody>
 </table>

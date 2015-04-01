@@ -1,21 +1,18 @@
 package controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-import play.db.jpa.JPA;
-import play.db.jpa.Transactional;
-import play.libs.Json;
-import play.mvc.Result;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import controllers.BaseController.Reply;
-import controllers.BaseController.Status;
 import dao.UserDAO;
 import dto.UserDTO;
 import entity.Company;
 import entity.User;
+import play.db.jpa.JPA;
+import play.db.jpa.Transactional;
+import play.libs.Json;
+import play.mvc.Result;
 import resource.MessageManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class UserController extends BaseController {
