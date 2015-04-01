@@ -53,7 +53,7 @@ public class Contact {
     }
 
     @Basic
-    @Column(name = "midle_name", nullable = true, insertable = true, updatable = true)
+    @Column(name = "middle_name", nullable = true, insertable = true, updatable = true)
     public String getMiddleName() {
         return middleName;
     }

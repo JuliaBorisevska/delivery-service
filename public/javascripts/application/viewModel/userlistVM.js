@@ -5,7 +5,7 @@ define(["application/service/userService",
 
     function UserListVM() {
     	var k;
-    	var PAGE_SIZE = 1,
+    	var PAGE_SIZE = 2,
         	SHOW_PAGES = 3,
         	currentPage = ko.observable(1),
         	totalPages = ko.observable(),
@@ -13,8 +13,8 @@ define(["application/service/userService",
         var self = this,
             users = ko.observableArray(),
             numbers = ko.observableArray([]);
-        var fill = function(pageNumber){
-        	if (pageNumber < numbers[1]){
+       /* var fill = function(pageNumber){
+        	if (pageNumber < numbers()[1]){
         		if (pageNumber>SHOW_PAGES-1){
             		numbers([]);
             		for (k=pageNumber-SHOW_PAGES+1; k<=pageNumber; k++){
@@ -22,12 +22,12 @@ define(["application/service/userService",
             		}
             	}else{
             		numbers([]);
-            		for (k=1; k<=totalPages()<SHOW_PAGES?totalPages():SHOW_PAGES; k++){
+            		for (k=1; k<=(totalPages()<SHOW_PAGES?totalPages():SHOW_PAGES); k++){
             			numbers.push(k);
             		}
             	}
         	} 
-        	if (pageNumber > numbers[numbers.length-2]){
+        	if (pageNumber > numbers()[numbers().length-2]){
         		if (pageNumber<totalPages()-SHOW_PAGES+1){
         			numbers([]);
         			for (k=pageNumber; k<=pageNumber+SHOW_PAGES-1; k++){
@@ -40,7 +40,7 @@ define(["application/service/userService",
             		}
         		}
         	} 
-        };
+        };*/
         var list = function(page, pageSize) {
                 userService.list(page, pageSize,
                     new Callback(function(params){
@@ -48,7 +48,7 @@ define(["application/service/userService",
                             if(reply.status === "SUCCESS") {
                                 users([]);
                                 totalPages(reply.data.totalPages);
-                                if (numbers.length==0){
+                                if (numbers().length==0){
                                 	numbers([]);
                                 	for (k=1; k<=(totalPages()<SHOW_PAGES?totalPages():SHOW_PAGES); k++){
                             			numbers.push(k);
@@ -65,7 +65,7 @@ define(["application/service/userService",
                         }, self, {})
                 )
             };
-            
+         /*   
           var navigate = function (data,e) {
                 var el = e.target;
                 switch (el.id){
@@ -101,13 +101,13 @@ define(["application/service/userService",
                 fill(currentPage());
                 list(currentPage(), PAGE_SIZE);
             };
-            
+            */
         return {
             users: users,
             numbers: numbers,
             list: list,
-            fill: fill,
-            navigate: navigate,
+            //fill: fill,
+            //navigate: navigate,
             totalPages: totalPages,
             currentPage: currentPage,
             PAGE_SIZE: PAGE_SIZE,
