@@ -122,7 +122,7 @@ public class ContactController extends BaseController {
         contact.setFirstName(firstName);
         contact.setLastName(lastName);
         contact.setMiddleName(middleName);
-        contact.setBirthDay(birthDay);
+        contact.setBirthday(birthDay);
         contact.setEmail(email);
         contact.setCompanyByCompanyId(company);
         contact.setTown(town);
