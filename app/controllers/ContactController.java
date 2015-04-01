@@ -20,11 +20,11 @@ import java.util.Map;
 
 public class ContactController extends BaseController {
 
-    private static ContactDAO contactDAO = new ContactDAO(JPA.em());
-
     @Transactional
     public static Result getContact(Long id) {
-       Contact contact = contactDAO.findById(id);
+
+        ContactDAO contactDAO = new ContactDAO(JPA.em());
+        Contact contact = contactDAO.findById(id);
         if(contact == null) {
             return notFound(Json.toJson(new Reply()));
         }
@@ -40,6 +40,7 @@ public class ContactController extends BaseController {
             return badRequest(Json.toJson(new Reply()));
         }
 
+        ContactDAO contactDAO = new ContactDAO(JPA.em());
         Long total = contactDAO.numberOfContacts();
         Integer totalPages = Double.valueOf(Math.ceil((double) total / pageSize)).intValue();
         List<Contact> contactList = contactDAO.getContactList(pageNumber, pageSize);
@@ -54,10 +55,10 @@ public class ContactController extends BaseController {
     }
 
     @Transactional
-    //@Secured.BmRole(role = {Role.ADMIN, Role.USER})
     public static Result createContact() {
 
         Contact contact = new Contact();
+        ContactDAO contactDAO = new ContactDAO(JPA.em());
         final Map<String, String[]> values = request().body().asFormUrlEncoded();
         try {
             setContactFields(contact, values);
@@ -72,9 +73,9 @@ public class ContactController extends BaseController {
     }
 
     @Transactional
-    //@Secured.BmRole
     public static Result updateContact(Long id) {
 
+        ContactDAO contactDAO = new ContactDAO(JPA.em());
         Contact contact = contactDAO.findById(id);
         final Map<String, String[]> values = request().body().asFormUrlEncoded();
         try {
@@ -105,7 +106,7 @@ public class ContactController extends BaseController {
         try {
             house = Integer.valueOf(values.get("house")[0]);
         } catch (ClassCastException cce) {
-                throw cce;
+            throw cce;
         }
         try {
             flat = Integer.valueOf(values.get("flat")[0]);
@@ -121,7 +122,7 @@ public class ContactController extends BaseController {
         contact.setFirstName(firstName);
         contact.setLastName(lastName);
         contact.setMiddleName(middleName);
-        contact.setBirthDay(birthDay);
+        contact.setBirthday(birthDay);
         contact.setEmail(email);
         contact.setCompanyByCompanyId(company);
         contact.setTown(town);
@@ -131,9 +132,9 @@ public class ContactController extends BaseController {
     }
 
     @Transactional
-    //@Secured.BmRole
     public static Result deleteContact(Long id) {
 
+        ContactDAO contactDAO = new ContactDAO(JPA.em());
         contactDAO.delete(id);
         return ok(Json.toJson(
                 new Reply<>(Status.SUCCESS, id)
