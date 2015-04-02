@@ -18,6 +18,7 @@ import java.util.List;
 public class User implements Subject {
 
     private Long id;
+    private String token;
     private Contact contactByContactId;
     private String login;
     private String password;
@@ -90,6 +91,16 @@ public class User implements Subject {
 
     public void setIdentifier(String login) {
         this.login = login;
+    }
+
+    @Basic
+    @Column(name = "token", nullable = true, insertable = true, updatable = true)
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
 

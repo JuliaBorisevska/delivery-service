@@ -1,33 +1,25 @@
 package controllers;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.persistence.EntityManager;
-
-import org.mindrot.jbcrypt.BCrypt;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import controllers.BaseController.Reply;
-import controllers.BaseController.Status;
 import dao.UserDAO;
 import dto.UserDTO;
-import entity.Role;
 import entity.User;
-import play.*;
+import org.mindrot.jbcrypt.BCrypt;
+import play.Logger;
 import play.Logger.ALogger;
 import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
-import dto.UserDTO;
+import play.libs.Crypto;
 import play.libs.Json;
 import play.mvc.Result;
 import resource.MessageManager;
 import views.html.main;
 
+import javax.persistence.EntityManager;
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
 
 public class Application extends BaseController {
@@ -55,6 +47,7 @@ public class Application extends BaseController {
     	}
     }
 
+
     @Transactional
     public static Result login() {
     	try{
@@ -65,15 +58,21 @@ public class Application extends BaseController {
     		EntityManager em = JPA.em();
     		UserDAO dao = new UserDAO(em);
     		User user = dao.findByLogin(login);
-    		if(user == null) {
-    		    return badRequest(Json.toJson(
+
+			if (user == null) {
+				return badRequest(Json.toJson(
     		            new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
     		}
     		if(BCrypt.checkpw(password, user.getPassword())) {
     			UserDTO userDTO = UserDTO.getUser(user);
-    			ObjectMapper mapper = new ObjectMapper();
-    			JsonNode rootNode = mapper.readTree(new File(FILE_CONFIG_NAME));
-    			Iterator<JsonNode> roleNodes = rootNode.path("roles").elements();
+				String token = Crypto.generateToken();
+				logger.info("token {} have been generated", token);
+				response().setCookie("token", token, 5000);
+				user.setToken(token);
+				dao.update(user);
+				ObjectMapper mapper = new ObjectMapper();
+				JsonNode rootNode = mapper.readTree(new File(FILE_CONFIG_NAME));
+				Iterator<JsonNode> roleNodes = rootNode.path("roles").elements();
     			while (roleNodes.hasNext()){
     				JsonNode role = roleNodes.next();
     				if (role.path("title").asText().equals(userDTO.getRoleTitle())){

@@ -2,6 +2,7 @@ package security;
 
 import be.objectify.deadbolt.core.models.Subject;
 import be.objectify.deadbolt.java.AbstractDeadboltHandler;
+import be.objectify.deadbolt.java.DynamicResourceHandler;
 import dao.UserDAO;
 import play.db.jpa.JPA;
 import play.libs.F;
@@ -13,6 +14,7 @@ import views.html.main;
  * Created by antonkw on 30.03.2015.
  */
 public class MyDeadboltHandler extends AbstractDeadboltHandler {
+    @Override
     public F.Promise<Result> beforeAuthCheck(Http.Context context) {
         // returning null means that everything is OK.  Return a real result if you want a redirect to a login page or
         // somewhere else
@@ -20,10 +22,10 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
     }
 
     @Override
-    public Subject getSubject(final Http.Context context) {
-        String login = (String) context.session().get("login");
+    public Subject getSubject(final Http.Context var1) {
+        String token = var1.request().cookie("token").value();
         UserDAO userDAO = new UserDAO(JPA.em());
-        return userDAO.findByLogin(login);
+        return userDAO.findByToken(token);
     }
 
     @Override
@@ -36,5 +38,10 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
                 return ok(main.render());
             }
         });
+    }
+
+    @Override
+    public DynamicResourceHandler getDynamicResourceHandler(Http.Context context) {
+        return new MyAlternativeDynamicResourceHandler();
     }
 }
