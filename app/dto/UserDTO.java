@@ -4,14 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import entity.User;
 
 public class UserDTO {
-	private Integer id;
+	private Long id;
 	private String firstName;
 	private String lastName;
 	private String middleName;
 	private String companyTitle;
 	private String roleTitle;
 	private JsonNode menu;
-	private String login;
+	//private String login;
 	
 	public static UserDTO getUser(User user) {
 		UserDTO dto = new UserDTO();
@@ -20,9 +20,12 @@ public class UserDTO {
 		dto.lastName = user.getContactByContactId().getLastName();
 		dto.middleName = user.getContactByContactId().getMiddleName();
 		dto.companyTitle = user.getContactByContactId().getCompanyByCompanyId().getTitle();
-		dto.roleTitle = user.getRoleByRoleId().getTitle();
-		dto.login = user.getLogin();
-        return dto;
+		//dto.roleTitle = user.getRoleByRoleId().getTitle();
+		//dto.login = user.getLogin();
+        //return dto;
+		//dto.companyId = user.getContactByContactId().getCompanyByCompanyId().getId();
+		dto.roleTitle = user.getRoleByRoleId().getName();
+		return dto;
     }
 
 	public String getFirstName() {
@@ -73,14 +76,14 @@ public class UserDTO {
 		this.companyTitle = companyTitle;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
-
+/*
 	public String getLogin() {
 		return login;
 	}
@@ -89,7 +92,7 @@ public class UserDTO {
 		this.login = login;
 	}
 	
-	
+	*/
 	
 
 }

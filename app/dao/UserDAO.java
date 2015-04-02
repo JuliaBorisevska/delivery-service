@@ -79,4 +79,17 @@ public class UserDAO extends AbstractDAO<User> {
         }
     }
 
+	public User findByToken(String token) {
+		try {
+			CriteriaBuilder builder = em.getCriteriaBuilder();
+			CriteriaQuery<User> query = builder.createQuery(User.class);
+			Root<User> u = query.from(User.class);
+			query.select(u).where(builder.equal(u.get("token"), token));
+			TypedQuery<User> q = em.createQuery(query);
+			return q.getSingleResult();
+		} catch (NoResultException nre) {
+			return null;
+		}
+	}
+
 }

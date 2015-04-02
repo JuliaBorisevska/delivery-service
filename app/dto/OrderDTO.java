@@ -27,8 +27,8 @@ public class OrderDTO {
         dto.id = order.getId();
         dto.description = order.getDescription();
         dto.price  = order.getTotalPrice();
-        dto.customer = order.getCustomerByContactId().getLogin();
-
+        //dto.customer = order.getCustomerByContactId().getLogin();
+        dto.customer = order.getCustomerByContactId().getContactByContactId().getLastName();
         StringBuilder stringdate = new StringBuilder();
         stringdate
                 .append(order.getOrderDate().toLocalDateTime().getHour())
@@ -44,8 +44,8 @@ public class OrderDTO {
         dto.date = stringdate.toString();
 
 
-        dto.user = order.getUserByUserId().getLogin();
-        dto.recipient = order.getRecipientByContactId().getLogin();
+        dto.user = order.getUserByUserId().getContactByContactId().getLastName();
+        dto.recipient = order.getRecipientByContactId().getContactByContactId().getLastName();
         dto.orderStatus = order.getStatusByStatusId().getTitle();
         dto.nextStatus = statusList.get(statusList.indexOf(order.getStatusByStatusId())+1).getTitle();
         return dto;

@@ -1,5 +1,7 @@
 package entity;
 
+import be.objectify.deadbolt.core.models.Role;
+
 import javax.persistence.*;
 
 /**
@@ -7,7 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "role")
-public class Role {
+public class SecurityRole implements Role {
 
     private Integer id;
     private String title;
@@ -24,12 +26,13 @@ public class Role {
     }
 
     @Basic
+    @Override
     @Column(name = "title", nullable = false, insertable = true, updatable = true)
-    public String getTitle() {
+    public String getName() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setName(String title) {
         this.title = title;
     }
 }
