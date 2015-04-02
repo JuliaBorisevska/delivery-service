@@ -71,7 +71,7 @@ public class UserDAO extends AbstractDAO<User> {
             CriteriaBuilder builder = em.getCriteriaBuilder();
             CriteriaQuery<User> query = builder.createQuery(User.class);
             Root<User> u = query.from(User.class);
-            query.select(u).where(builder.equal(u.get("login"), login));
+            query.select(u).where(builder.equal(u.get("identifier"), login));
             TypedQuery<User> q = em.createQuery(query);
             return q.getSingleResult();
         } catch (NoResultException nre){

@@ -11,7 +11,7 @@ public class UserDTO {
 	private String companyTitle;
 	private String roleTitle;
 	private JsonNode menu;
-	//private String login;
+	private String login;
 	
 	public static UserDTO getUser(User user) {
 		UserDTO dto = new UserDTO();
@@ -21,7 +21,7 @@ public class UserDTO {
 		dto.middleName = user.getContactByContactId().getMiddleName();
 		dto.companyTitle = user.getContactByContactId().getCompanyByCompanyId().getTitle();
 		//dto.roleTitle = user.getRoleByRoleId().getTitle();
-		//dto.login = user.getLogin();
+		dto.login = user.getIdentifier();
         //return dto;
 		//dto.companyId = user.getContactByContactId().getCompanyByCompanyId().getId();
 		dto.roleTitle = user.getRoleByRoleId().getName();
@@ -83,7 +83,7 @@ public class UserDTO {
 	public void setId(Long id) {
 		this.id = id;
 	}
-/*
+
 	public String getLogin() {
 		return login;
 	}
@@ -91,8 +91,6 @@ public class UserDTO {
 	public void setLogin(String login) {
 		this.login = login;
 	}
-	
-	*/
 	
 
 }

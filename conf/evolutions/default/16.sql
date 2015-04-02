@@ -1,7 +1,7 @@
 # --- !Ups
 
 ALTER TABLE `delivery_service`.`user` ADD COLUMN `token` VARCHAR(50)
-AFTER `email`;
+AFTER `password`;
 
 # --- !Downs
 

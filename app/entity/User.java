@@ -20,7 +20,7 @@ public class User implements Subject {
     private Long id;
     private String token;
     private Contact contactByContactId;
-    private String login;
+    private String identifier;
     private String password;
     private SecurityRole roleByRoleId;
 
@@ -86,11 +86,11 @@ public class User implements Subject {
     @Column(name = "login", nullable = false, insertable = true, updatable = true)
     @Override
     public String getIdentifier() {
-        return login;
+        return identifier;
     }
 
-    public void setIdentifier(String login) {
-        this.login = login;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     @Basic
