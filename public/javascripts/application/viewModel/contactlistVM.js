@@ -31,11 +31,16 @@ define(["application/service/contactService",
                 )
             )
         };
+        
+        var goToDetails = function(root) {
+                    location.hash = "ctadd";
+        };
 
         return {
             contacts: contacts,
             list: list,
-            PAGE_SIZE: PAGE_SIZE
+            PAGE_SIZE: PAGE_SIZE,
+            goToDetails: goToDetails
         }
     }
 
