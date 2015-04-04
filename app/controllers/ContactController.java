@@ -1,5 +1,7 @@
 package controllers;
 
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dao.CompanyDAO;
 import dao.ContactDAO;
@@ -17,7 +19,7 @@ import java.util.Map;
 /**
  * @Author ValentineS. Created 28.03.2015.
  */
-
+@Restrict(@Group("!group_name"))
 public class ContactController extends BaseController {
 
     @Transactional

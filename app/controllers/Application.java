@@ -1,5 +1,6 @@
 package controllers;
 
+import be.objectify.deadbolt.java.actions.Unrestricted;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.UserDAO;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
+@Unrestricted
 public class Application extends BaseController {
 	private static ALogger logger = Logger.of(Application.class);
 	private static final String FILE_CONFIG_NAME = "conf/privileges.json";
@@ -46,7 +48,6 @@ public class Application extends BaseController {
                             new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
     	}
     }
-
 
     @Transactional
     public static Result login() {
