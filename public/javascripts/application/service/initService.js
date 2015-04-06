@@ -11,10 +11,22 @@ define(["application/service/baseService"], function(baseService) {
                 error,
                 done
             );
+        };
+        
+        var getUser = function(success, error, done) {
+            baseService.send(
+                "/user",
+                "GET",
+                {},
+                success,
+                error,
+                done
+            );
         }
 
         return {
-        	initSections: initSections
+        	initSections: initSections,
+        	getUser: getUser
         }
     }
 

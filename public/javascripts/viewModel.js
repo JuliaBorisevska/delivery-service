@@ -1,10 +1,11 @@
 define(["application/service/initService",
         "application/util/callback",
+        "application/model/user",
         "application/viewModel/loginVM",
         "application/viewModel/contactListVM",
         "application/viewModel/orderlistVM",
         "application/viewModel/userlistVM"], 
-        function (initService, Callback, loginVM, contactListVM, orderlistVM, userlistVM) {
+        function (initService, Callback, User, loginVM, contactListVM, orderlistVM, userlistVM) {
 
     "use strict";
 
@@ -12,25 +13,65 @@ define(["application/service/initService",
     	var self = this;
     	var k;
     	var index=-1, sectionIndex;
-    	self.sections = [{name: "Вход", id: "lgn"}];
-    	initService.initSections(
+    	self.loginVM = loginVM;
+        self.contactListVM = contactListVM;
+        self.orderlistVM = orderlistVM;
+        self.userlistVM = userlistVM;
+        self.chosenSectionId = ko.observable();
+        self.user = ko.observable();
+        self.menu = ko.observableArray();
+    	self.sections = [];
+    	var app = Sammy(function() {
+            this.get('#:section', function() {
+                var sectionId = this.params.section;
+                for(var ind in self.sections) {
+                    if(self.sections.hasOwnProperty(ind) && self.sections[ind].id === sectionId) {
+                    	self.chosenSectionId(self.sections[ind]);
+                    	if (sessionStorage)
+                            sessionStorage.setItem("current", JSON.stringify(self.sections[ind]));
+                    }
+                }
+            });
+            this.get(" ", function() {
+                location.hash = "lgn";
+            });
+            this.get("/", function() {
+                location.hash = "lgn";
+            });
+
+        });
+    		initService.initSections(
                 new Callback(function(params){
                     var reply = params.reply;
                     if(reply.status === "SUCCESS") {
                     	self.sections = reply.data;
+                    	if (sessionStorage){
+                    		var data = sessionStorage.getItem("current");
+                            if (data){
+                            	initService.getUser(
+                                        new Callback(function(params){
+                                            var reply = params.reply,
+                                            	data = reply.data;
+                                            if(reply.status === "SUCCESS") {
+                                            	setUser(new User(data.id, data.firstName, data.lastName, data.middleName, data.roleTitle, data.companyTitle, data.login, data.menu));
+                                            }
+                                        }, this, {}),
+                                        new Callback(function(params){
+                                            alert("User isn't authorized");
+                                            location.hash = "lgn";
+                                        }, this, {})
+                                    );
+                            	self.chosenSectionId(data);
+                            }
+                    	}   
+                    	app.run();
+                    	
                     }
                 }, this, {}),
                 new Callback(function(params){
                     alert(params.reply.responseJSON.data);
                 }, this, {})
             );
-        self.loginVM = loginVM;
-        self.contactListVM = contactListVM;
-        self.orderlistVM = orderlistVM;
-        self.userlistVM = userlistVM;
-        self.chosenSectionId = ko.observable(self.sections[0]);
-        self.user = ko.observable();
-        self.menu = ko.observableArray();
         self.goTo = function(section) {
             switch (section.id){
             	case "lst":
@@ -111,27 +152,8 @@ define(["application/service/initService",
             vm.list(vm.currentPage(), vm.PAGE_SIZE);
         };
         
-        
-        Sammy(function() {
-            this.get('#:section', function() {
-                var sectionId = this.params.section;
-                for(var ind in self.sections) {
-                    if(self.sections.hasOwnProperty(ind) && self.sections[ind].id === sectionId) {
-                    	self.chosenSectionId(self.sections[ind]);
-                    }
-                }
-            });
-            this.get(" ", function() {
-                location.hash = "lgn";
-            });
-            this.get("/", function() {
-                location.hash = "lgn";
-            });
-
-        }).run();
-        
-        $("body").on("authorized", function(evt, user) {
-            self.user(user);
+        var setUser = function(user){
+        	self.user(user);
             self.menu.removeAll();
             for(var item in user.menu) {
             	for (k=0; k<self.sections.length; k++){
@@ -149,10 +171,24 @@ define(["application/service/initService",
         		alert("У данного пользователя нет полномочий!");
         		location.hash = "lgn";
         	}else{
-        		 self.chosenSectionId(self.menu()[0]);
-                 self.goTo(self.chosenSectionId());
+        		if(sessionStorage){
+            		var data = JSON.parse(sessionStorage.getItem("current"));
+                    if (data.id != "lgn"){
+                    	self.chosenSectionId(data);
+                    }else{
+                    	self.chosenSectionId(self.menu()[0]);
+                    }
+        		}else{
+        			self.chosenSectionId(self.menu()[0]);
+        		}
+                self.goTo(self.chosenSectionId());
         	}
            
+        };
+        
+        
+        $("body").on("authorized", function(evt, user) {
+            setUser(user);
         });
 
         $.ajaxSetup({

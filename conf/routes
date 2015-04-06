@@ -5,6 +5,7 @@
 # Home page
 GET           /                                 controllers.Application.index()
 GET           /init                             controllers.Application.getSectionsFromJson()
+GET           /user                             controllers.Application.getCurrentUser()
 POST          /login                            controllers.Application.login()
 POST          /logout                           controllers.Application.logout()
 

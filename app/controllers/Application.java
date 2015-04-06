@@ -1,23 +1,29 @@
 package controllers;
 
 import be.objectify.deadbolt.java.actions.Unrestricted;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import dao.UserDAO;
 import dto.UserDTO;
 import entity.User;
+
 import org.mindrot.jbcrypt.BCrypt;
+
 import play.Logger;
 import play.Logger.ALogger;
 import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
 import play.libs.Crypto;
 import play.libs.Json;
+import play.mvc.Http;
 import play.mvc.Result;
 import resource.MessageManager;
 import views.html.main;
 
 import javax.persistence.EntityManager;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
@@ -48,6 +54,42 @@ public class Application extends BaseController {
                             new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
     	}
     }
+    
+    @Transactional
+    public static Result getCurrentUser() {
+    	try{
+    	logger.info("Start getCurrentUser method");
+    	User user = null;
+        String token = request().cookie("token").value();
+        UserDAO userDAO = new UserDAO(JPA.em());
+        user = userDAO.findByToken(token);
+        if (user == null) {
+			return badRequest(Json.toJson(
+		            new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
+		}
+        UserDTO userDTO = UserDTO.getUser(user);
+        ObjectMapper mapper = new ObjectMapper();
+		JsonNode rootNode = mapper.readTree(new File(FILE_CONFIG_NAME));
+		Iterator<JsonNode> roleNodes = rootNode.path("roles").elements();
+		while (roleNodes.hasNext()){
+			JsonNode role = roleNodes.next();
+			if (role.path("title").asText().equals(userDTO.getRoleTitle())){
+				userDTO.setMenu(role.path("menu"));
+				break;
+			}
+		}
+		if (userDTO.getMenu()==null){
+			return badRequest(Json.toJson(
+                    new Reply<>(Status.ERROR, MessageManager.getProperty("role.error"))));
+		}
+		return ok(Json.toJson(
+            new Reply<>(Status.SUCCESS, userDTO)));
+    	}catch(IOException e){
+    		logger.error("Exception in getCurrentUser method ", e);
+    		return badRequest(Json.toJson(
+                        new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
+    	}  
+    }
 
     @Transactional
     public static Result login() {
@@ -59,7 +101,6 @@ public class Application extends BaseController {
     		EntityManager em = JPA.em();
     		UserDAO dao = new UserDAO(em);
     		User user = dao.findByLogin(login);
-
 			if (user == null) {
 				return badRequest(Json.toJson(
     		            new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
@@ -93,7 +134,7 @@ public class Application extends BaseController {
                         new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
             }
     	}catch(IOException e){
-    		logger.error("Exception in index method ", e);
+    		logger.error("Exception in login method ", e);
     		return badRequest(Json.toJson(
                             new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
     	}     
