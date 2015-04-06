@@ -10,7 +10,7 @@ define(["application/service/orderService",
     	var k;
         var self = this,
             orders = ko.observableArray(),
-            PAGE_SIZE = 1,
+            PAGE_SIZE = 5,
         	SHOW_PAGES = 3,
         	currentPage = ko.observable(1),
         	totalPages = ko.observable(),

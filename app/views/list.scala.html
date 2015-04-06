@@ -17,7 +17,11 @@
         	<tbody data-bind="foreach: userlistVM.users">
         		<tr>
                     <td><input type="checkbox"></td>
-                    <td data-bind="text: firstName"></td>
+                    <td>
+                    	<span data-bind="text:firstName"></span>&nbsp;
+                    	<span data-bind="text:lastName"></span>&nbsp;
+                    	<span data-bind="text:middleName"></span>
+                    </td>
                     <td data-bind="text: login"></td>
                     <td data-bind="text: role"></td>
                </tr>

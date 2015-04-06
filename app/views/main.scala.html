@@ -14,7 +14,25 @@
         <!-- ko if: $root.chosenSectionId() -->
             <!-- ko if: $root.chosenSectionId().id !== "lgn" -->
                 <!-- ko if: $root.user() -->
+                <div id="wrapper">
                 <div id="context">
+                	<div id="header">
+    					<div id="site_title">
+    						<h1><span data-bind="text: $root.user().company"></span></h1><br/>
+    					</div>
+        				<div id="header_right">
+            			
+                    			Добро пожаловать,
+                    			<span data-bind="text: $root.user().firstName"></span>&nbsp;<span data-bind="text: $root.user().lastName"></span>
+                			<br/>
+                    			Роль:&nbsp;<span data-bind="text: $root.user().role"></span>
+                		<br/>
+                		<div id="logout">
+                    		<a href="#" class="button" name="logoutButton" data-bind="click: $root.loginVM.logoutButton">Выход</a>
+                		</div>	
+         			</div>
+    			</div>
+    			<div class="clr"></div>
                 <div id="menu">
                 <ul data-bind="foreach: menu">
                 	<li data-bind="text: name,
@@ -23,41 +41,20 @@
                 	</li>
                 </ul>
                 </div>
-                <div id="greeting">
-                	<table id="greet">
-            			<tr>
-                			<td>
-                    			Добро пожаловать,<br/>
-                    			<span data-bind="text: $root.user().firstName"></span>&nbsp;<span data-bind="text: $root.user().lastName"></span>
-                			</td>
-                		</tr>
-            			<tr>
-                			<td>
-                    			Роль:&nbsp;<span data-bind="text: $root.user().role"></span>
-                			</td>
-            			</tr>
-            			<tr>
-                			<td>
-                    			Компания:&nbsp;<span data-bind="text: $root.user().company"></span>
-                			</td>
-            			</tr>
-            			<tr>
-                			<td>
-                    		<a href="#" class="button" name="logoutButton" data-bind="click: $root.loginVM.logoutButton">Выход</a>
-                			</td>
-           				</tr>
-        			</table>
-            	</div>
-            	<div class="clr"></div>
-            	@list()
-        		@contactlist()
-        		@orderlist()
-        		@settings()
-        		@contactdetails()
-        		@contactsearch()
-        		@orderdetails()
-        		@ordersearch()
-        		@userdetails()
+            	<div class="clr h20"></div>
+            	
+    			<div id="main">
+            		@list()
+        			@contactlist()
+        			@orderlist()
+        			@settings()
+        			@contactdetails()
+        			@contactsearch()
+        			@orderdetails()
+        			@ordersearch()
+        			@userdetails()
+        		</div>	
+        		</div>
         		</div>
         		<!-- /ko -->
         	<!-- /ko -->
