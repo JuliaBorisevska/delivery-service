@@ -1,6 +1,6 @@
 <!-- ko if: $root.chosenSectionId().id == "lst" -->
 <div class="actions">
-	<button type="button">Удалить пользователей</button>
+	<button type="button" data-bind="click: userlistVM.deleteUsers">Удалить пользователей</button>
 </div>
         <table class="list">
         	<thead>
@@ -19,7 +19,7 @@
         	</thead>
         	<tbody data-bind="foreach: userlistVM.users">
         		<tr>
-                    <td><input type="checkbox"></td>
+                    <td><input type="checkbox" data-bind="value: id, checked: $root.userlistVM.checkedUsers" /></td>
                     <td>
                     	<span data-bind="text:firstName"></span>&nbsp;
                     	<span data-bind="text:lastName"></span>&nbsp;

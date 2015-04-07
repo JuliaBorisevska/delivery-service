@@ -13,6 +13,7 @@ define(["application/service/userService",
         var self = this,
             users = ko.observableArray(),
             numbers = ko.observableArray([]);
+        var checkedUsers = ko.observableArray();
         var list = function(page, pageSize) {
                 userService.list(page, pageSize,
                     new Callback(function(params){
@@ -37,10 +38,15 @@ define(["application/service/userService",
                         }, self, {})
                 )
             };
+        var deleteUsers = function() {
+        	alert(checkedUsers());
+        };
         return {
             users: users,
+            checkedUsers: checkedUsers,
             numbers: numbers,
             list: list,
+            deleteUsers: deleteUsers,
             totalPages: totalPages,
             currentPage: currentPage,
             PAGE_SIZE: PAGE_SIZE,
