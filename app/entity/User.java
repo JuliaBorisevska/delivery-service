@@ -3,10 +3,10 @@ package entity;
 import be.objectify.deadbolt.core.models.Permission;
 import be.objectify.deadbolt.core.models.Role;
 import be.objectify.deadbolt.core.models.Subject;
+import security.SecurityPermission;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,11 +23,17 @@ public class User implements Subject {
     private String identifier;
     private String password;
     private SecurityRole roleByRoleId;
+    public List<SecurityPermission> permissions;
 
     @Override
     @Transient
     public List<? extends Permission> getPermissions() {
-        return Collections.emptyList();
+        return permissions;
+        //return Collections.emptyList();
+    }
+
+    public void setPermissions(List<SecurityPermission> permissions) {
+        this.permissions = permissions;
     }
 
     @Override
