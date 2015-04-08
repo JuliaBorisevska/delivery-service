@@ -1,10 +1,15 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import controllers.BaseController.Reply;
+import controllers.BaseController.Status;
 import dao.UserDAO;
 import dto.UserDTO;
 import entity.Company;
 import entity.User;
+import play.Logger;
+import play.Logger.ALogger;
 import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
 import play.libs.Json;
@@ -13,9 +18,12 @@ import resource.MessageManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
+
 
 
 public class UserController extends BaseController {
+	private static ALogger logger = Logger.of(UserController.class);
 	
     @Transactional
     public static Result listUsers(Integer pageNumber, Integer pageSize) {
@@ -44,5 +52,26 @@ public class UserController extends BaseController {
         );
     }
 	
-	
+    @Transactional
+    public static Result deleteUsers(String ids) {
+    	try{
+    		logger.info("Start deleteUsers method with ids: {}", ids);
+    		Pattern separator;
+    		separator = Pattern.compile(",");
+    		String [] idArray = separator.split(ids);
+    		UserDAO dao = new UserDAO(JPA.em());
+    		for (String id : idArray){
+    			User user = new User();
+    			user.setId(Long.parseLong(id));
+        		dao.delete(user);
+    		}
+    		return ok(Json.toJson(
+                new Reply<>(Status.SUCCESS, ids)
+    			));
+    	}catch(Exception e){
+    		logger.error("Error in deleteUsers method: {}", e);
+    		return badRequest(Json.toJson(
+            		new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
+    	}
+    }
 }

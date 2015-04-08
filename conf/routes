@@ -14,6 +14,7 @@ GET           /contact/list/:page/:pageSize     controllers.ContactController.li
 
 # Users
 GET           /user/list/:page/:pageSize     controllers.UserController.listUsers(page: Integer, pageSize: Integer)
+DELETE        /user/:ids                     controllers.UserController.deleteUsers(ids: String)
 
 #Orders
 GET     /order/setNextStatus/:id        controllers.OrderController.setNextStatus(id: Integer)

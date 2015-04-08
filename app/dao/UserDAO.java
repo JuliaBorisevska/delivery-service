@@ -27,7 +27,7 @@ public class UserDAO extends AbstractDAO<User> {
 	public void delete(User entity) {
 		User user = em.find(User.class, entity.getId());
 		if(user != null) {
-			em.remove(entity);
+			em.remove(user);
 		}
 
 	}

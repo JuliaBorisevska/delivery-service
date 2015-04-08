@@ -57,7 +57,7 @@ define(["application/service/initService",
                                             }
                                         }, this, {}),
                                         new Callback(function(params){
-                                            alert("User isn't authorized");
+                                        	alert(params.reply.responseJSON.data);
                                             location.hash = "lgn";
                                         }, this, {})
                                     );
@@ -78,10 +78,10 @@ define(["application/service/initService",
             		self.userlistVM.list(self.userlistVM.currentPage(), self.userlistVM.PAGE_SIZE);
             		break;
             	case "ctlst":
-            		self.contactListVM.list(1, self.contactListVM.PAGE_SIZE);
+            		self.contactListVM.list(self.contactListVM.currentPage(), self.contactListVM.PAGE_SIZE);
             		break;
             	case "ordlst":
-            		self.orderlistVM.list(self.userlistVM.currentPage(),self.orderlistVM.PAGE_SIZE);
+            		self.orderlistVM.list(self.orderlistVM.currentPage(),self.orderlistVM.PAGE_SIZE);
             		break;
             }
             location.hash = section.id;

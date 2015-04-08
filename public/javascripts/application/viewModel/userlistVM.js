@@ -39,7 +39,26 @@ define(["application/service/userService",
                 )
             };
         var deleteUsers = function() {
-        	alert(checkedUsers());
+        	if (checkedUsers().length<1){
+        		alert("Пользователи не выбраны");
+        		return;
+        	}
+        	//alert(checkedUsers());
+        	userService.remove(checkedUsers(),
+                    new Callback(function(params){
+                            reply = params.reply;
+                            if(reply.status === "SUCCESS") {
+                                currentPage(1);
+                                numbers([]);
+                                list(currentPage(), PAGE_SIZE);
+                            }
+                        }, self, {}
+                    ),
+                    new Callback(function(params){
+                    	alert(params.reply.responseJSON.data);
+                    }, self, {})
+                )
+           checkedUsers([]);
         };
         return {
             users: users,
