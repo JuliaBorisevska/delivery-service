@@ -31,8 +31,9 @@ define(["application/service/contactService",
                             contacts([]);
                             for(var i = 0, lth = reply.data.list.length; i < lth; i++) {
                                 var contact = reply.data.list[i];
-                                contacts.push(new Contact(contact.firstName, contact.lastName, contact.middleName,
-                                    contact.birthday, contact.town, contact.street, contact.house, contact.flat));
+                                contacts.push(new Contact(contact.id, contact.firstName, contact.lastName, contact.middleName,
+                                    contact.birthday, contact.town, contact.street, contact.house, contact.flat,
+                                    contact.companyByCompanyId.id));
                             }
                         }
                     }, self, {}
@@ -46,8 +47,32 @@ define(["application/service/contactService",
             )
         };
         
-        var goToDetails = function(root) {
-                    location.hash = "ctadd";
+        var goToDetails = function(contact, event, root) {
+
+            location.hash = "ctadd";
+
+            contactService.get(contact.id,
+                new Callback(function(params){
+                        reply = params.reply;
+                        if(reply.status === "SUCCESS") {
+                            var contact = reply.data;
+                            root.contactDetailsVM.setContact(
+                                new Contact(contact.id, contact.firstName, contact.lastName, contact.middleName,
+                                    contact.birthday, contact.town, contact.street, contact.house, contact.flat,
+                                    contact.companyByCompanyId.id)
+                            );
+                            root.goTo("ctlst");
+                        }
+                    }, self, {}
+                ),
+                new Callback(function(params){
+                        reply = params.reply;
+                        var message = reply.responseText ? reply.responseText : reply.statusText;
+                        alert(message);
+                    }, self, {}
+                )
+            );
+
         };
 
         return {

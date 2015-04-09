@@ -12,7 +12,6 @@ define(["application/service/baseService"], function(baseService) {
                 done
             );
         };
-        /*
 
         self.add = function(contact, success, error, done) {
             baseService.send(
@@ -57,16 +56,13 @@ define(["application/service/baseService"], function(baseService) {
                 done
             );
         };
-        */
 
         return {
-            list: self.list
-            /*,
+            list: self.list,
             add: self.add,
             get: self.get,
             update: self.update,
-            remove: self.removez
-            */
+            remove: self.remove
         }
     }
 

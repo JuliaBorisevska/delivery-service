@@ -78,7 +78,7 @@ define(["application/service/initService",
             		self.userlistVM.list(self.userlistVM.currentPage(), self.userlistVM.PAGE_SIZE);
             		break;
             	case "ctlst":
-            		self.contactListVM.list(1, self.contactListVM.PAGE_SIZE);
+            		self.contactListVM.list(self.contactListVM.currentPage(), self.contactListVM.PAGE_SIZE);
             		break;
             	case "ordlst":
             		self.orderlistVM.list(self.userlistVM.currentPage(),self.orderlistVM.PAGE_SIZE);

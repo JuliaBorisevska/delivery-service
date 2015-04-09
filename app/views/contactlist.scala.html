@@ -15,7 +15,7 @@
         <tbody data-bind="foreach: contactListVM.contacts">
                 <tr>
                         <td><input type="checkbox"></td>
-                        <td>
+                        <td data-bind="attr: { id: id }, click: function(contact, evt) {$root.contactListVM.goToDetails(contact, evt, $root)}">
                                 <span data-bind="text: lastName">&nbsp;</span>
                                 <span data-bind="text: firstName">&nbsp;</span>
                                 <span data-bind="text: middleName"></span>
@@ -31,12 +31,8 @@
         </tbody>
 </table>
 
-
-<a href="#" data-bind="click: contactListVM.goToDetails">Детали</a>
-
-
 <div class="pagination">
-        <a id="first" href="#" data-bind="click: function (data, event) { $root.navigate($root.contactListVM, data,event); }, css: { disabled: contactListVM.currentPage() === 1 }">В начало</a>
+        <a id="first" href="#" data-bind="click: function (data, event) { $root.navigate($root.contactListVM,data,event); }, css: { disabled: contactListVM.currentPage() === 1 }">В начало</a>
         <a id="prev" href="#" data-bind="click: function (data, event) { $root.navigate($root.contactListVM,data,event); }, css: { disabled: contactListVM.currentPage() === 1 }"><<</a>
                 <!-- ko foreach: contactListVM.numbers -->
         <a id="block" href="#" data-bind="click: function (data, event) { $root.navigate($root.contactListVM,data,event); }, text: $data, css: { current: $root.contactListVM.currentPage() == $data}"></a>
