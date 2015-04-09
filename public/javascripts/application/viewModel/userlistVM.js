@@ -13,6 +13,7 @@ define(["application/service/userService",
         var self = this,
             users = ko.observableArray(),
             numbers = ko.observableArray([]);
+        var checkedUsers = ko.observableArray();
         var list = function(page, pageSize) {
                 userService.list(page, pageSize,
                     new Callback(function(params){
@@ -37,10 +38,34 @@ define(["application/service/userService",
                         }, self, {})
                 )
             };
+        var deleteUsers = function() {
+        	if (checkedUsers().length<1){
+        		alert("Пользователи не выбраны");
+        		return;
+        	}
+        	//alert(checkedUsers());
+        	userService.remove(checkedUsers(),
+                    new Callback(function(params){
+                            reply = params.reply;
+                            if(reply.status === "SUCCESS") {
+                                currentPage(1);
+                                numbers([]);
+                                list(currentPage(), PAGE_SIZE);
+                            }
+                        }, self, {}
+                    ),
+                    new Callback(function(params){
+                    	alert(params.reply.responseJSON.data);
+                    }, self, {})
+                )
+           checkedUsers([]);
+        };
         return {
             users: users,
+            checkedUsers: checkedUsers,
             numbers: numbers,
             list: list,
+            deleteUsers: deleteUsers,
             totalPages: totalPages,
             currentPage: currentPage,
             PAGE_SIZE: PAGE_SIZE,

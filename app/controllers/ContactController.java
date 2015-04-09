@@ -1,8 +1,5 @@
 package controllers;
 
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Pattern;
-import be.objectify.deadbolt.java.actions.Restrict;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dao.CompanyDAO;
 import dao.ContactDAO;
@@ -20,8 +17,8 @@ import java.util.Map;
 /**
  * @Author ValentineS. Created 28.03.2015.
  */
-@Restrict(@Group("!group_name"))
-
+//@Restrict(@Group("!group_name"))
+// @Pattern("!permission_name")
 public class ContactController extends BaseController {
 
     @Transactional
@@ -37,9 +34,7 @@ public class ContactController extends BaseController {
         return ok(Json.toJson(reply));
     }
 
-
     @Transactional
-    @Pattern("ctlst")
     public static Result listContacts(Integer pageNumber, Integer pageSize) {
 
         if(pageNumber == null || pageSize == null || pageNumber <= 0 || pageNumber <= 0) {
@@ -61,7 +56,6 @@ public class ContactController extends BaseController {
     }
 
     @Transactional
-    @Pattern("ctadd")
     public static Result createContact() {
 
         Contact contact = new Contact();
@@ -96,7 +90,6 @@ public class ContactController extends BaseController {
                 new Reply<>(Status.SUCCESS, contact)
         ));
     }
-
 
     private static void setContactFields(Contact contact, Map<String, String[]> values) {
 

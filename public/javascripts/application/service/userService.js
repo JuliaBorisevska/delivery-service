@@ -13,8 +13,20 @@ define(["application/service/baseService"], function(baseService) {
             );
         };
 
+        self.remove = function(ids, success, error, done) {
+            baseService.send(
+                "/user/" + ids,
+                "DELETE",
+                {},
+                success,
+                error,
+                done
+            );
+        };
+        
         return {
-            list: self.list
+            list: self.list,
+            remove: self.remove
         }
     }
 

@@ -1,3 +1,48 @@
 <!-- ko if: $root.chosenSectionId().id == "ctadd" -->
-       contact creation/changing
+<input type="hidden" name="id" data-bind="attr: {value: $root.contactDetailsVM.contact.id}"/>
+
+<table class="list">
+       <tr>
+              <td>Имя</td>
+              <td><input type="text" name="firstName" id="firstName" data-bind="value: $root.contactDetailsVM.contact().firstName"></td>
+       </tr>
+       <tr>
+              <td>Фамилия</td>
+              <td><input type="text" name="lastName" id="lastName" data-bind="value: $root.contactDetailsVM.contact().lastName"></td>
+       </tr>
+       <tr>
+              <td>Отчество</td>
+              <td><input type="text" name="middleName" id="middleName" data-bind="value: $root.contactDetailsVM.contact().middleName"></td>
+       </tr>
+       <tr>
+              <td>Дата рождения</td>
+              <td><input type="text" name="birthday" id="birthday" data-bind="value: $root.contactDetailsVM.contact().birthday"></td>
+       </tr>
+       <tr>
+              <td>Email</td>
+              <td><input type="text" name="email" id="email" data-bind="value: $root.contactDetailsVM.contact().email"></td>
+       </tr>
+       <tr>
+              <td>Компания</td>
+              <td><input type="text" name="company" id="company" data-bind="value: $root.contactDetailsVM.contact().companyId"></td>
+       </tr>
+       <tr>
+              <td>Город</td>
+              <td><input type="text" name="town" id="town" data-bind="value: $root.contactDetailsVM.contact().town"></td>
+       </tr>
+       <tr>
+              <td>Улица</td>
+              <td><input type="text" name="street" id="street" data-bind="value: $root.contactDetailsVM.contact().street"></td>
+       </tr>
+       <tr>
+              <td>Дом</td>
+              <td><input type="text" name="house" id="house" data-bind="value: $root.contactDetailsVM.contact().house"></td>
+       </tr>
+       <tr>
+              <td>Квартира</td>
+              <td><input type="text" name="flat" id="flat" data-bind="value: $root.contactDetailsVM.contact().flat"></td>
+       </tr>
+</table>
+
+<a class="button" href="#" data-bind="">Добавить</a>
 <!-- /ko -->

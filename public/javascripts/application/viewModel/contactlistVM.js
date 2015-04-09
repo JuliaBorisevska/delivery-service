@@ -12,9 +12,9 @@ define(["application/service/contactService",
             currentPage = ko.observable(1),
             totalPages = ko.observable(),
             numbers = ko.observableArray([]),
-
-            reply,
-        list = function(page, pageSize) {
+            reply;
+        var checkedContacts = ko.observableArray();
+        var list = function(page, pageSize) {
             contactService.list(page, pageSize,
                 new Callback(function(params){
                         reply = params.reply;
@@ -27,12 +27,12 @@ define(["application/service/contactService",
                                     numbers.push(k);
                                 }
                             }
-
                             contacts([]);
                             for(var i = 0, lth = reply.data.list.length; i < lth; i++) {
                                 var contact = reply.data.list[i];
-                                contacts.push(new Contact(contact.firstName, contact.lastName, contact.middleName,
-                                    contact.birthday, contact.town, contact.street, contact.house, contact.flat));
+                                contacts.push(new Contact(contact.id, contact.firstName, contact.lastName, contact.middleName,
+                                    contact.birthday, contact.town, contact.street, contact.house, contact.flat,
+                                    contact.companyByCompanyId.id));
                             }
                         }
                     }, self, {}
@@ -46,15 +46,62 @@ define(["application/service/contactService",
             )
         };
         
-        var goToDetails = function(root) {
-                    location.hash = "ctadd";
+        var goToDetails = function(contact, event, root) {
+
+            location.hash = "ctadd";
+
+            contactService.get(contact.id,
+                new Callback(function(params){
+                        reply = params.reply;
+                        if(reply.status === "SUCCESS") {
+                            var contact = reply.data;
+                            root.contactDetailsVM.setContact(
+                                new Contact(contact.id, contact.firstName, contact.lastName, contact.middleName,
+                                    contact.birthday, contact.town, contact.street, contact.house, contact.flat,
+                                    contact.companyByCompanyId.id)
+                            );
+                            root.goTo("ctlst");
+                        }
+                    }, self, {}
+                ),
+                new Callback(function(params){
+                        reply = params.reply;
+                        var message = reply.responseText ? reply.responseText : reply.statusText;
+                        alert(message);
+                    }, self, {}
+                )
+            );
+
+        };
+        
+        var deleteContacts = function() {
+        	if (checkedContacts().length<1){
+        		alert("Контакты не выбраны");
+        		return;
+        	}
+        	contactService.remove(checkedContacts(),
+                    new Callback(function(params){
+                            reply = params.reply;
+                            if(reply.status === "SUCCESS") {
+                                currentPage(1);
+                                numbers([]);
+                                list(currentPage(), PAGE_SIZE);
+                            }
+                        }, self, {}
+                    ),
+                    new Callback(function(params){
+                    	alert(params.reply.responseJSON.data);
+                    }, self, {})
+                )
+           checkedContacts([]);
         };
 
         return {
             contacts: contacts,
             numbers: numbers,
             list: list,
-
+            deleteContacts: deleteContacts,
+            checkedContacts: checkedContacts,
             totalPages: totalPages,
             currentPage: currentPage,
             PAGE_SIZE: PAGE_SIZE,

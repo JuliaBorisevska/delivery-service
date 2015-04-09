@@ -60,7 +60,7 @@ public class Application extends BaseController {
     	try{
     	logger.info("Start getCurrentUser method");
     	User user = null;
-        String token = request().cookie("token").value();
+        String token = request().cookie("token").value();  //проверка на null и сообщение, что пользователь не авторизован
         UserDAO userDAO = new UserDAO(JPA.em());
         user = userDAO.findByToken(token);
         if (user == null) {
