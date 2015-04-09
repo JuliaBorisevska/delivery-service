@@ -10,8 +10,11 @@ POST          /login                            controllers.Application.login()
 POST          /logout                           controllers.Application.logout()
 
 # Contacts
+
 GET           /contact/list/:page/:pageSize     controllers.ContactController.listContacts(page: Integer, pageSize: Integer)
 DELETE        /contact/:ids                     controllers.ContactController.deleteContacts(ids: String)
+GET           /contact/:id                      controllers.ContactController.getContact(id: Long)
+POST          /contact                          controllers.ContactController.createContact()
 
 # Users
 GET           /user/list/:page/:pageSize     controllers.UserController.listUsers(page: Integer, pageSize: Integer)

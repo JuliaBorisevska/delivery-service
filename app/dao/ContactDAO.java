@@ -60,6 +60,24 @@ public class ContactDAO extends AbstractDAO<Contact> {
         em.persist(entity);
     }
 
+    public List<Contact> getContactList(Integer pageNumber, Integer pageSize, Integer companyId) {
+
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Contact> criteriaQuery = criteriaBuilder.createQuery(Contact.class);
+        Root<Contact> from = criteriaQuery.from(Contact.class);
+
+        CriteriaQuery<Contact> select = criteriaQuery.select(from);
+
+        //where
+        criteriaQuery.where(criteriaBuilder.equal(from.get("company_id"), companyId));
+
+        TypedQuery<Contact> q = em.createQuery(select);
+        q.setFirstResult((pageNumber - 1) * pageSize);
+        q.setMaxResults(pageSize);
+
+        return q.getResultList();
+    }
+
     public List<Contact> getContactList(Integer pageNumber, Integer pageSize) {
 
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
@@ -67,6 +85,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
         Root<Contact> from = criteriaQuery.from(Contact.class);
 
         CriteriaQuery<Contact> select = criteriaQuery.select(from);
+
         TypedQuery<Contact> q = em.createQuery(select);
         q.setFirstResult((pageNumber - 1) * pageSize);
         q.setMaxResults(pageSize);

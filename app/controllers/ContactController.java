@@ -27,7 +27,8 @@ import java.util.regex.Pattern;
 /**
  * @Author ValentineS. Created 28.03.2015.
  */
-@Restrict(@Group("!group_name"))
+//@Restrict(@Group("!group_name"))
+// @Pattern("!permission_name")
 public class ContactController extends BaseController {
 	private static ALogger logger = Logger.of(ContactController.class);
 	
