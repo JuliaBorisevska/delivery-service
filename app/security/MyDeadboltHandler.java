@@ -13,9 +13,6 @@ import play.mvc.Result;
 import play.mvc.Results;
 import views.html.accesserror;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by antonkw on 30.03.2015.
  */
@@ -34,9 +31,7 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
         String token = var1.request().cookie("token").value();
         UserDAO userDAO = new UserDAO(JPA.em());
         user = userDAO.findByToken(token);
-        List<SecurityPermission> permissions = new ArrayList<>();
-        permissions.add(new SecurityPermission("permission"));
-        user.setPermissions(permissions);
+        user.setPermissions(PermissionsHandler.getInstance().getPermissions(user.getRoleByRoleId()));
         logger.info("check role of user: {}, role: {}", user.getIdentifier(), user.getRoles().get(0).getName());
         return user;
     }

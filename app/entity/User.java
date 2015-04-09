@@ -29,7 +29,6 @@ public class User implements Subject {
     @Transient
     public List<? extends Permission> getPermissions() {
         return permissions;
-        //return Collections.emptyList();
     }
 
     public void setPermissions(List<SecurityPermission> permissions) {

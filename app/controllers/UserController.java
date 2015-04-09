@@ -1,5 +1,6 @@
 package controllers;
 
+import be.objectify.deadbolt.java.actions.Pattern;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dao.UserDAO;
 import dto.UserDTO;
@@ -18,6 +19,7 @@ import java.util.List;
 public class UserController extends BaseController {
 	
     @Transactional
+    @Pattern("lst")
     public static Result listUsers(Integer pageNumber, Integer pageSize) {
         if(pageNumber == null || pageSize == null || pageNumber <= 0 || pageNumber <= 0) {
                 return badRequest(Json.toJson(
