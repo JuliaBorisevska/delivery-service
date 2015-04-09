@@ -1,6 +1,6 @@
 <!-- ko if: $root.chosenSectionId().id == "ctlst" -->
 <div class="actions">
-	<button type="button">Удалить контакты</button>
+	<button type="button" data-bind="click: contactListVM.deleteContacts">Удалить контакты</button>
 	<button type="button">Отправить Email</button>
 </div>
 <table class="list">
@@ -14,7 +14,7 @@
         </thead>
         <tbody data-bind="foreach: contactListVM.contacts">
                 <tr>
-                        <td><input type="checkbox"></td>
+                        <td><input type="checkbox" data-bind="value: id, checked: $root.contactListVM.checkedContacts" ></td>
                         <td>
                                 <span data-bind="text: lastName">&nbsp;</span>
                                 <span data-bind="text: firstName">&nbsp;</span>

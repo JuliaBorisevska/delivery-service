@@ -46,10 +46,11 @@ define(["application/service/baseService"], function(baseService) {
                 done
             );
         };
-
-        self.remove = function(id, success, error, done) {
+        */
+        
+        self.remove = function(ids, success, error, done) {
             baseService.send(
-                "/contact/" + id,
+                "/contact/" + ids,
                 "DELETE",
                 {},
                 success,
@@ -57,15 +58,14 @@ define(["application/service/baseService"], function(baseService) {
                 done
             );
         };
-        */
 
         return {
-            list: self.list
+            list: self.list,
+            remove: self.remove
             /*,
             add: self.add,
             get: self.get,
             update: self.update,
-            remove: self.removez
             */
         }
     }

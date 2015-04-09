@@ -8,7 +8,7 @@ import java.util.List;
 @Table(name = "contact")
 public class Contact {
 
-    private Integer id;
+    private Long id;
     private String firstName;
     private String lastName;
     private String middleName;
@@ -24,11 +24,11 @@ public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, insertable = true, updatable = true)
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

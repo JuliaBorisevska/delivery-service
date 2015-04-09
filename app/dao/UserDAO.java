@@ -3,6 +3,8 @@ package dao;
 import entity.Company;
 import entity.Contact;
 import entity.User;
+import play.Logger;
+import play.Logger.ALogger;
 import play.db.jpa.JPA;
 
 import javax.persistence.EntityManager;
@@ -15,21 +17,36 @@ import javax.persistence.criteria.Root;
 
 
 
+
+
 import java.util.List;
 
 public class UserDAO extends AbstractDAO<User> {
-
+	private static ALogger logger = Logger.of(UserDAO.class);
+	
 	public UserDAO(EntityManager em) {
 		super(em);
 	}
 
 	@Override
 	public void delete(User entity) {
-		User user = em.find(User.class, entity.getId());
+		logger.info("Start delete with user id - {} and company id - {}",entity.getId(), entity.getContactByContactId().getCompanyByCompanyId().getId());
+		/*User user = em.find(User.class, entity.getId());
 		if(user != null) {
 			em.remove(user);
+		}*/
+		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<User> query = criteriaBuilder.createQuery(User.class);
+        Root<User> fromUser = query.from(User.class);
+		Join<User, Contact> fromContact = fromUser.join("contactByContactId");
+		Join<Contact, Company> fromCompany = fromContact.join("companyByCompanyId");
+		query.select(fromUser).where(criteriaBuilder.equal(fromCompany.get("id"), entity.getContactByContactId().getCompanyByCompanyId().getId()),
+										criteriaBuilder.equal(fromUser.get("id"), entity.getId()));
+		List<User> users = em.createQuery(query).getResultList();
+		if(!users.isEmpty()) {
+			em.remove(users.get(0));
+			logger.info("User with id - {} and company id - {} is deleted",entity.getId(), entity.getContactByContactId().getCompanyByCompanyId().getId());
 		}
-
 	}
 
 	@Override

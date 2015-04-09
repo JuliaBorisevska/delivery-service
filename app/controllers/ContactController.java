@@ -2,26 +2,36 @@ package controllers;
 
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import controllers.BaseController.Reply;
+import controllers.BaseController.Status;
 import dao.CompanyDAO;
 import dao.ContactDAO;
 import entity.Company;
 import entity.Contact;
+import play.Logger;
+import play.Logger.ALogger;
 import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
 import play.libs.Json;
 import play.mvc.Result;
+import resource.MessageManager;
 
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * @Author ValentineS. Created 28.03.2015.
  */
 @Restrict(@Group("!group_name"))
 public class ContactController extends BaseController {
-
+	private static ALogger logger = Logger.of(ContactController.class);
+	
+	
     @Transactional
     public static Result getContact(Long id) {
 
@@ -134,12 +144,32 @@ public class ContactController extends BaseController {
     }
 
     @Transactional
-    public static Result deleteContact(Long id) {
-
-        ContactDAO contactDAO = new ContactDAO(JPA.em());
-        contactDAO.delete(id);
-        return ok(Json.toJson(
-                new Reply<>(Status.SUCCESS, id)
-        ));
+    public static Result deleteContacts(String ids) {
+    	try{
+    		logger.info("Start deleteContacts method with ids: {}", ids);
+    		
+    		///////////////////
+    		Company company = new Company();
+    		company.setId(2);
+    		///////////////////
+    		
+    		Pattern separator;
+    		separator = Pattern.compile(",");
+    		String [] idArray = separator.split(ids);
+    		ContactDAO contactDAO = new ContactDAO(JPA.em());
+    		for (String id : idArray){
+    			Contact contact = new Contact();
+    			contact.setCompanyByCompanyId(company);
+    			contact.setId(Long.parseLong(id));
+    			contactDAO.delete(contact);
+    		}
+    		return ok(Json.toJson(
+                new Reply<>(Status.SUCCESS, ids)
+    			));
+    	}catch(Exception e){
+    		logger.error("Error in deleteContacts method: {}", e);
+    		return badRequest(Json.toJson(
+            		new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
+    	}
     }
 }

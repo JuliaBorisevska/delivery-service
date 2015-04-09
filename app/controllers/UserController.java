@@ -7,6 +7,7 @@ import controllers.BaseController.Status;
 import dao.UserDAO;
 import dto.UserDTO;
 import entity.Company;
+import entity.Contact;
 import entity.User;
 import play.Logger;
 import play.Logger.ALogger;
@@ -59,9 +60,16 @@ public class UserController extends BaseController {
     		Pattern separator;
     		separator = Pattern.compile(",");
     		String [] idArray = separator.split(ids);
+    		///////////////////
+    		Company company = new Company();
+    		company.setId(2);
+    		///////////////////
     		UserDAO dao = new UserDAO(JPA.em());
     		for (String id : idArray){
     			User user = new User();
+    			Contact contact = new Contact();
+    			contact.setCompanyByCompanyId(company);
+    			user.setContactByContactId(contact);
     			user.setId(Long.parseLong(id));
         		dao.delete(user);
     		}
