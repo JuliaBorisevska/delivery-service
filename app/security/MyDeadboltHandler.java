@@ -5,6 +5,7 @@ import be.objectify.deadbolt.java.AbstractDeadboltHandler;
 import be.objectify.deadbolt.java.DynamicResourceHandler;
 import dao.UserDAO;
 import entity.User;
+import handler.ConfigContainer;
 import play.Logger;
 import play.db.jpa.JPA;
 import play.libs.F;
@@ -13,8 +14,8 @@ import play.mvc.Result;
 import play.mvc.Results;
 import views.html.accesserror;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.text.ParseException;
 
 /**
  * Created by antonkw on 30.03.2015.
@@ -34,9 +35,11 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
         String token = var1.request().cookie("token").value();
         UserDAO userDAO = new UserDAO(JPA.em());
         user = userDAO.findByToken(token);
-        List<SecurityPermission> permissions = new ArrayList<>();
-        permissions.add(new SecurityPermission("permission"));
-        user.setPermissions(permissions);
+        try {
+            user.setPermissions(ConfigContainer.getInstance().getPermissionHandler().getPermissions(user.getRoleByRoleId()));
+        } catch (IOException | ParseException e) {
+            logger.error("Exception during set permissions", e);
+        }
         logger.info("check role of user: {}, role: {}", user.getIdentifier(), user.getRoles().get(0).getName());
         return user;
     }

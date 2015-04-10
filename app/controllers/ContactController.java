@@ -1,12 +1,7 @@
 package controllers;
 
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import controllers.BaseController.Reply;
-import controllers.BaseController.Status;
 import dao.CompanyDAO;
 import dao.ContactDAO;
 import entity.Company;
@@ -31,7 +26,6 @@ import java.util.Map;
 // @Pattern("!permission_name")
 public class ContactController extends BaseController {
 	private static ALogger logger = Logger.of(ContactController.class);
-	
 	
     @Transactional
     public static Result getContact(Long id) {

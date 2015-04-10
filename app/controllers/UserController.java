@@ -1,9 +1,7 @@
 package controllers;
 
+import be.objectify.deadbolt.java.actions.Pattern;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import controllers.BaseController.Reply;
-import controllers.BaseController.Status;
 import dao.UserDAO;
 import dto.UserDTO;
 import entity.Company;
@@ -26,6 +24,7 @@ public class UserController extends BaseController {
 	private static ALogger logger = Logger.of(UserController.class);
 	
     @Transactional
+    @Pattern("lst")
     public static Result listUsers(Integer pageNumber, Integer pageSize) {
         logger.info("Start listUsers method");
     	if(pageNumber == null || pageSize == null || pageNumber <= 0 || pageNumber <= 0) {

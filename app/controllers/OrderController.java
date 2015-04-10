@@ -1,7 +1,7 @@
 package controllers;
 
+import be.objectify.deadbolt.java.actions.Pattern;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import dao.OrderDAO;
 import dao.StatusDAO;
 import dto.OrderDTO;
@@ -12,11 +12,10 @@ import play.db.jpa.Transactional;
 import play.libs.Json;
 import play.mvc.Result;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import javax.persistence.EntityManager;
 
 /**
  * Created by hanna.kubarka on 30.03.2015.
@@ -51,6 +50,7 @@ public class OrderController extends BaseController {
     */
 
     @Transactional
+    @Pattern("ordlst")
     public static Result listOrders(Integer pageNumber, Integer pageSize) {
     	EntityManager em = JPA.em();
     	OrderDAO orderDAO = new OrderDAO(em);
@@ -79,6 +79,7 @@ public class OrderController extends BaseController {
     }
 
     @Transactional
+    @Pattern("ordadd")
     public static Result createOrder() {
     	OrderDAO orderDAO = new OrderDAO(JPA.em());
         Order order = new Order();
