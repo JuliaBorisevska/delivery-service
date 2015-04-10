@@ -15,7 +15,7 @@ import java.util.List;
 public class Order {
 
     @GeneratedValue
-    private Integer id;
+    private Long id;
     private Timestamp orderDate;
     private String description;
     private Double totalPrice;
@@ -31,11 +31,11 @@ public class Order {
 
     @Id
     @Column(name = "id")
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

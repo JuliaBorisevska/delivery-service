@@ -39,6 +39,18 @@ public class Application extends BaseController {
     	return ok(main.render());
     }
     
+    @Transactional
+    public static User recieveUserByToken(){
+    	logger.info("Start recieveUserByToken method");
+    	User user = null;
+    	if (request().cookie("token")!=null){
+    		String token = request().cookie("token").value();
+    		UserDAO userDAO = new UserDAO(JPA.em());
+            user = userDAO.findByToken(token);
+    	}
+    	return user;
+    }
+    
     public static Result getSectionsFromJson() {
     	logger.info("Start getSectionsFromJson method");
     	try{
@@ -59,10 +71,7 @@ public class Application extends BaseController {
     public static Result getCurrentUser() {
     	try{
     	logger.info("Start getCurrentUser method");
-    	User user = null;
-        String token = request().cookie("token").value();  //проверка на null и сообщение, что пользователь не авторизован
-        UserDAO userDAO = new UserDAO(JPA.em());
-        user = userDAO.findByToken(token);
+    	User user = recieveUserByToken();
         if (user == null) {
 			return badRequest(Json.toJson(
 		            new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));

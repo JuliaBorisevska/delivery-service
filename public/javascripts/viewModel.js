@@ -24,6 +24,11 @@ define(["application/service/initService",
     	var app = Sammy(function() {
             this.get('#:section', function() {
                 var sectionId = this.params.section;
+                /*if (sectionId==="lgn"){
+                	self.contactListVM.numbers([]);
+                    self.orderlistVM.numbers([]);
+                    self.userlistVM.numbers([]);
+                }*/
                 for(var ind in self.sections) {
                     if(self.sections.hasOwnProperty(ind) && self.sections[ind].id === sectionId) {
                     	self.chosenSectionId(self.sections[ind]);
@@ -46,8 +51,9 @@ define(["application/service/initService",
                     if(reply.status === "SUCCESS") {
                     	self.sections = reply.data;
                     	if (sessionStorage){
-                    		var data = sessionStorage.getItem("current");
-                            if (data){
+                    		var sect = JSON.parse(sessionStorage.getItem("current"));
+                            if (sect){
+                    		if (sect.id!="lgn"){
                             	initService.getUser(
                                         new Callback(function(params){
                                             var reply = params.reply,
@@ -61,7 +67,8 @@ define(["application/service/initService",
                                             location.hash = "lgn";
                                         }, this, {})
                                     );
-                            	self.chosenSectionId(data);
+                            	self.chosenSectionId(sect);
+                            }
                             }
                     	}   
                     	app.run();
@@ -75,13 +82,19 @@ define(["application/service/initService",
         self.goTo = function(section) {
             switch (section.id){
             	case "lst":
+                    self.userlistVM.numbers([]);
+                    self.userlistVM.currentPage(1);
             		self.userlistVM.list(self.userlistVM.currentPage(), self.userlistVM.PAGE_SIZE);
             		break;
             	case "ctlst":
+            		self.contactListVM.currentPage(1);
+            		self.contactListVM.numbers([]);
             		self.contactListVM.list(self.contactListVM.currentPage(), self.contactListVM.PAGE_SIZE);
             		break;
             	case "ordlst":
-            		self.orderlistVM.list(self.orderlistVM.currentPage(),self.orderlistVM.PAGE_SIZE);
+            		self.orderlistVM.currentPage(1);
+                    self.orderlistVM.numbers([]);
+            		self.orderlistVM.list(self.orderlistVM.currentPage(), self.orderlistVM.PAGE_SIZE);
             		break;
             }
             location.hash = section.id;

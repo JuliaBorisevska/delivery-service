@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @Table(name = "order_history", schema = "", catalog = "delivery_service")
 public class OrderHistory {
     @GeneratedValue
-    private Integer id;
+    private Long id;
     private Timestamp modificationDate;
     private String userComment;
     @Constraints.Required
@@ -24,11 +24,11 @@ public class OrderHistory {
 
     @Id
     @Column(name = "id")
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -3,7 +3,7 @@ define(["application/service/baseService"], function(baseService) {
 
     function OrderService(){
         var self = this;
-
+/*
         self.add = function(order, success, error, done) {
             baseService.send(
                 "/order",
@@ -14,7 +14,8 @@ define(["application/service/baseService"], function(baseService) {
                 done
             );
         };
-
+*/
+        /*
         self.setNextStatus  = function(id, success, error, done){
 
             baseService.send(
@@ -26,7 +27,7 @@ define(["application/service/baseService"], function(baseService) {
                 done
             );
         };
-
+		*/
         self.list = function(page, pageSize, success, error, done) {
             baseService.send(
                 "/order/list/" + page + "/" + pageSize,
@@ -37,7 +38,7 @@ define(["application/service/baseService"], function(baseService) {
                 done
             );
         };
-
+/*
         self.get = function(id, success, error, done) {
             baseService.send(
                 "/order/" + id,
@@ -69,15 +70,15 @@ define(["application/service/baseService"], function(baseService) {
                 error,
                 done
             );
-        };
+        };*/
 
         return {
-            add: self.add,
-            list: self.list,
-            get: self.get,
-            update: self.update,
-            remove: self.remove,
-            setNextStatus: self.setNextStatus
+            //add: self.add,
+            list: self.list
+            //get: self.get,
+            //update: self.update,
+            //remove: self.remove,
+            //setNextStatus: self.setNextStatus
 
         }
     }

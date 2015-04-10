@@ -1,12 +1,12 @@
 logs
-project/project
+project/project/
 project/target
 target
 tmp
 .history
 dist
 /.idea
-/.sbtserver/*
+/.sbtserver
 /*.iml
 /out
 /.idea_modules

@@ -11,24 +11,23 @@ import java.util.ArrayList;
  */
 public class OrderDTO {
 
-    public Integer id;
+    public Long id;
     public String description;
     public Double price;
-    public String customer;
-    public String recipient;
-    public String user;
+    //public String customer;
+    //public String recipient;
+    //public String user;
     public String orderStatus;
     public String date;
-    public String nextStatus;
+    //public String nextStatus;
 
-    public static OrderDTO getOrder(Order order, ArrayList<Status> statusList) {
+    public static OrderDTO getOrder(Order order) {
 
         OrderDTO dto = new OrderDTO();
         dto.id = order.getId();
         dto.description = order.getDescription();
         dto.price  = order.getTotalPrice();
-        //dto.customer = order.getCustomerByContactId().getLogin();
-        dto.customer = order.getCustomerByContactId().getContactByContactId().getLastName();
+        //dto.customer = order.getCustomerByContactId().getContactByContactId().getLastName();
         StringBuilder stringdate = new StringBuilder();
         stringdate
                 .append(order.getOrderDate().toLocalDateTime().getHour())
@@ -44,10 +43,9 @@ public class OrderDTO {
         dto.date = stringdate.toString();
 
 
-        dto.user = order.getUserByUserId().getContactByContactId().getLastName();
-        dto.recipient = order.getRecipientByContactId().getContactByContactId().getLastName();
+        //dto.user = order.getUserByUserId().getContactByContactId().getLastName();
+        //dto.recipient = order.getRecipientByContactId().getContactByContactId().getLastName();
         dto.orderStatus = order.getStatusByStatusId().getTitle();
-        dto.nextStatus = statusList.get(statusList.indexOf(order.getStatusByStatusId())+1).getTitle();
         return dto;
 
     }

@@ -26,7 +26,7 @@ define(["application/service/authService",
                 authService.logout(
                     new Callback(function(){
                         login("");
-                        password(""); 
+                        password("");
                         location.hash = "lgn";
                     }, this, {}),
                     new Callback(function(params) {

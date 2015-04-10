@@ -38,7 +38,7 @@ public class OrderController extends BaseController {
         Reply<Order> reply = new Reply<>(Status.SUCCESS, order);
         return ok(Json.toJson(reply));
     }
-
+/*
     @Transactional
     public static Result setNextStatus(Integer id){
     	OrderDAO orderDAO = new OrderDAO(JPA.em());
@@ -47,9 +47,8 @@ public class OrderController extends BaseController {
         return ok(Json.toJson(
                 new Reply<>(Status.SUCCESS, id)
         ));
-
-
     }
+    */
 
     @Transactional
     public static Result listOrders(Integer pageNumber, Integer pageSize) {
@@ -67,7 +66,7 @@ public class OrderController extends BaseController {
         List<Order> orderList = orderDAO.getOrderList(pageNumber, pageSize);
         List<OrderDTO> dtoList = new ArrayList<>();
         for(Order ord : orderList) {
-            dtoList.add(OrderDTO.getOrder(ord, statuslist));
+            dtoList.add(OrderDTO.getOrder(ord));
         }
 
         ObjectNode result = Json.newObject();

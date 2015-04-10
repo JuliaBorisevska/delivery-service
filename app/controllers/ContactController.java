@@ -11,6 +11,7 @@ import dao.CompanyDAO;
 import dao.ContactDAO;
 import entity.Company;
 import entity.Contact;
+import entity.User;
 import play.Logger;
 import play.Logger.ALogger;
 import play.db.jpa.JPA;
@@ -22,7 +23,6 @@ import resource.MessageManager;
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * @Author ValentineS. Created 28.03.2015.
@@ -148,14 +148,14 @@ public class ContactController extends BaseController {
     public static Result deleteContacts(String ids) {
     	try{
     		logger.info("Start deleteContacts method with ids: {}", ids);
-    		
-    		///////////////////
-    		Company company = new Company();
-    		company.setId(2);
-    		///////////////////
-    		
-    		Pattern separator;
-    		separator = Pattern.compile(",");
+    		User user = Application.recieveUserByToken();
+            if (user == null) {
+    			return badRequest(Json.toJson(
+    		            new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
+    		}
+            Company company = user.getContactByContactId().getCompanyByCompanyId();
+            java.util.regex.Pattern separator;
+    		separator = java.util.regex.Pattern.compile(",");
     		String [] idArray = separator.split(ids);
     		ContactDAO contactDAO = new ContactDAO(JPA.em());
     		for (String id : idArray){

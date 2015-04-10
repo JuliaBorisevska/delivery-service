@@ -21,7 +21,7 @@ GET           /user/list/:page/:pageSize     controllers.UserController.listUser
 DELETE        /user/:ids                     controllers.UserController.deleteUsers(ids: String)
 
 #Orders
-GET     /order/setNextStatus/:id        controllers.OrderController.setNextStatus(id: Integer)
+#GET     /order/setNextStatus/:id        controllers.OrderController.setNextStatus(id: Integer)
 GET     /order/list/:page/:pageSize     controllers.OrderController.listOrders(page:Integer, pageSize: Integer)
 
 # Map static resources from the /public folder to the /assets URL path

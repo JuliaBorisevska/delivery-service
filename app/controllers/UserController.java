@@ -19,7 +19,6 @@ import resource.MessageManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 
 
@@ -28,14 +27,17 @@ public class UserController extends BaseController {
 	
     @Transactional
     public static Result listUsers(Integer pageNumber, Integer pageSize) {
-        if(pageNumber == null || pageSize == null || pageNumber <= 0 || pageNumber <= 0) {
+        logger.info("Start listUsers method");
+    	if(pageNumber == null || pageSize == null || pageNumber <= 0 || pageNumber <= 0) {
                 return badRequest(Json.toJson(
                 		new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
         }
-        ///////////////////
-        Company company = new Company();
-        company.setId(2);
-        ///////////////////
+    	User user = Application.recieveUserByToken();
+        if (user == null) {
+			return badRequest(Json.toJson(
+		            new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
+		}
+        Company company = user.getContactByContactId().getCompanyByCompanyId();
         UserDAO dao = new UserDAO(JPA.em());
         Long total = dao.total(company);
         Integer totalPages = Double.valueOf(Math.ceil((double) total / pageSize)).intValue();
@@ -57,13 +59,15 @@ public class UserController extends BaseController {
     public static Result deleteUsers(String ids) {
     	try{
     		logger.info("Start deleteUsers method with ids: {}", ids);
-    		Pattern separator;
-    		separator = Pattern.compile(",");
+    		java.util.regex.Pattern separator;
+    		separator = java.util.regex.Pattern.compile(",");
     		String [] idArray = separator.split(ids);
-    		///////////////////
-    		Company company = new Company();
-    		company.setId(2);
-    		///////////////////
+    		User currentUser = Application.recieveUserByToken();
+            if (currentUser == null) {
+    			return badRequest(Json.toJson(
+    		            new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
+    		}
+            Company company = currentUser.getContactByContactId().getCompanyByCompanyId();
     		UserDAO dao = new UserDAO(JPA.em());
     		for (String id : idArray){
     			User user = new User();
