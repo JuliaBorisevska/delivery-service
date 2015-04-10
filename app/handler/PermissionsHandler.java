@@ -1,9 +1,10 @@
-package security;
+package handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entity.SecurityRole;
 import play.Logger;
+import security.SecurityPermission;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,46 +14,31 @@ import java.util.*;
 /**
  * Created by antonkw on 08.04.2015.
  */
-public class PermissionsHandler {
-    private static PermissionsHandler instance = null;
-
+public class PermissionsHandler extends AbstractPrivelegesHandler {
     private static Logger.ALogger logger = Logger.of(PermissionsHandler.class);
 
-    private PermissionsHandler() {
-        try {
-            read();
-        } catch (IOException e) {
-            logger.error("Cannot read config file");
-        } catch (ParseException e) {
-            logger.error(e.getMessage());
-        }
+    private Map<String, List<SecurityPermission>> roles = null;
+
+    private Map<String, JsonNode> jsonRoles = null;
+
+    protected PermissionsHandler() throws IOException, ParseException {
+        parse();
     }
 
-    public static PermissionsHandler getInstance() {
-        if (instance == null) {
-            instance = new PermissionsHandler();
-        }
-        return instance;
-    }
-
-    public void reload() {
-        instance = null;
-    }
-
-
-    private Map<String, List<SecurityPermission>> roles = new HashMap<>();
-
-    private void read() throws ParseException, IOException {
+    @Override
+    public void parse() throws ParseException, IOException {
+        roles = new HashMap<>();
+        jsonRoles = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode rootNode = mapper.readTree(new File(ConfigFiles.getFileConfigName()));
+        JsonNode rootNode = mapper.readTree(new File(FILE_CONFIG_NAME));
         Iterator<JsonNode> roleNodes = rootNode.path("roles").elements();
-        JsonNode role = null;
-        JsonNode arrNode = null;
+        JsonNode role, arrNode = null;
         while (roleNodes.hasNext()) {
             List<SecurityPermission> permissions = new ArrayList<>();
             role = roleNodes.next();
             arrNode = role.path("menu");
             if (arrNode.isArray()) {
+                jsonRoles.put(role.path("title").asText(), arrNode);
                 for (final JsonNode objNode : arrNode) {
                     permissions.add(new SecurityPermission(objNode.asText()));
                 }
@@ -67,8 +53,17 @@ public class PermissionsHandler {
         if (roles.containsKey(role.getName())) {
             return roles.get(role.getName());
         } else {
-            logger.warn("role {} have no permissions", role.getName());
+            logger.warn("role {} is not existing", role.getName());
             return Collections.emptyList();
+        }
+    }
+
+    public JsonNode getJsonPermissions(String roleName) {
+        if (roles.containsKey(roleName)) {
+            return jsonRoles.get(roleName);
+        } else {
+            logger.warn("role {} is not existing", roleName);
+            return null;
         }
     }
 
