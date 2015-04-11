@@ -31,6 +31,4 @@ public class SectionHandler extends AbstractPrivelegesHandler {
     public JsonNode getSectionNode() {
         return sectionNode;
     }
-
-
 }

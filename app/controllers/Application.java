@@ -1,8 +1,6 @@
 package controllers;
 
 import be.objectify.deadbolt.java.actions.Unrestricted;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.UserDAO;
 import dto.UserDTO;
 import entity.User;
@@ -19,10 +17,8 @@ import resource.MessageManager;
 import views.html.main;
 
 import javax.persistence.EntityManager;
-import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Iterator;
 import java.util.Map;
 
 @Unrestricted
@@ -70,11 +66,13 @@ public class Application extends BaseController {
     		}
             UserDTO userDTO = UserDTO.getUser(user);
             try {
-                userDTO.setMenu(ConfigContainer.getInstance().getPermissionHandler().getJsonPermissions(userDTO.getRoleTitle()));
+                if (ConfigContainer.getInstance().getPermissionHandler().hasRole(userDTO.getRoleTitle())) {
+                    userDTO.setMenu(ConfigContainer.getInstance().getPermissionHandler().getJsonPermissions(userDTO.getRoleTitle()));
+                } else {
+                    throw new ParseException("role is not exist in configuration!", 0);
+                }
             } catch (ParseException e) {
-                logger.error("exception during setting menu", e);
-            }
-            if (userDTO.getMenu() == null) {
+                logger.error("exception during setting menu for role {}", userDTO.getRoleTitle(), e);
                 return badRequest(Json.toJson(
                         new Reply<>(Status.ERROR, MessageManager.getProperty("role.error"))));
             }
@@ -109,11 +107,13 @@ public class Application extends BaseController {
                 user.setToken(token);
                 dao.update(user);
                 try {
-                    userDTO.setMenu(ConfigContainer.getInstance().getPermissionHandler().getJsonPermissions(userDTO.getRoleTitle()));
+                    if (ConfigContainer.getInstance().getPermissionHandler().hasRole(userDTO.getRoleTitle())) {
+                        userDTO.setMenu(ConfigContainer.getInstance().getPermissionHandler().getJsonPermissions(userDTO.getRoleTitle()));
+                    } else {
+                        throw new ParseException("role is not exist in configuration!", 0);
+                    }
                 } catch (ParseException e) {
-                    logger.error("exception during setting menu", e);
-                }
-                if (userDTO.getMenu() == null) {
+                    logger.error("exception during setting menu for role {}", userDTO.getRoleTitle(), e);
                     return badRequest(Json.toJson(
                             new Reply<>(Status.ERROR, MessageManager.getProperty("role.error"))));
                 }

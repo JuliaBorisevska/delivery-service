@@ -31,13 +31,22 @@ public class PermissionsHandler extends AbstractPrivelegesHandler {
         jsonRoles = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(new File(FILE_CONFIG_NAME));
+        if (!rootNode.has("roles")) {
+            throw new ParseException("roles path not exist", 0);
+        }
         Iterator<JsonNode> roleNodes = rootNode.path("roles").elements();
         JsonNode role, arrNode = null;
         while (roleNodes.hasNext()) {
             List<SecurityPermission> permissions = new ArrayList<>();
             role = roleNodes.next();
+            if (!role.has("menu")) {
+                throw new ParseException("menu path not exist", 0);
+            }
             arrNode = role.path("menu");
             if (arrNode.isArray()) {
+                if (!role.has("title")) {
+                    throw new ParseException("title path not exist", 0);
+                }
                 jsonRoles.put(role.path("title").asText(), arrNode);
                 for (final JsonNode objNode : arrNode) {
                     permissions.add(new SecurityPermission(objNode.asText()));
@@ -56,6 +65,10 @@ public class PermissionsHandler extends AbstractPrivelegesHandler {
             logger.warn("role {} is not existing", role.getName());
             return Collections.emptyList();
         }
+    }
+
+    public boolean hasRole(String roleName) {
+        return roles.containsKey(roleName);
     }
 
     public JsonNode getJsonPermissions(String roleName) {

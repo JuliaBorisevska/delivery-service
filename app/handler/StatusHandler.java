@@ -50,6 +50,9 @@ public class StatusHandler extends AbstractPrivelegesHandler {
             logger.warn("status {} is not exist", title);
             return null;
         }
+    }
 
+    public boolean has(String statusName) {
+        return statusMap.containsKey(statusName);
     }
 }
