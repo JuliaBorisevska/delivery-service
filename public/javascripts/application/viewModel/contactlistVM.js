@@ -1,7 +1,6 @@
 define(["application/service/contactService",
-        "application/viewModel/contactDetailsVM",
         "application/util/callback",
-        "application/model/contact"], function(contactService, contactDetailsVM, Callback, Contact) {
+        "application/model/contact"], function(contactService, Callback, Contact) {
     "use strict";
 
     function ContactListVM() {
@@ -56,7 +55,7 @@ define(["application/service/contactService",
                         reply = params.reply;
                         if(reply.status === "SUCCESS") {
                             var contact = reply.data;
-                            contactDetailsVM.setContact(
+                            root.contactDetailsVM.setContact(
                                 new Contact(contact.id, contact.firstName, contact.lastName, contact.middleName,
                                     contact.birthday, contact.town, contact.street, contact.house, contact.flat,
                                     contact.companyByCompanyId.id)
