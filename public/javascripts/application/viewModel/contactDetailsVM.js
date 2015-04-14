@@ -19,15 +19,15 @@ define([
                             reply = params.reply;
                             if(reply.status === "SUCCESS") {
                                 clean();
-                                //root.contactListVM.list(1, root.contactListVM.PAGE_SIZE);
-                                root.goTo("ctlst");
+                                root.contactListVM.list(root.contactListVM.currentPage, root.contactListVM.PAGE_SIZE);
+                                location.hash = "ctlst";
                             }
                         }, self, {}
                     ),
                     error = new Callback(function(params){
                             reply = params.reply;
                             var message = reply.responseText ? reply.responseText : reply.statusText;
-                            alert(message);
+                            alert("contactDetailsVM error!");
                         }, self, {}
                     );
 
@@ -40,6 +40,7 @@ define([
             },
             setContact = function(c){
                 contact(c);
+                debugger;
             },
             clean = function(){
                 contact(null);
