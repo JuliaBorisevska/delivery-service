@@ -107,7 +107,7 @@ public class Application extends BaseController {
                 user.setToken(token);
                 dao.update(user);
                 try {
-                    if (ConfigContainer.getInstance().getPermissionHandler().hasRole(userDTO.getRoleTitle())) {
+                   if (ConfigContainer.getInstance().getPermissionHandler().hasRole(userDTO.getRoleTitle())) {
                         userDTO.setMenu(ConfigContainer.getInstance().getPermissionHandler().getJsonPermissions(userDTO.getRoleTitle()));
                     } else {
                         throw new ParseException("role is not exist in configuration!", 0);

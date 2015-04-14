@@ -4,8 +4,9 @@ define(["application/service/initService",
         "application/viewModel/loginVM",
         "application/viewModel/contactListVM",
         "application/viewModel/orderlistVM",
-        "application/viewModel/userlistVM"], 
-        function (initService, Callback, User, loginVM, contactListVM, orderlistVM, userlistVM) {
+        "application/viewModel/userlistVM",
+        "application/viewModel/contactDetailsVM"], 
+        function (initService, Callback, User, loginVM, contactListVM, orderlistVM, userlistVM, contactDetailsVM) {
 
     "use strict";
 
@@ -17,6 +18,7 @@ define(["application/service/initService",
         self.contactListVM = contactListVM;
         self.orderlistVM = orderlistVM;
         self.userlistVM = userlistVM;
+        self.contactDetailsVM = contactDetailsVM;
         self.chosenSectionId = ko.observable();
         self.user = ko.observable();
         self.menu = ko.observableArray();

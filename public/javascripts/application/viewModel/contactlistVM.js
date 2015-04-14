@@ -48,7 +48,7 @@ define(["application/service/contactService",
         
         var goToDetails = function(contact, event, root) {
 
-            location.hash = "ctadd";
+            //location.hash = "ctadd";
 
             contactService.get(contact.id,
                 new Callback(function(params){
@@ -60,14 +60,15 @@ define(["application/service/contactService",
                                     contact.birthday, contact.town, contact.street, contact.house, contact.flat,
                                     contact.companyByCompanyId.id)
                             );
-                            root.goTo("ctlst");
+                            location.hash = "ctadd";
+                            //debugger;
                         }
                     }, self, {}
                 ),
                 new Callback(function(params){
                         reply = params.reply;
                         var message = reply.responseText ? reply.responseText : reply.statusText;
-                        alert(message);
+                        alert("get contact error! contactlistVM");
                     }, self, {}
                 )
             );
@@ -92,7 +93,7 @@ define(["application/service/contactService",
                     new Callback(function(params){
                     	alert(params.reply.responseJSON.data);
                     }, self, {})
-                )
+                );
            checkedContacts([]);
         };
 
