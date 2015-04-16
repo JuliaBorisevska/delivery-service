@@ -55,6 +55,7 @@ public class UserController extends BaseController {
     }
 	
     @Transactional
+    @Pattern("lst")
     public static Result deleteUsers(String ids) {
     	try{
     		logger.info("Start deleteUsers method with ids: {}", ids);

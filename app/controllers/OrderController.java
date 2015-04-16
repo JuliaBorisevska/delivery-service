@@ -1,31 +1,38 @@
 package controllers;
 
 import be.objectify.deadbolt.java.actions.Pattern;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import controllers.BaseController.Reply;
+import controllers.BaseController.Status;
 import dao.OrderDAO;
 import dao.StatusDAO;
 import dto.OrderDTO;
 import entity.Order;
 import logic.StatusOrder;
+import play.Logger;
+import play.Logger.ALogger;
 import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
 import play.libs.Json;
 import play.mvc.Result;
+import resource.MessageManager;
+import handler.ConfigContainer;
 
 import javax.persistence.EntityManager;
+
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by hanna.kubarka on 30.03.2015.
- */
 
 public class OrderController extends BaseController {
-
-    //private static OrderDAO orderDAO = new OrderDAO(JPA.em());
-    //private static StatusDAO statusDAO =  new StatusDAO(JPA.em());
-
+	private static ALogger logger = Logger.of(OrderController.class);
+	
+	
     @Transactional
     public static Result getOrder(Integer id) {
     	OrderDAO orderDAO = new OrderDAO(JPA.em());
@@ -52,6 +59,7 @@ public class OrderController extends BaseController {
     @Transactional
     @Pattern("ordlst")
     public static Result listOrders(Integer pageNumber, Integer pageSize) {
+    	try{
     	EntityManager em = JPA.em();
     	OrderDAO orderDAO = new OrderDAO(em);
     	StatusDAO statusDAO =  new StatusDAO(em);
@@ -61,6 +69,7 @@ public class OrderController extends BaseController {
 //        ArrayList<entity.Status> statuslist = (ArrayList) statusDAO.getStatusList();
         StatusOrder.setList((ArrayList)statusDAO.getStatusList());
         ArrayList<entity.Status> statuslist = StatusOrder.statusList;
+        logger.info("Statuses: {}",ConfigContainer.getInstance().getStatusHandler().getStatusList("Новый"));
         Long total = orderDAO.getLength();
         Integer totalPages = Double.valueOf(Math.ceil((double) total / pageSize)).intValue();
         List<Order> orderList = orderDAO.getOrderList(pageNumber, pageSize);
@@ -76,6 +85,11 @@ public class OrderController extends BaseController {
         return ok(Json.toJson(
                         new Reply<>(Status.SUCCESS, result))
         );
+    	} catch (IOException | ParseException e) {
+            logger.error("Exception in listOrders method ", e);
+            return badRequest(Json.toJson(
+                    new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
+        }
     }
 
     @Transactional

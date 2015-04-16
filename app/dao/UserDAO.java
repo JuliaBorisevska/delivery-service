@@ -3,6 +3,7 @@ package dao;
 import entity.Company;
 import entity.Contact;
 import entity.User;
+import entity.UserState;
 import play.Logger;
 import play.Logger.ALogger;
 import play.db.jpa.JPA;
@@ -19,10 +20,14 @@ import javax.persistence.criteria.Root;
 
 
 
+
+
 import java.util.List;
 
 public class UserDAO extends AbstractDAO<User> {
 	private static ALogger logger = Logger.of(UserDAO.class);
+	private static final String ACTIVE_USER = "active";
+	private static final String INACTIVE_USER = "inactive";
 	
 	public UserDAO(EntityManager em) {
 		super(em);
@@ -31,10 +36,6 @@ public class UserDAO extends AbstractDAO<User> {
 	@Override
 	public void delete(User entity) {
 		logger.info("Start delete with user id - {} and company id - {}",entity.getId(), entity.getContactByContactId().getCompanyByCompanyId().getId());
-		/*User user = em.find(User.class, entity.getId());
-		if(user != null) {
-			em.remove(user);
-		}*/
 		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<User> query = criteriaBuilder.createQuery(User.class);
         Root<User> fromUser = query.from(User.class);
@@ -43,9 +44,13 @@ public class UserDAO extends AbstractDAO<User> {
 		query.select(fromUser).where(criteriaBuilder.equal(fromCompany.get("id"), entity.getContactByContactId().getCompanyByCompanyId().getId()),
 										criteriaBuilder.equal(fromUser.get("id"), entity.getId()));
 		List<User> users = em.createQuery(query).getResultList();
+		UserState state = findByStateTitle(INACTIVE_USER);
 		if(!users.isEmpty()) {
-			em.remove(users.get(0));
-			logger.info("User with id - {} and company id - {} is deleted",entity.getId(), entity.getContactByContactId().getCompanyByCompanyId().getId());
+			User user = users.get(0);
+			user.setUserStateByUserStateId(state);
+			update(user);
+			//em.remove(users.get(0));
+			logger.info("User with id - {} and company id - {} is inactive",entity.getId(), entity.getContactByContactId().getCompanyByCompanyId().getId());
 		}
 	}
 
@@ -59,13 +64,30 @@ public class UserDAO extends AbstractDAO<User> {
 		em.persist(entity);
 	}
 	
+	public UserState findByStateTitle(String title) {
+
+        try{
+            CriteriaBuilder builder = em.getCriteriaBuilder();
+            CriteriaQuery<UserState> query = builder.createQuery(UserState.class);
+            Root<UserState> u = query.from(UserState.class);
+            query.select(u).where(builder.equal(u.get("title"), title));
+            TypedQuery<UserState> q = em.createQuery(query);
+            return q.getSingleResult();
+        } catch (NoResultException nre){
+            return null;
+        }
+    }
+	
+	
 	public Long total(Company company) {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
         Root<User> from = countQuery.from(User.class);
 		Join<User, Contact> contact = from.join("contactByContactId");
 		Join<Contact, Company> comp = contact.join("companyByCompanyId");
-        countQuery.select(criteriaBuilder.count(from)).where(criteriaBuilder.equal(comp.get("id"), company.getId()));
+		UserState state = findByStateTitle(ACTIVE_USER);
+        countQuery.select(criteriaBuilder.count(from)).where(criteriaBuilder.equal(comp.get("id"), company.getId()),
+        													criteriaBuilder.equal(from.get("userStateByUserStateId"), state));
         return em.createQuery(countQuery).getSingleResult();
     }
 
@@ -75,7 +97,9 @@ public class UserDAO extends AbstractDAO<User> {
 		Root<User> from = criteriaQuery.from(User.class);
 		Join<User, Contact> contact = from.join("contactByContactId");
 		Join<Contact, Company> comp = contact.join("companyByCompanyId");
-		CriteriaQuery<User> select = criteriaQuery.select(from).where(criteriaBuilder.equal(comp.get("id"), company.getId()));
+		UserState state = findByStateTitle(ACTIVE_USER);
+		CriteriaQuery<User> select = criteriaQuery.select(from).where(criteriaBuilder.equal(comp.get("id"), company.getId()),
+				criteriaBuilder.equal(from.get("userStateByUserStateId"), state));
 		TypedQuery<User> q = em.createQuery(select);
 		q.setFirstResult((pageNumber - 1) * pageSize);
 		q.setMaxResults(pageSize);
@@ -88,7 +112,9 @@ public class UserDAO extends AbstractDAO<User> {
             CriteriaBuilder builder = em.getCriteriaBuilder();
             CriteriaQuery<User> query = builder.createQuery(User.class);
             Root<User> u = query.from(User.class);
-            query.select(u).where(builder.equal(u.get("identifier"), login));
+            UserState state = findByStateTitle(ACTIVE_USER);
+            query.select(u).where(builder.equal(u.get("identifier"), login),
+					builder.equal(u.get("userStateByUserStateId"), state));
             TypedQuery<User> q = em.createQuery(query);
             return q.getSingleResult();
         } catch (NoResultException nre){

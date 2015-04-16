@@ -20,6 +20,7 @@ public class User implements Subject {
     private Long id;
     private String token;
     private Contact contactByContactId;
+    private UserState userStateByUserStateId;
     private String identifier;
     private String password;
     private SecurityRole roleByRoleId;
@@ -66,7 +67,17 @@ public class User implements Subject {
         this.contactByContactId = contactByContactId;
     }
 
-    @Basic
+    @OneToOne
+    @JoinColumn(name = "user_state_id", referencedColumnName = "id", nullable = false)
+    public UserState getUserStateByUserStateId() {
+		return userStateByUserStateId;
+	}
+
+	public void setUserStateByUserStateId(UserState userStateByUserStateId) {
+		this.userStateByUserStateId = userStateByUserStateId;
+	}
+
+	@Basic
     @Column(name = "password", nullable = false, insertable = true, updatable = true)
     public String getPassword() {
         return password;

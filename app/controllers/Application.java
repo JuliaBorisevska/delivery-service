@@ -24,7 +24,7 @@ import java.util.Map;
 @Unrestricted
 public class Application extends BaseController {
     private static ALogger logger = Logger.of(Application.class);
-    private static final String FILE_CONFIG_NAME = "conf/privileges.json";
+    //private static final String FILE_CONFIG_NAME = "conf/privileges.json";
 
     public static Result index() {
         logger.info("Start index method");
@@ -89,9 +89,9 @@ public class Application extends BaseController {
     public static Result login() {
         try {
             final Map<String, String[]> values = request().body().asFormUrlEncoded();
-            logger.debug("Start login method with parameters: {}", values);
             String login = values.get("user")[0];
             String password = values.get("password")[0];
+            logger.info("Start login method with login: {}", login);
             EntityManager em = JPA.em();
             UserDAO dao = new UserDAO(em);
             User user = dao.findByLogin(login);
@@ -129,9 +129,20 @@ public class Application extends BaseController {
                     new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
         }
     }
-
+    
+    @Transactional
     public static Result logout() {
-
+    	logger.info("Start logout method");
+        User user = recieveUserByToken();
+        if (user == null) {
+			return badRequest(Json.toJson(
+		            new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
+		}
+        user.setToken(null);
+        EntityManager em = JPA.em();
+        UserDAO dao = new UserDAO(em);
+        dao.update(user);
+        response().discardCookie("token");
         return ok();
     }
 }
