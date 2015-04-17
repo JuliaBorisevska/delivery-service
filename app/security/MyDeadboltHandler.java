@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Collections;
 
+import controllers.Application;
+
 /**
  * Created by antonkw on 30.03.2015.
  */
@@ -34,9 +36,7 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
     @Override
     public Subject getSubject(final Http.Context var1) {
         User user = new User();
-        String token = var1.request().cookie("token").value();
-        UserDAO userDAO = new UserDAO(JPA.em());
-        user = userDAO.findByToken(token);
+        user = Application.recieveUserByToken();
         if (user != null) {
             try {
                 user.setPermissions(ConfigContainer.getInstance().getRolesHandler().getPermissions(user.getRoleByRoleId()));

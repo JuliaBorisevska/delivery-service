@@ -40,7 +40,7 @@ define([
             },
             setContact = function(c){
                 contact(c);
-                debugger;
+                //debugger;
             },
             clean = function(){
                 contact(null);

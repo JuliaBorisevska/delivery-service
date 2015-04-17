@@ -1,7 +1,7 @@
 @()
 <!-- ko if: $root.chosenSectionId().id == "ctadd" -->
 
-
+<!-- ko if: $root.contactDetailsVM.contact() -->
 <table class="list">
        <tr>
               <td>Имя</td>
@@ -44,6 +44,6 @@
               <td><input type="text" name="flat" id="flat" data-bind="value: $root.contactDetailsVM.contact().flat"></td>
        </tr>
 </table>
-
 <a class="button" href="#" data-bind="">Добавить</a>
+<!-- /ko -->
 <!-- /ko -->

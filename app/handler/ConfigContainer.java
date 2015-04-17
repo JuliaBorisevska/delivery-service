@@ -54,7 +54,7 @@ public class ConfigContainer implements AbstractHandler {
             sectionHandler.parse();
             statusHandler.parse();
         } catch (ParseException | IOException e) {
-            logger.error("exception during reloading all of handlers", e);
+            logger.error("exception during reloading all of handlers: {}", e);
         }
 
     }

@@ -49,7 +49,6 @@ public class UserDAO extends AbstractDAO<User> {
 			User user = users.get(0);
 			user.setUserStateByUserStateId(state);
 			update(user);
-			//em.remove(users.get(0));
 			logger.info("User with id - {} and company id - {} is inactive",entity.getId(), entity.getContactByContactId().getCompanyByCompanyId().getId());
 		}
 	}

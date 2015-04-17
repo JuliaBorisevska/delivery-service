@@ -94,9 +94,8 @@ define(["application/service/initService",
             		self.contactListVM.list(self.contactListVM.currentPage(), self.contactListVM.PAGE_SIZE);
             		break;
             	case "ordlst":
-            		self.orderlistVM.currentPage(1);
-                    self.orderlistVM.numbers([]);
-            		self.orderlistVM.list(self.orderlistVM.currentPage(), self.orderlistVM.PAGE_SIZE);
+            		self.orderlistVM.getStatusList();
+            		self.orderlistVM.changeStatus();
             		break;
             }
             location.hash = section.id;

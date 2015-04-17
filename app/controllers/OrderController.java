@@ -9,8 +9,9 @@ import controllers.BaseController.Status;
 import dao.OrderDAO;
 import dao.StatusDAO;
 import dto.OrderDTO;
+import entity.Company;
 import entity.Order;
-import logic.StatusOrder;
+import entity.User;
 import play.Logger;
 import play.Logger.ALogger;
 import play.db.jpa.JPA;
@@ -21,6 +22,8 @@ import resource.MessageManager;
 import handler.ConfigContainer;
 
 import javax.persistence.EntityManager;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -58,33 +61,76 @@ public class OrderController extends BaseController {
 
     @Transactional
     @Pattern("ordlst")
-    public static Result listOrders(Integer pageNumber, Integer pageSize) {
+    public static Result listStatuses(){
+    	User user = Application.recieveUserByToken();
+		if (user == null) {
+			return badRequest(Json.toJson(
+					new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
+		}
+    	//проверка на наличие списка статусов заказов у текущего пользователя
+    	//если есть, то возвращать их, иначе - все из бд
+    	StatusDAO statusDAO =  new StatusDAO(JPA.em());
+    	List<entity.Status> statusList = statusDAO.getStatusList();
+    	ObjectNode result = Json.newObject();
+		result.put("statusList", Json.toJson(statusList));
+		return ok(Json.toJson(
+                    	new Reply<>(Status.SUCCESS, result)));
+    }
+    
+    @Transactional
+    @Pattern("ordlst")
+    public static Result listOrders(Integer pageNumber, Integer pageSize, String status) {
     	try{
-    	EntityManager em = JPA.em();
-    	OrderDAO orderDAO = new OrderDAO(em);
-    	StatusDAO statusDAO =  new StatusDAO(em);
-    	if(pageNumber == null || pageSize == null || pageNumber <= 0 || pageNumber <= 0) {
-            return badRequest(Json.toJson(new Reply()));
-        }
-//        ArrayList<entity.Status> statuslist = (ArrayList) statusDAO.getStatusList();
-        StatusOrder.setList((ArrayList)statusDAO.getStatusList());
-        ArrayList<entity.Status> statuslist = StatusOrder.statusList;
-        logger.info("Statuses: {}",ConfigContainer.getInstance().getStatusHandler().getStatusList("Новый"));
-        Long total = orderDAO.getLength();
-        Integer totalPages = Double.valueOf(Math.ceil((double) total / pageSize)).intValue();
-        List<Order> orderList = orderDAO.getOrderList(pageNumber, pageSize);
-        List<OrderDTO> dtoList = new ArrayList<>();
-        for(Order ord : orderList) {
-            dtoList.add(OrderDTO.getOrder(ord));
-        }
+    		EntityManager em = JPA.em();
+    		OrderDAO orderDAO = new OrderDAO(em);
+    		if(pageNumber == null || pageSize == null || pageNumber <= 0 || pageNumber <= 0) {
+    			return badRequest(Json.toJson(
+    					new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
+    		}
+    		User user = Application.recieveUserByToken();
+    		if (user == null) {
+    			return badRequest(Json.toJson(
+    					new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
+    		}
+    		Company company = user.getContactByContactId().getCompanyByCompanyId();
+    	
+    		logger.info("Statuses: {}",ConfigContainer.getInstance().getStatusHandler().getStatusList("Новый"));
+    		Long total;
+    		List<Order> orderList;
+    		List<String> statusTitleList;
+    		if (StringUtils.isBlank(status)){
+    			//проверка на наличие списка статусов заказов у текущего пользователя
+            	//выбор версии перегруженного метода
+    			
+    			//total = orderDAO.getLength(company);
+    			//orderList = orderDAO.getOrderList(pageNumber, pageSize, company);
+    			
+    			statusTitleList = new ArrayList<String>();
+    			statusTitleList.add("Новый");
+    			statusTitleList.add("Доставка");
+    			total = orderDAO.getLength(company, statusTitleList);
+    			orderList = orderDAO.getOrderList(pageNumber, pageSize, company, statusTitleList);
+    		}else{
+    			//проверка на наличие списка статусов заказов у текущего пользователя
+    			//проверка на наличие в этом списке заданного статуса
+    			statusTitleList = new ArrayList<String>();
+    			statusTitleList.add(status);
+    			total = orderDAO.getLength(company, statusTitleList);
+    			orderList = orderDAO.getOrderList(pageNumber, pageSize, company, statusTitleList);
+    		}
+    		Integer totalPages = Double.valueOf(Math.ceil((double) total / pageSize)).intValue();
+    		List<OrderDTO> dtoList = new ArrayList<>();
+    		for(Order ord : orderList) {
+    			dtoList.add(OrderDTO.getOrder(ord));
+    		}
 
-        ObjectNode result = Json.newObject();
-        result.put("totalPages", totalPages);
-        result.put("list", Json.toJson(dtoList));
+    		ObjectNode result = Json.newObject();
+    		result.put("totalPages", totalPages);
+    		result.put("list", Json.toJson(dtoList));
 
-        return ok(Json.toJson(
-                        new Reply<>(Status.SUCCESS, result))
-        );
+    		return ok(Json.toJson(
+                        	new Reply<>(Status.SUCCESS, result))
+    				);
     	} catch (IOException | ParseException e) {
             logger.error("Exception in listOrders method ", e);
             return badRequest(Json.toJson(

@@ -1,19 +1,41 @@
-
 define(["application/service/orderService",
     "application/util/callback",
-    "application/model/order"], function(orderService, Callback, Order) {
+    "application/model/order",
+    "application/model/status"], function(orderService, Callback, Order, Status) {
     "use strict";
 
     function OrderListVM() {
     	var k;
         var self = this,
             orders = ko.observableArray(),
-            PAGE_SIZE = 5,
+            PAGE_SIZE = 2,
         	SHOW_PAGES = 3,
         	currentPage = ko.observable(1),
         	totalPages = ko.observable(),
             reply,
-            numbers = ko.observableArray([]);
+            numbers = ko.observableArray([]),
+        	availableStatuses = ko.observableArray(),
+        	//lastStatus,
+        	//isStatusChanged,
+        	selectedStatus = ko.observable();
+        var getStatusList = function(){
+        	orderService.getStatusList(
+        			new Callback(function(params){
+                        reply = params.reply;
+                        if(reply.status === "SUCCESS") {
+                        	selectedStatus();
+                        	availableStatuses([]);
+                            for(var i = 0, lth = reply.data.statusList.length; i < lth; i++) {
+                                var status = reply.data.statusList[i];
+                                availableStatuses.push(new Status(status.id, status.title));
+                            }
+                        }
+                    }, self, {}),
+                    new Callback(function(params){
+                	alert(params.reply.responseJSON.data);
+                    }, self, {})
+        	)
+        };
         /*
         var setNextStatusBtn = function(id) {
 
@@ -36,10 +58,16 @@ define(["application/service/orderService",
             };
 			*/
            var list = function(page, pageSize) {
-                orderService.list(page, pageSize,
+                orderService.list(page, pageSize, selectedStatus() ? selectedStatus().title : "",
                     new Callback(function(params){
                             reply = params.reply;
                             if(reply.status === "SUCCESS") {
+                            	//debugger;
+                            	/*if (isStatusChanged){
+                             	   currentPage(1);
+                             	   numbers([]);
+                             	   isStatusChanged = false;
+                         	   }*/
                                 orders([]);
                                 totalPages(reply.data.totalPages);
                                 if (numbers().length==0){
@@ -56,18 +84,34 @@ define(["application/service/orderService",
                         }, self, {}
                     ),
                     new Callback(function(params){
-                            reply = params.reply;
-                            var message = reply.responseText ? reply.responseText : reply.statusText;
-                            alert(message);
-                        }, self, {}
-                    )
-                )
+                    	alert(params.reply.responseJSON.data);
+                        }, self, {})
+                	)
             };
-
+            /*
+            self.ordersByStatus = ko.computed(function(){
+            	if (lastStatus!=selectedStatus()){
+                    //numbers();
+                	list(1, PAGE_SIZE);
+            	}
+            	lastStatus=selectedStatus();
+            	isStatusChanged = true;
+            });
+*/
+            var changeStatus = function(){
+            	numbers([]);
+            	currentPage(1);
+            	totalPages(0);
+            	list(currentPage(), PAGE_SIZE);
+            };
+            
         return {
             orders: orders,
             list: list,
-            
+            changeStatus: changeStatus,
+            availableStatuses: availableStatuses,
+            selectedStatus: selectedStatus,
+            getStatusList: getStatusList,
             numbers: numbers,
             totalPages: totalPages,
             currentPage: currentPage,
