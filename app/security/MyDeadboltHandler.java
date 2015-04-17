@@ -4,6 +4,7 @@ import be.objectify.deadbolt.core.models.Subject;
 import be.objectify.deadbolt.java.AbstractDeadboltHandler;
 import be.objectify.deadbolt.java.DynamicResourceHandler;
 import dao.UserDAO;
+import entity.SecurityRole;
 import entity.User;
 import handler.ConfigContainer;
 import play.Logger;
@@ -16,6 +17,7 @@ import views.html.accesserror;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Collections;
 
 /**
  * Created by antonkw on 30.03.2015.
@@ -31,16 +33,22 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
 
     @Override
     public Subject getSubject(final Http.Context var1) {
-        User user = null;
+        User user = new User();
         String token = var1.request().cookie("token").value();
         UserDAO userDAO = new UserDAO(JPA.em());
         user = userDAO.findByToken(token);
-        try {
-            user.setPermissions(ConfigContainer.getInstance().getRolesHandler().getPermissions(user.getRoleByRoleId()));
-        } catch (IOException | ParseException e) {
-            logger.error("Exception during set permissions", e);
+        if (user != null) {
+            try {
+                user.setPermissions(ConfigContainer.getInstance().getRolesHandler().getPermissions(user.getRoleByRoleId()));
+            } catch (IOException | ParseException e) {
+                logger.error("Exception during set permissions", e);
+            }
+            logger.info("check role of user: {}, role: {}", user.getIdentifier(), user.getRoles().get(0).getName());
+        } else {
+            user = new User();
+            user.setRoleByRoleId(new SecurityRole());
+            user.setPermissions(Collections.<SecurityPermission>emptyList());
         }
-        logger.info("check role of user: {}, role: {}", user.getIdentifier(), user.getRoles().get(0).getName());
         return user;
     }
 
