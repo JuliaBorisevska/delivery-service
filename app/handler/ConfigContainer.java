@@ -23,7 +23,7 @@ public class ConfigContainer implements AbstractHandler {
         try {
             statusHandler = new StatusHandler();
             sectionHandler = new SectionHandler();
-            permissionsHandler = new RolesHandler();
+            permissionsHandler = new RolesHandler(statusHandler);
             logger.info("config container start");
         } catch (IOException | ParseException e) {
             throw e;
@@ -55,7 +55,6 @@ public class ConfigContainer implements AbstractHandler {
             statusHandler.parse();
         } catch (ParseException | IOException e) {
             logger.error("exception during reloading all of handlers", e);
-
         }
 
     }
