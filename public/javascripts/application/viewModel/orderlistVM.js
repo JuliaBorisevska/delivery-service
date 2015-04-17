@@ -15,8 +15,8 @@ define(["application/service/orderService",
             reply,
             numbers = ko.observableArray([]),
         	availableStatuses = ko.observableArray(),
-        	lastStatus,
-        	isStatusChanged,
+        	//lastStatus,
+        	//isStatusChanged,
         	selectedStatus = ko.observable();
         var getStatusList = function(){
         	orderService.getStatusList(
@@ -62,11 +62,12 @@ define(["application/service/orderService",
                     new Callback(function(params){
                             reply = params.reply;
                             if(reply.status === "SUCCESS") {
-                            	if (isStatusChanged){
+                            	//debugger;
+                            	/*if (isStatusChanged){
                              	   currentPage(1);
                              	   numbers([]);
                              	   isStatusChanged = false;
-                         	   }
+                         	   }*/
                                 orders([]);
                                 totalPages(reply.data.totalPages);
                                 if (numbers().length==0){
@@ -87,6 +88,7 @@ define(["application/service/orderService",
                         }, self, {})
                 	)
             };
+            /*
             self.ordersByStatus = ko.computed(function(){
             	if (lastStatus!=selectedStatus()){
                     //numbers();
@@ -95,10 +97,18 @@ define(["application/service/orderService",
             	lastStatus=selectedStatus();
             	isStatusChanged = true;
             });
-
+*/
+            var changeStatus = function(){
+            	numbers([]);
+            	currentPage(1);
+            	totalPages(0);
+            	list(currentPage(), PAGE_SIZE);
+            };
+            
         return {
             orders: orders,
             list: list,
+            changeStatus: changeStatus,
             availableStatuses: availableStatuses,
             selectedStatus: selectedStatus,
             getStatusList: getStatusList,

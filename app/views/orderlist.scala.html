@@ -2,7 +2,8 @@
 <div class="actions">
 <select data-bind = "options:$root.orderlistVM.availableStatuses, optionsText: 'title',
 					value: $root.orderlistVM.selectedStatus,
-                    optionsCaption: 'Выберите статус заказа'"></select>
+                    optionsCaption: 'Выберите статус заказа',
+                    event: { change: $root.orderlistVM.changeStatus}"></select>
 </div>
 <table class="list"> 
     <thead>
