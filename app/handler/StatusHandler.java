@@ -21,8 +21,6 @@ public class StatusHandler extends AbstractPrivelegesHandler {
 
     private Map<String, String> translateMap = null;
 
-    private ObjectMapper mapper = null;
-
     private JsonNode rootNode = null;
 
     protected StatusHandler() throws IOException, ParseException {
@@ -62,7 +60,7 @@ public class StatusHandler extends AbstractPrivelegesHandler {
         }
     }
 
-    private String getTranslate(String id) {
+    protected String getTranslate(String id) {
         if (has(id)) {
             if (translateMap.get(id) == null) {
                 logger.warn("status with id {} not have title(translate)", id);

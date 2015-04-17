@@ -36,7 +36,7 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
         UserDAO userDAO = new UserDAO(JPA.em());
         user = userDAO.findByToken(token);
         try {
-            user.setPermissions(ConfigContainer.getInstance().getPermissionHandler().getPermissions(user.getRoleByRoleId()));
+            user.setPermissions(ConfigContainer.getInstance().getRolesHandler().getPermissions(user.getRoleByRoleId()));
         } catch (IOException | ParseException e) {
             logger.error("Exception during set permissions", e);
         }
