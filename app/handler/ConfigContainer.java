@@ -13,7 +13,7 @@ public class ConfigContainer implements AbstractHandler {
 
     private static volatile ConfigContainer instance;
 
-    private PermissionsHandler permissionsHandler;
+    private RolesHandler permissionsHandler;
 
     private SectionHandler sectionHandler;
 
@@ -21,9 +21,9 @@ public class ConfigContainer implements AbstractHandler {
 
     private ConfigContainer() throws IOException, ParseException {
         try {
-            sectionHandler = new SectionHandler();
-            permissionsHandler = new PermissionsHandler();
             statusHandler = new StatusHandler();
+            sectionHandler = new SectionHandler();
+            permissionsHandler = new RolesHandler();
             logger.info("config container start");
         } catch (IOException | ParseException e) {
             throw e;
@@ -43,7 +43,7 @@ public class ConfigContainer implements AbstractHandler {
         return localContainer;
     }
 
-    public PermissionsHandler getPermissionHandler() {
+    public RolesHandler getRolesHandler() {
         return permissionsHandler;
     }
 

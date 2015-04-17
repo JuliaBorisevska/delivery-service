@@ -1,7 +1,6 @@
 package handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import entity.SecurityRole;
 import play.Logger;
 import security.SecurityPermission;
@@ -14,30 +13,34 @@ import java.util.*;
 /**
  * Created by antonkw on 08.04.2015.
  */
-public class PermissionsHandler extends AbstractPrivelegesHandler {
-    private static Logger.ALogger logger = Logger.of(PermissionsHandler.class);
+public class RolesHandler extends AbstractPrivelegesHandler {
+    private static Logger.ALogger logger = Logger.of(RolesHandler.class);
 
     private Map<String, List<SecurityPermission>> roles = null;
 
+    private Map<String, List<String>> orders = null;
+
     private Map<String, JsonNode> jsonRoles = null;
 
-    protected PermissionsHandler() throws IOException, ParseException {
+    protected RolesHandler() throws IOException, ParseException {
         parse();
     }
 
     @Override
     public void parse() throws ParseException, IOException {
         roles = new HashMap<>();
+        orders = new HashMap<>();
         jsonRoles = new HashMap<>();
-        ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(new File(FILE_CONFIG_NAME));
+        List<String> bufferOrderList = null;
         if (!rootNode.has("roles")) {
             throw new ParseException("roles path not exist", 0);
         }
         Iterator<JsonNode> roleNodes = rootNode.path("roles").elements();
         JsonNode role, arrNode = null;
+        List<SecurityPermission> permissions;
         while (roleNodes.hasNext()) {
-            List<SecurityPermission> permissions = new ArrayList<>();
+            permissions = new ArrayList<>();
             role = roleNodes.next();
             if (!role.has("menu")) {
                 throw new ParseException("menu path not exist", 0);
@@ -55,6 +58,18 @@ public class PermissionsHandler extends AbstractPrivelegesHandler {
                 throw new ParseException("list of permission is not array (check priveleges.json)", 0);
             }
             roles.put(role.path("title").asText(), permissions);
+            if (role.has("order")) {
+                arrNode = role.path("order");
+                if (arrNode.isArray()) {
+                    bufferOrderList = new ArrayList<>();
+                    for (final JsonNode objNode : arrNode) {
+                        bufferOrderList.add(ConfigContainer.getInstance().getStatusHandler().getTranslate(objNode.asText()));
+                    }
+                    orders.put(role.path("title").asText(), bufferOrderList);
+                } else {
+                    throw new ParseException("list of orders is not array (check priveleges.json)", 0);
+                }
+            }
         }
     }
 
@@ -67,17 +82,30 @@ public class PermissionsHandler extends AbstractPrivelegesHandler {
         }
     }
 
+    public boolean hasOrders(String title) {
+        return orders.containsKey(title);
+    }
+
     public boolean hasRole(String roleName) {
         return roles.containsKey(roleName);
     }
 
     public JsonNode getJsonPermissions(String roleName) {
-        if (roles.containsKey(roleName)) {
+        if (hasRole(roleName)) {
             return jsonRoles.get(roleName);
         } else {
             logger.warn("role {} is not existing", roleName);
             return null;
         }
+    }
+
+    public List<String> getOrdersList(String title) {
+        if (hasOrders(title)) {
+            return orders.get(title);
+        } else {
+            return null;
+        }
+
     }
 
 }

@@ -66,8 +66,8 @@ public class Application extends BaseController {
     		}
             UserDTO userDTO = UserDTO.getUser(user);
             try {
-                if (ConfigContainer.getInstance().getPermissionHandler().hasRole(userDTO.getRoleTitle())) {
-                    userDTO.setMenu(ConfigContainer.getInstance().getPermissionHandler().getJsonPermissions(userDTO.getRoleTitle()));
+                if (ConfigContainer.getInstance().getRolesHandler().hasRole(userDTO.getRoleTitle())) {
+                    userDTO.setMenu(ConfigContainer.getInstance().getRolesHandler().getJsonPermissions(userDTO.getRoleTitle()));
                 } else {
                     throw new ParseException("role is not exist in configuration!", 0);
                 }
@@ -107,8 +107,8 @@ public class Application extends BaseController {
                 user.setToken(token);
                 dao.update(user);
                 try {
-                   if (ConfigContainer.getInstance().getPermissionHandler().hasRole(userDTO.getRoleTitle())) {
-                        userDTO.setMenu(ConfigContainer.getInstance().getPermissionHandler().getJsonPermissions(userDTO.getRoleTitle()));
+                    if (ConfigContainer.getInstance().getRolesHandler().hasRole(userDTO.getRoleTitle())) {
+                        userDTO.setMenu(ConfigContainer.getInstance().getRolesHandler().getJsonPermissions(userDTO.getRoleTitle()));
                     } else {
                         throw new ParseException("role is not exist in configuration!", 0);
                     }

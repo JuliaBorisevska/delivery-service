@@ -1,7 +1,6 @@
 package handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import play.Logger;
 
 import java.io.File;
@@ -22,7 +21,6 @@ public class SectionHandler extends AbstractPrivelegesHandler {
 
     @Override
     public void parse() throws ParseException, IOException {
-        ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(new File(FILE_CONFIG_NAME));
         sectionNode = rootNode.path("sections");
         logger.info("Section node: {}", sectionNode.toString());
