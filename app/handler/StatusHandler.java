@@ -61,7 +61,7 @@ public class StatusHandler extends AbstractPrivelegesHandler {
     }
 
     protected String getTranslate(String id) {
-        if (has(id)) {
+        if (hasTranslate(id)) {
             if (translateMap.get(id) == null) {
                 logger.warn("status with id {} not have title(translate)", id);
                 return null;
@@ -84,5 +84,9 @@ public class StatusHandler extends AbstractPrivelegesHandler {
 
     public boolean has(String statusName) {
         return statusMap.containsKey(statusName);
+    }
+
+    public boolean hasTranslate(String id) {
+        return translateMap.containsKey(id);
     }
 }
