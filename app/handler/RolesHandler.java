@@ -22,7 +22,10 @@ public class RolesHandler extends AbstractPrivelegesHandler {
 
     private Map<String, JsonNode> jsonRoles = null;
 
-    protected RolesHandler() throws IOException, ParseException {
+    private StatusHandler statusHandler = null;
+
+    protected RolesHandler(StatusHandler statusHandler) throws IOException, ParseException {
+        this.statusHandler = statusHandler;
         parse();
     }
 
@@ -63,7 +66,7 @@ public class RolesHandler extends AbstractPrivelegesHandler {
                 if (arrNode.isArray()) {
                     bufferOrderList = new ArrayList<>();
                     for (final JsonNode objNode : arrNode) {
-                        bufferOrderList.add(ConfigContainer.getInstance().getStatusHandler().getTranslate(objNode.asText()));
+                        bufferOrderList.add(statusHandler.getTranslate(objNode.asText()));
                     }
                     orders.put(role.path("title").asText(), bufferOrderList);
                 } else {
@@ -108,4 +111,7 @@ public class RolesHandler extends AbstractPrivelegesHandler {
 
     }
 
+    public void setStatusHandler(StatusHandler statusHandler) {
+        this.statusHandler = statusHandler;
+    }
 }
