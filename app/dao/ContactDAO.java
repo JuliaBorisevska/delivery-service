@@ -41,7 +41,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
 		}
     	//delete(entity.getId());
     }
-
+/*
     public void delete(Long id) {
 
         Contact contact = em.find(Contact.class, id);
@@ -49,7 +49,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
             em.remove(contact);
         }
     }
-
+*/
     @Override
     public void create(Contact entity) {
         em.persist(entity);

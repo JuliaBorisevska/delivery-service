@@ -28,15 +28,26 @@ define(["application/service/baseService"], function(baseService) {
             );
         };
 		*/
-        self.list = function(page, pageSize, success, error, done) {
-            baseService.send(
-                "/order/list/" + page + "/" + pageSize,
+        self.list = function(page, pageSize, status, success, error, done) {
+        	baseService.send(
+        		"/order/list/" + page + "/" + pageSize + "/" + status,
                 "GET",
                 {},
                 success,
                 error,
                 done
             );
+        };
+        
+        self.getStatusList = function(success, error, done){
+        	baseService.send(
+                    "/status/list",
+                    "GET",
+                    {},
+                    success,
+                    error,
+                    done
+                );
         };
 /*
         self.get = function(id, success, error, done) {
@@ -74,7 +85,8 @@ define(["application/service/baseService"], function(baseService) {
 
         return {
             //add: self.add,
-            list: self.list
+            list: self.list,
+            getStatusList: self.getStatusList
             //get: self.get,
             //update: self.update,
             //remove: self.remove,

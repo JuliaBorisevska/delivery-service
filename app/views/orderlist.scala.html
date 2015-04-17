@@ -1,5 +1,9 @@
 <!-- ko if: $root.chosenSectionId().id == "ordlst" -->
-
+<div class="actions">
+<select data-bind = "options:$root.orderlistVM.availableStatuses, optionsText: 'title',
+					value: $root.orderlistVM.selectedStatus,
+                    optionsCaption: 'Выберите статус заказа'"></select>
+</div>
 <table class="list"> 
     <thead>
         <tr>

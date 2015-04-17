@@ -97,6 +97,7 @@ define(["application/service/initService",
             		self.orderlistVM.currentPage(1);
                     self.orderlistVM.numbers([]);
             		self.orderlistVM.list(self.orderlistVM.currentPage(), self.orderlistVM.PAGE_SIZE);
+            		self.orderlistVM.getStatusList();
             		break;
             }
             location.hash = section.id;

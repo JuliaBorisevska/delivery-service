@@ -24,9 +24,9 @@ public class Order {
     @Constraints.Required
     private User userByUserId;
     @Constraints.Required
-    private User customerByContactId;
+    private Contact customerByContactId;
     @Constraints.Required
-    private User recipientByContactId;
+    private Contact recipientByContactId;
     private List<OrderHistory> orderHistory;
 
     @Id
@@ -81,21 +81,21 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "customer_contact_id", referencedColumnName = "id", nullable = false)
-    public User getCustomerByContactId() {
+    public Contact getCustomerByContactId() {
         return customerByContactId;
     }
 
-    public void setCustomerByContactId(User customerByContactId) {
+    public void setCustomerByContactId(Contact customerByContactId) {
         this.customerByContactId = customerByContactId;
     }
 
     @ManyToOne
     @JoinColumn(name = "recipient_contact_id", referencedColumnName = "id", nullable = false)
-    public User getRecipientByContactId() {
+    public Contact getRecipientByContactId() {
         return recipientByContactId;
     }
 
-    public void setRecipientByContactId(User recipientByContactId) {
+    public void setRecipientByContactId(Contact recipientByContactId) {
         this.recipientByContactId = recipientByContactId;
     }
 

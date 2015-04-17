@@ -46,18 +46,11 @@ public class StatusDAO extends AbstractDAO<Status> {
     }
 
     public List<Status> getStatusList(){
-
-        Integer pageNumber = 1;
-        Integer pageSize = 10;
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Status> criteriaQuery = criteriaBuilder.createQuery(Status.class);
         Root<Status> from = criteriaQuery.from(Status.class);
-
         CriteriaQuery<Status> select = criteriaQuery.select(from);
         TypedQuery<Status> q = em.createQuery(select);
-        q.setFirstResult((pageNumber - 1) * pageSize);
-        q.setMaxResults(pageSize);
-
         return q.getResultList();
     }
 
@@ -65,12 +58,5 @@ public class StatusDAO extends AbstractDAO<Status> {
         return em.find(Status.class, statusId);
     }
 
-    public Long  getLength(){
-        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        countQuery.select(criteriaBuilder.count(countQuery.from(Status.class)));
-        Long lngth = em.createQuery(countQuery).getSingleResult();
-        return lngth;
-    }
 
 }
