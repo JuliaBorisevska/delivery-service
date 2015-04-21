@@ -1,5 +1,6 @@
 package handler;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -9,4 +10,6 @@ public abstract class AbstractPrivelegesHandler implements AbstractHandler {
     protected final String FILE_CONFIG_NAME = "conf/privileges.json";
 
     ObjectMapper mapper = new ObjectMapper();
+
+    JsonNode rootNode = null;
 }

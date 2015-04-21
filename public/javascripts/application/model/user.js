@@ -1,7 +1,7 @@
 
 define(function() {
     "use strict";
-    function User (id, firstName, lastName, middleName, role, company, login, menu) {
+    function User(id, firstName, lastName, middleName, role, company, login, menu, password) {
         var self = this;
         self.id = id;
         self.firstName = firstName;
@@ -10,6 +10,7 @@ define(function() {
         self.company = company;
         self.role = role;
         self.login = login;
+        self.password = password;
         self.menu = menu;
     }
 

@@ -16,7 +16,9 @@ public class SectionHandler extends AbstractPrivelegesHandler {
     private JsonNode sectionNode = null;
 
     protected SectionHandler() throws IOException, ParseException {
+        rootNode = mapper.readTree(new File(FILE_CONFIG_NAME));
         parse();
+        logger.info("section handler start");
     }
 
     @Override

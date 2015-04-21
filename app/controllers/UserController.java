@@ -2,6 +2,7 @@ package controllers;
 
 import be.objectify.deadbolt.java.actions.Pattern;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import dao.ContactDAO;
 import dao.UserDAO;
 import dto.UserDTO;
 import entity.Company;
@@ -17,11 +18,43 @@ import resource.MessageManager;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Map;
 
 
 public class UserController extends BaseController {
 	private static ALogger logger = Logger.of(UserController.class);
+
+	@Transactional
+	public static Result createUser() {
+		logger.info("start to create user");
+
+		User user = new User();
+		UserDAO userDAO = new UserDAO(JPA.em());
+		final Map<String, String[]> values = request().body().asFormUrlEncoded();
+		try {
+			String login = values.get("login")[0];
+			String password = values.get("password")[0];
+			Contact contact = null;
+			Long numberOfContact = null;
+			try {
+				numberOfContact = Long.valueOf(values.get("house")[0]);
+			} catch (ClassCastException e) {
+				throw e;
+			}
+			user.setIdentifier(login);
+			user.setPassword(password); // do hash
+			ContactDAO contactDAO = new ContactDAO(JPA.em());
+			user.setContactByContactId(contactDAO.findById(numberOfContact));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		userDAO.create(user);
+
+		return ok(Json.toJson(
+				new Reply<>(Status.SUCCESS, user)
+		));
+	}
 	
     @Transactional
     @Pattern("lst")
