@@ -37,44 +37,59 @@ public class OrderController extends BaseController {
 	
 	
     @Transactional
-    public static Result getOrder(Integer id) {
-    	OrderDAO orderDAO = new OrderDAO(JPA.em());
-        Order order = orderDAO.getOrderById(id);
-        if(order == null) {
-            return notFound(Json.toJson(new Reply()));
-        }
-
-        Reply<Order> reply = new Reply<>(Status.SUCCESS, order);
-        return ok(Json.toJson(reply));
+    public static Result getOrder(Long id) {
+        try {
+        	User user = Application.recieveUserByToken();
+        	if (user == null) {
+    			return badRequest(Json.toJson(
+    				new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
+    		}
+        	Company company = user.getContactByContactId().getCompanyByCompanyId();
+        	OrderDAO orderDAO = new OrderDAO(JPA.em());
+            Order order = orderDAO.getOrderById(id, company);
+            if(order == null) {
+                return notFound(Json.toJson(new Reply<>(Status.ERROR, MessageManager.getProperty("order.notfound"))));
+            }
+			List<String> statusTitleListFromJson = ConfigContainer.getInstance().getRolesHandler().getOrdersList(user.getRoleByRoleId().getName());
+			if (statusTitleListFromJson!=null && !statusTitleListFromJson.contains(order.getStatusByStatusId().getTitle())){
+				return badRequest(Json.toJson(
+		               new Reply<>(Status.ERROR, MessageManager.getProperty("status.access.error"))));
+			}
+			Reply<Order> reply = new Reply<>(Status.SUCCESS, order);
+	        return ok(Json.toJson(reply));
+        } catch (IOException | ParseException e) {
+			logger.error("Exception in getOrder method: {} ", e);
+            return badRequest(Json.toJson(
+                    new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
+		}
     }
-/*
-    @Transactional
-    public static Result setNextStatus(Integer id){
-    	OrderDAO orderDAO = new OrderDAO(JPA.em());
-        entity.Status st =  StatusOrder.nextStatus(orderDAO.getOrderById(id).getStatusByStatusId());
-        orderDAO.getOrderById(id).setStatusByStatusId(st);
-        return ok(Json.toJson(
-                new Reply<>(Status.SUCCESS, id)
-        ));
-    }
-    */
 
     @Transactional
     @Pattern("ordlst")
     public static Result listStatuses(){
-    	User user = Application.recieveUserByToken();
-		if (user == null) {
-			return badRequest(Json.toJson(
+    	try {
+    		User user = Application.recieveUserByToken();
+    		List<entity.Status> statusList;
+    		StatusDAO statusDAO =  new StatusDAO(JPA.em());
+    		if (user == null) {
+    			return badRequest(Json.toJson(
 					new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
+    		}
+			if (ConfigContainer.getInstance().getRolesHandler().hasOrders(user.getRoleByRoleId().getName())){
+				List<String> statusTitleList = ConfigContainer.getInstance().getRolesHandler().getOrdersList(user.getRoleByRoleId().getName());
+				statusList = statusDAO.getStatusList(statusTitleList);
+			}else{
+				statusList = statusDAO.getStatusList();
+			}
+	    	ObjectNode result = Json.newObject();
+			result.put("statusList", Json.toJson(statusList));
+			return ok(Json.toJson(
+	                    	new Reply<>(Status.SUCCESS, result)));
+		} catch (IOException | ParseException  e) {
+			logger.error("Exception in listStatuses method: {} ", e);
+            return badRequest(Json.toJson(
+                    new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
 		}
-    	//проверка на наличие списка статусов заказов у текущего пользователя
-    	//если есть, то возвращать их, иначе - все из бд
-    	StatusDAO statusDAO =  new StatusDAO(JPA.em());
-    	List<entity.Status> statusList = statusDAO.getStatusList();
-    	ObjectNode result = Json.newObject();
-		result.put("statusList", Json.toJson(statusList));
-		return ok(Json.toJson(
-                    	new Reply<>(Status.SUCCESS, result)));
     }
     
     @Transactional
@@ -93,30 +108,29 @@ public class OrderController extends BaseController {
     					new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
     		}
     		Company company = user.getContactByContactId().getCompanyByCompanyId();
-    	
-    		logger.info("Statuses: {}",ConfigContainer.getInstance().getStatusHandler().getStatusList("Новый"));
     		Long total;
     		List<Order> orderList;
-    		List<String> statusTitleList;
+    		List<String> statusTitleList = null;
+    		List<String> statusTitleListFromJson = ConfigContainer.getInstance().getRolesHandler().getOrdersList(user.getRoleByRoleId().getName());
     		if (StringUtils.isBlank(status)){
-    			//проверка на наличие списка статусов заказов у текущего пользователя
-            	//выбор версии перегруженного метода
-    			
-    			//total = orderDAO.getLength(company);
-    			//orderList = orderDAO.getOrderList(pageNumber, pageSize, company);
-    			
-    			statusTitleList = new ArrayList<String>();
-    			statusTitleList.add("Новый");
-    			statusTitleList.add("Доставка");
+    			if (statusTitleListFromJson!=null){
+    				statusTitleList = statusTitleListFromJson;
+    			}	
+    		}else{
+    			if (statusTitleListFromJson!=null && !statusTitleListFromJson.contains(status)){
+    				return badRequest(Json.toJson(
+    		               new Reply<>(Status.ERROR, MessageManager.getProperty("status.access.error"))));
+    			}else{
+    				statusTitleList = new ArrayList<String>();
+					statusTitleList.add(status);
+    			}
+    		}
+    		if (statusTitleList!=null){
     			total = orderDAO.getLength(company, statusTitleList);
     			orderList = orderDAO.getOrderList(pageNumber, pageSize, company, statusTitleList);
     		}else{
-    			//проверка на наличие списка статусов заказов у текущего пользователя
-    			//проверка на наличие в этом списке заданного статуса
-    			statusTitleList = new ArrayList<String>();
-    			statusTitleList.add(status);
-    			total = orderDAO.getLength(company, statusTitleList);
-    			orderList = orderDAO.getOrderList(pageNumber, pageSize, company, statusTitleList);
+    			total = orderDAO.getLength(company);
+    			orderList = orderDAO.getOrderList(pageNumber, pageSize, company);
     		}
     		Integer totalPages = Double.valueOf(Math.ceil((double) total / pageSize)).intValue();
     		List<OrderDTO> dtoList = new ArrayList<>();
@@ -132,7 +146,7 @@ public class OrderController extends BaseController {
                         	new Reply<>(Status.SUCCESS, result))
     				);
     	} catch (IOException | ParseException e) {
-            logger.error("Exception in listOrders method ", e);
+            logger.error("Exception in listOrders method: {} ", e);
             return badRequest(Json.toJson(
                     new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
         }
@@ -155,7 +169,7 @@ public class OrderController extends BaseController {
                 new Reply<>(Status.SUCCESS, order)
         ));
     }
-
+/*
     @Transactional
     public static Result updateOrder(Integer id) {
     	OrderDAO orderDAO = new OrderDAO(JPA.em());
@@ -181,5 +195,5 @@ public class OrderController extends BaseController {
         ));
     }
 
-    
+   */ 
 }

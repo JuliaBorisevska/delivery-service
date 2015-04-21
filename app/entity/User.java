@@ -6,6 +6,9 @@ import be.objectify.deadbolt.core.models.Subject;
 import security.SecurityPermission;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +21,17 @@ import java.util.List;
 public class User implements Subject {
 
     private Long id;
+    @JsonIgnore
     private String token;
     private Contact contactByContactId;
+    @JsonIgnore
     private UserState userStateByUserStateId;
+    @JsonIgnore
     private String identifier;
+    @JsonIgnore
     private String password;
     private SecurityRole roleByRoleId;
+    @JsonIgnore
     public List<SecurityPermission> permissions;
 
     @Override

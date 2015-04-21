@@ -4,6 +4,7 @@ package entity;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Table(name = "order", schema = "", catalog = "delivery_service")
 public class Order {
 
-    @GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Timestamp orderDate;
     private String description;
@@ -109,7 +110,7 @@ public class Order {
         this.statusByStatusId = statusByStatusId;
     }
 
-    @OneToMany(mappedBy = "orderByOrderId")
+    @OneToMany(mappedBy = "orderByOrderId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     public List<OrderHistory> getOrderHistory() {
         return orderHistory;
     }
