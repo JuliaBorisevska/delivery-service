@@ -15,19 +15,6 @@ define(["application/service/baseService"], function(baseService) {
             );
         };
 */
-        /*
-        self.setNextStatus  = function(id, success, error, done){
-
-            baseService.send(
-                "/order/getNextStatus" + id ,
-                "GET",
-                {},
-                success,
-                error,
-                done
-            );
-        };
-		*/
         self.list = function(page, pageSize, status, success, error, done) {
         	baseService.send(
         		"/order/list/" + page + "/" + pageSize + "/" + status,
@@ -49,8 +36,8 @@ define(["application/service/baseService"], function(baseService) {
                     done
                 );
         };
-/*
-        self.get = function(id, success, error, done) {
+
+        self.getOrder = function(id, success, error, done) {
             baseService.send(
                 "/order/" + id,
                 "GET",
@@ -60,7 +47,7 @@ define(["application/service/baseService"], function(baseService) {
                 done
             );
         };
-
+        /*
         self.update = function(order, success, error, done) {
             baseService.send(
                 "/order/" + order.id,
@@ -86,11 +73,10 @@ define(["application/service/baseService"], function(baseService) {
         return {
             //add: self.add,
             list: self.list,
-            getStatusList: self.getStatusList
-            //get: self.get,
+            getStatusList: self.getStatusList,
+            getOrder: self.getOrder
             //update: self.update,
             //remove: self.remove,
-            //setNextStatus: self.setNextStatus
 
         }
     }

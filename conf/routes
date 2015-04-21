@@ -21,10 +21,10 @@ GET           /user/list/:page/:pageSize     controllers.UserController.listUser
 DELETE        /user/:ids                     controllers.UserController.deleteUsers(ids: String)
 
 #Orders
-#GET     /order/setNextStatus/:id        controllers.OrderController.setNextStatus(id: Integer)
+GET     /order/:id                              controllers.OrderController.getOrder(id: Long)
 GET     /order/list/:page/:pageSize/:status     controllers.OrderController.listOrders(page:Integer, pageSize: Integer, status: String)
-GET     /order/list/:page/:pageSize/     controllers.OrderController.listOrders(page:Integer, pageSize: Integer, status="")
-GET     /status/list                     controllers.OrderController.listStatuses()
+GET     /order/list/:page/:pageSize/            controllers.OrderController.listOrders(page:Integer, pageSize: Integer, status="")
+GET     /status/list                            controllers.OrderController.listStatuses()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

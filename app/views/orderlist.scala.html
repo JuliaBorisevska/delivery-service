@@ -20,7 +20,7 @@
     </thead>
     <tbody data-bind="foreach: $root.orderlistVM.orders">
 <!--         <tr data-bind="click: $root.goToOrder"> -->
-		<tr>
+		<tr data-bind="click: function(data, evt) {$root.orderlistVM.goToOrderDetails(data, evt, $root)}">
 			<td data-bind="text: date"></td>
             <td data-bind="text: description"></td>
             <td data-bind="text: price"></td>

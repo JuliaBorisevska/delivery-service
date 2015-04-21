@@ -5,8 +5,9 @@ define(["application/service/initService",
         "application/viewModel/contactListVM",
         "application/viewModel/orderlistVM",
         "application/viewModel/userlistVM",
-        "application/viewModel/contactDetailsVM"], 
-        function (initService, Callback, User, loginVM, contactListVM, orderlistVM, userlistVM, contactDetailsVM) {
+        "application/viewModel/contactDetailsVM",
+        "application/viewModel/orderDetailsVM"], 
+        function (initService, Callback, User, loginVM, contactListVM, orderlistVM, userlistVM, contactDetailsVM, orderDetailsVM) {
 
     "use strict";
 
@@ -19,6 +20,7 @@ define(["application/service/initService",
         self.orderlistVM = orderlistVM;
         self.userlistVM = userlistVM;
         self.contactDetailsVM = contactDetailsVM;
+        self.orderDetailsVM = orderDetailsVM;
         self.chosenSectionId = ko.observable();
         self.user = ko.observable();
         self.menu = ko.observableArray();
@@ -95,7 +97,10 @@ define(["application/service/initService",
             		break;
             	case "ordlst":
             		self.orderlistVM.getStatusList();
-            		self.orderlistVM.changeStatus();
+            		//self.orderlistVM.changeStatus();
+            		break;
+            	case "ordadd":
+            		self.orderDetailsVM.setOrder(new Order("", "", "", "", "", "", "", "",""));
             		break;
             }
             location.hash = section.id;
