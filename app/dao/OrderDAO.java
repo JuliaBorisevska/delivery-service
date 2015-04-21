@@ -98,7 +98,7 @@ public class OrderDAO extends AbstractDAO<Order> {
         	//fromOrder.fetch(listAttribute);
         	CriteriaQuery<Order> select = criteriaQuery.select(fromOrder).where(cb.equal(fromOrder.get("id"), orderId));
         	TypedQuery<Order> q = em.createQuery(select);
-        	order = q.getResultList().get(0);
+        	order = q.getSingleResult();
         	if (order.getCustomerByContactId().getCompanyByCompanyId().getId()!=company.getId()){
         		logger.warn("Order with orderId - {} doesn't belong the company with id - {}", orderId, company.getId());
         		order = null;
