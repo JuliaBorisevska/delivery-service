@@ -29,7 +29,7 @@ define(["application/service/userService",
                                 }
                                 for(var i = 0, lth = reply.data.list.length; i < lth; i++) {
                                     var user = reply.data.list[i];
-                                    users.push(new User(user.id,user.firstName, user.lastName, user.middleName, user.roleTitle, user.companyTitle, user.login, user.menu));
+                                    users.push(new User(user.id, user.firstName, user.lastName, user.middleName, user.roleTitle, user.companyTitle, user.login, user.menu, user.password));
                                 }
                             }
                         }, self, {}),

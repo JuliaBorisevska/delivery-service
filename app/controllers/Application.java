@@ -35,8 +35,8 @@ public class Application extends BaseController {
     public static User recieveUserByToken(){
     	logger.info("Start recieveUserByToken method");
     	User user = null;
-    	if (request().cookie("token")!=null){
-    		String token = request().cookie("token").value();
+        if (request().cookie("token") != null) {
+            String token = request().cookie("token").value();
     		UserDAO userDAO = new UserDAO(JPA.em());
             user = userDAO.findByToken(token);
     	}
@@ -68,6 +68,7 @@ public class Application extends BaseController {
             try {
                 if (ConfigContainer.getInstance().getRolesHandler().hasRole(userDTO.getRoleTitle())) {
                     userDTO.setMenu(ConfigContainer.getInstance().getRolesHandler().getJsonPermissions(userDTO.getRoleTitle()));
+                    logger.info("set menu for current user: {}", ConfigContainer.getInstance().getRolesHandler().getJsonPermissions(userDTO.getRoleTitle()));
                 } else {
                     throw new ParseException("role is not exist in configuration!", 0);
                 }
@@ -109,6 +110,7 @@ public class Application extends BaseController {
                 try {
                     if (ConfigContainer.getInstance().getRolesHandler().hasRole(userDTO.getRoleTitle())) {
                         userDTO.setMenu(ConfigContainer.getInstance().getRolesHandler().getJsonPermissions(userDTO.getRoleTitle()));
+                        logger.info("set menu: {}", ConfigContainer.getInstance().getRolesHandler().getJsonPermissions(userDTO.getRoleTitle()));
                     } else {
                         throw new ParseException("role is not exist in configuration!", 0);
                     }

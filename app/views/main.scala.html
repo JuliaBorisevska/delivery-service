@@ -7,6 +7,7 @@
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
 		<script src="@routes.Assets.at("javascripts/vendor/knockout-3.1.0.js")" type="text/javascript"></script>
 		<script src="@routes.Assets.at("javascripts/vendor/jquery-1.11.2.min.js")" type="text/javascript"></script>
+		<script src="@routes.Assets.at("javascripts/vendor/jquery-ui.min.js")" type="text/javascript"></script>
 		<script src="@routes.Assets.at("javascripts/vendor/sammy-latest.min.js")" type="text/javascript"></script>
         @helper.requireJs(core = routes.Assets.at("javascripts/vendor/require.js").url, module = routes.Assets.at("javascripts/app").url)
     </head>
@@ -62,4 +63,5 @@
        	@login()
 		<!-- /ko -->
     </body>
+	<script src="@routes.Assets.at("javascripts/buttonActions.js")" type="text/javascript"></script>
 </html>

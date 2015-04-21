@@ -1,3 +1,5 @@
+@()
+
 <table class="list">
     <thead>
         <tr>
@@ -9,7 +11,12 @@
     </thead>
     <tbody data-bind="foreach: contactListVM.contacts">
         <tr>
+                <!-- ko if: $root.chosenSectionId().id != "useradd" -->
             <td><input type="checkbox" data-bind="value: id, checked: $root.contactListVM.checkedContacts" ></td>
+                <!-- /ko -->
+                <!-- ko if: $root.chosenSectionId().id == "useradd" -->
+            <td><input type="radio" data-bind="click: $root.userDetailsVM.closeModal, value: id, checked: $root.contactListVM.checkedContact" ></td>
+                <!-- /ko -->
             <td data-bind="attr: { id: id }, click: function(contact, evt) {$root.contactListVM.goToDetails(contact, evt, $root)}">
                 <span data-bind="text: lastName">&nbsp;</span>
                 <span data-bind="text: firstName">&nbsp;</span>

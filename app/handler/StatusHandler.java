@@ -1,7 +1,6 @@
 package handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import play.Logger;
 
 import java.io.File;
@@ -21,12 +20,10 @@ public class StatusHandler extends AbstractPrivelegesHandler {
 
     private Map<String, String> translateMap = null;
 
-    private JsonNode rootNode = null;
-
     protected StatusHandler() throws IOException, ParseException {
-        mapper = new ObjectMapper();
         rootNode = mapper.readTree(new File(FILE_CONFIG_NAME));
         parse();
+        logger.info("status handler start");
     }
 
     private void updateStatusNodes() {

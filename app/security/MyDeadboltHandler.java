@@ -3,12 +3,11 @@ package security;
 import be.objectify.deadbolt.core.models.Subject;
 import be.objectify.deadbolt.java.AbstractDeadboltHandler;
 import be.objectify.deadbolt.java.DynamicResourceHandler;
-import dao.UserDAO;
+import controllers.Application;
 import entity.SecurityRole;
 import entity.User;
 import handler.ConfigContainer;
 import play.Logger;
-import play.db.jpa.JPA;
 import play.libs.F;
 import play.mvc.Http;
 import play.mvc.Result;
@@ -18,8 +17,6 @@ import views.html.accesserror;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Collections;
-
-import controllers.Application;
 
 /**
  * Created by antonkw on 30.03.2015.
@@ -45,6 +42,7 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
             }
             logger.info("check role of user: {}, role: {}", user.getIdentifier(), user.getRoles().get(0).getName());
         } else {
+
             user = new User();
             user.setRoleByRoleId(new SecurityRole());
             user.setPermissions(Collections.<SecurityPermission>emptyList());

@@ -26,7 +26,9 @@ public class RolesHandler extends AbstractPrivelegesHandler {
 
     protected RolesHandler(StatusHandler statusHandler) throws IOException, ParseException {
         this.statusHandler = statusHandler;
+        rootNode = mapper.readTree(new File(FILE_CONFIG_NAME));
         parse();
+        logger.info("roles handler start");
     }
 
     @Override
@@ -95,6 +97,7 @@ public class RolesHandler extends AbstractPrivelegesHandler {
 
     public JsonNode getJsonPermissions(String roleName) {
         if (hasRole(roleName)) {
+            logger.info("permission of role {} : {}", roleName, jsonRoles.get(roleName).toString());
             return jsonRoles.get(roleName);
         } else {
             logger.warn("role {} is not existing", roleName);
