@@ -1,3 +1,26 @@
 <!-- ko if: $root.chosenSectionId().id == "ordadd" -->
-       order creation/changing
+<h2>Изменение статуса заказа</h2>
+<div class="details-form">    
+    <div class="actions">
+    <button type="button" data-bind="click: contactListVM.deleteContacts">Принят</button>
+    <button type="button">Не может быть выполнен</button>
+</div>
+</div>
+<h2>Информация о заказе</h2>
+<div class="details-form">    
+    <div class="field">
+        <label class="title">Имя:</label>
+        <input type="text" class="textfield" />
+    </div>
+    <div class="clr"></div>
+    <div class="field">
+        <label class="title">Фамилия:</label>
+        <input type="text" class="textfield" />
+    </div>
+    <div class="clr"></div>
+    <div class="field">
+        <label class="title">Сообщение:</label>
+        <textarea class="textfield"></textarea>
+    </div>
+</div>
 <!-- /ko -->

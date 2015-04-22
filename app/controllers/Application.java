@@ -24,7 +24,6 @@ import java.util.Map;
 @Unrestricted
 public class Application extends BaseController {
     private static ALogger logger = Logger.of(Application.class);
-    //private static final String FILE_CONFIG_NAME = "conf/privileges.json";
 
     public static Result index() {
         logger.info("Start index method");
@@ -62,7 +61,7 @@ public class Application extends BaseController {
             User user = recieveUserByToken();
             if (user == null) {
     			return badRequest(Json.toJson(
-    		            new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
+    		            new Reply<>(Status.ERROR, MessageManager.getProperty("time.error"))));
     		}
             UserDTO userDTO = UserDTO.getUser(user);
             try {
@@ -138,7 +137,7 @@ public class Application extends BaseController {
         User user = recieveUserByToken();
         if (user == null) {
 			return badRequest(Json.toJson(
-		            new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
+		            new Reply<>(Status.ERROR, MessageManager.getProperty("time.error"))));
 		}
         user.setToken(null);
         EntityManager em = JPA.em();

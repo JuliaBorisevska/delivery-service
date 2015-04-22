@@ -60,7 +60,7 @@ define(["application/service/orderService",
                                 }
                                 for(var i = 0, lth = reply.data.list.length; i < lth; i++) {
                                     var order = reply.data.list[i];
-                                    orders.push(new Order(order.id, order.description, null, null, null, order.orderStatus, order.date, order.price, null));
+                                    orders.push(new Order(order.id, order.description, null, null, null, null, null, order.orderStatus, order.date, order.price, null));
                                 }
                             }
                         }, self, {}
@@ -92,18 +92,22 @@ define(["application/service/orderService",
                     new Callback(function(params){
                             reply = params.reply;
                             if(reply.status === "SUCCESS") {
-                                var order = reply.data;
+                                var order = reply.data.order;
+                                var statuslist = reply.data.statuslist;
                                 root.orderDetailsVM.setOrder(
                                 		new Order(order.id, order.description,
-                                				new Contact(order.customerByContactId.id, order.customerByContactId.firstName, order.customerByContactId.lastName, order.customerByContactId.middleName,
-                                						order.customerByContactId.birthday, order.customerByContactId.town, order.customerByContactId.street, order.customerByContactId.house, order.customerByContactId.flat,
-                                						order.customerByContactId.companyByCompanyId.id), 
-                                				new Contact(order.recipientByContactId.id, order.recipientByContactId.firstName, order.recipientByContactId.lastName, order.recipientByContactId.middleName,
-                                        				order.recipientByContactId.birthday, order.recipientByContactId.town, order.recipientByContactId.street, order.recipientByContactId.house, order.recipientByContactId.flat,
-                                        				order.recipientByContactId.companyByCompanyId.id), 
-                                        		new User(order.userByUserId.id,order.userByUserId.contactByContactId.firstName, order.userByUserId.contactByContactId.lastName, order.userByUserId.contactByContactId.middleName, 
-                                        				order.userByUserId.roleByRoleId.title, null, null, null), 
-                                				order.statusByStatusId.title, order.orderDate, order.totalPrice, null)
+                                				new Contact(order.customer.contactId, order.customer.firstName, order.customer.lastName, order.customer.middleName,
+                                						null, null, null, null, null, null), 
+                                				new Contact(order.recipient.contactId, order.recipient.firstName, order.recipient.lastName, order.recipient.middleName,
+                                						null, null, null, null, null, null), 
+                                        		new User(order.orderMng.id,order.orderMng.firstName, order.orderMng.lastName, order.orderMng.middleName, 
+                                        				order.orderMng.roleTitle, order.orderMng.companyTitle, order.orderMng.login, order.orderMng.menu, null),
+                                        		new User(order.processMng.id,order.processMng.firstName, order.processMng.lastName, order.processMng.middleName, 
+                                        				order.processMng.roleTitle, order.processMng.companyTitle, order.processMng.login, order.processMng.menu, null),
+                                                new User(order.deliveryMng.id,order.deliveryMng.firstName, order.deliveryMng.lastName, order.deliveryMng.middleName, 
+                                        				order.deliveryMng.roleTitle, order.deliveryMng.companyTitle, order.deliveryMng.login, order.deliveryMng.menu, null),
+                                				order.orderStatus, order.date, order.price),
+                                		statuslist
                                 );
                                 location.hash = "ordadd";
                             }

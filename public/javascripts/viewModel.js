@@ -7,8 +7,9 @@ define(["application/service/initService",
         "application/viewModel/userlistVM",
         "application/viewModel/contactDetailsVM",
         "application/viewModel/userDetailsVM",
-        "application/viewModel/orderDetailsVM"],
-    function (initService, Callback, User, loginVM, contactListVM, orderlistVM, userlistVM, contactDetailsVM, userDetailsVM, orderDetailsVM) {
+        "application/viewModel/orderDetailsVM",
+        "application/model/Order"],
+    function (initService, Callback, User, loginVM, contactListVM, orderlistVM, userlistVM, contactDetailsVM, userDetailsVM, orderDetailsVM, Order) {
 
     "use strict";
 
@@ -102,12 +103,14 @@ define(["application/service/initService",
             		//self.orderlistVM.changeStatus();
             		break;
             	case "ordadd":
-            		self.orderDetailsVM.setOrder(new Order("", "", "", "", "", "", "", "",""));
+            		self.orderDetailsVM.setOrder(new Order("", "", "", "", "", "", "", "","", ""), []);
             		break;
                 case "useradd":
-                    self.contactListVM.currentPage(1);
-                    self.contactListVM.numbers([]);
-                    self.contactListVM.list(self.contactListVM.currentPage(), self.contactListVM.PAGE_SIZE);
+                	self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", ""));
+            		
+                    //self.contactListVM.currentPage(1);
+                    //self.contactListVM.numbers([]);
+                    //self.contactListVM.list(self.contactListVM.currentPage(), self.contactListVM.PAGE_SIZE);
                     break;
             }
             location.hash = section.id;

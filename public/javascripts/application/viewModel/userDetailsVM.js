@@ -32,11 +32,11 @@ define([
                             }, self, {}
                         );
 
-                    if (record.id) {
-                        userService.update(record, success, error);
-                    } else {
-                        userService.add(record, success, error);
-                    }
+                    //if (record.id) {
+                    //    userService.update(record, success, error);
+                    //} else {
+                    //    userService.add(record, success, error);
+                    //}
 
                 }, setUser = function (c) {
                     user(c);

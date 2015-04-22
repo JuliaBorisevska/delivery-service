@@ -7,11 +7,15 @@ define([
     function OrderDetailsVM() {
         var self = this,
             reply,
-            order = ko.observable();
+            order = ko.observable(),
+            statusList = ko.observableArray();
             
-        var setOrder = function(ord){
+        var setOrder = function(ord, list){
                 order(ord);
-            };
+                for(var i = 0, lth = list.length; i < lth; i++) {
+                	statusList.push(list[i]);
+                }
+        };
 
 
         return {

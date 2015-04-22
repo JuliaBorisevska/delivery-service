@@ -58,7 +58,7 @@ public class OrderController extends BaseController {
 			}
 			ObjectNode result = Json.newObject();
     		result.put("order", Json.toJson(OrderDetailsDTO.getOrderDetails(order)));
-    		result.put("list", Json.toJson(ConfigContainer.getInstance().getStatusHandler().getStatusList(order.getStatusByStatusId().getTitle())));
+    		result.put("statuslist", Json.toJson(ConfigContainer.getInstance().getStatusHandler().getStatusList(order.getStatusByStatusId().getTitle())));
 
     		return ok(Json.toJson(
                         	new Reply<>(Status.SUCCESS, result)));
