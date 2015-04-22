@@ -18,12 +18,18 @@ public class Order {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Timestamp orderDate;
+    @Constraints.Required
     private String description;
+    @Constraints.Required
     private Double totalPrice;
     @Constraints.Required
     private Status statusByStatusId;
     @Constraints.Required
     private User userByUserId;
+    @Constraints.Required
+    private User processMngByUserId;
+    @Constraints.Required
+    private User deliveryMngByUserId;
     @Constraints.Required
     private Contact customerByContactId;
     @Constraints.Required
@@ -81,6 +87,26 @@ public class Order {
     }
 
     @ManyToOne
+    @JoinColumn(name = "process_mng_id", referencedColumnName = "id", nullable = false)
+    public User getProcessMngByUserId() {
+		return processMngByUserId;
+	}
+
+	public void setProcessMngByUserId(User processMngByUserId) {
+		this.processMngByUserId = processMngByUserId;
+	}
+
+	@ManyToOne
+    @JoinColumn(name = "delivery_mng_id", referencedColumnName = "id", nullable = false)
+	public User getDeliveryMngByUserId() {
+		return deliveryMngByUserId;
+	}
+
+	public void setDeliveryMngByUserId(User deliveryMngByUserId) {
+		this.deliveryMngByUserId = deliveryMngByUserId;
+	}
+
+	@ManyToOne
     @JoinColumn(name = "customer_contact_id", referencedColumnName = "id", nullable = false)
     public Contact getCustomerByContactId() {
         return customerByContactId;

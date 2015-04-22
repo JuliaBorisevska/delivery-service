@@ -84,7 +84,7 @@ public class OrderDAO extends AbstractDAO<Order> {
         return q.getResultList();
     }
 */
-    
+    /*
     public Order getOrderById(Long orderId, Company company){
     	logger.info("Start getOrderById method with orderId - {}", orderId);
     	Order order;
@@ -92,8 +92,8 @@ public class OrderDAO extends AbstractDAO<Order> {
     		CriteriaBuilder cb = em.getCriteriaBuilder();
         	CriteriaQuery<Order> criteriaQuery = cb.createQuery(Order.class);
         	Root<Order> fromOrder = criteriaQuery.from(Order.class);
+        	//Fetch<Order,OrderHistory> orderFetch = fromOrder.fetch("orderHistory");
         	//Join<Order,OrderHistory> orderJoin = fromOrder.join("orderHistory");
-        	Fetch<Order,OrderHistory> orderFetch = fromOrder.fetch("orderHistory");
         	//ListAttribute<? super Order, OrderHistory> listAttribute = fromOrder.getModel().getList("orderHistory", OrderHistory.class);
         	//fromOrder.fetch(listAttribute);
         	CriteriaQuery<Order> select = criteriaQuery.select(fromOrder).where(cb.equal(fromOrder.get("id"), orderId));
@@ -109,7 +109,8 @@ public class OrderDAO extends AbstractDAO<Order> {
         }
     	return order;
     }
-    /*
+    */
+    
     public Order getOrderById(Long orderId, Company company){
     	logger.info("Start getOrderById method with orderId - {}", orderId);
     	Order order;
@@ -117,7 +118,7 @@ public class OrderDAO extends AbstractDAO<Order> {
     		Query query = em.createQuery("select o from Order o " +
     		        "left join fetch o.orderHistory where o.id=:id");
     		query.setParameter("id", orderId);
-    		order= (Order)query.getResultList().get(0);
+    		order= (Order)query.getSingleResult();
         	if (order.getCustomerByContactId().getCompanyByCompanyId().getId()!=company.getId()){
         		logger.warn("Order with orderId - {} doesn't belong the company with id - {}", orderId, company.getId());
         		order = null;
@@ -128,7 +129,7 @@ public class OrderDAO extends AbstractDAO<Order> {
         }
     	return order;
     }
-    */
+    
     public List<Order> getOrderList(Integer pageNumber, Integer pageSize, Company company){
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);

@@ -9,6 +9,7 @@ import controllers.BaseController.Status;
 import dao.OrderDAO;
 import dao.StatusDAO;
 import dto.OrderDTO;
+import dto.OrderDetailsDTO;
 import entity.Company;
 import entity.Order;
 import entity.User;
@@ -55,8 +56,12 @@ public class OrderController extends BaseController {
 				return badRequest(Json.toJson(
 		               new Reply<>(Status.ERROR, MessageManager.getProperty("status.access.error"))));
 			}
-			Reply<Order> reply = new Reply<>(Status.SUCCESS, order);
-	        return ok(Json.toJson(reply));
+			ObjectNode result = Json.newObject();
+    		result.put("order", Json.toJson(OrderDetailsDTO.getOrderDetails(order)));
+    		result.put("list", Json.toJson(ConfigContainer.getInstance().getStatusHandler().getStatusList(order.getStatusByStatusId().getTitle())));
+
+    		return ok(Json.toJson(
+                        	new Reply<>(Status.SUCCESS, result)));
         } catch (IOException | ParseException e) {
 			logger.error("Exception in getOrder method: {} ", e);
             return badRequest(Json.toJson(

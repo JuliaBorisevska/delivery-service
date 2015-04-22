@@ -53,7 +53,7 @@ public class OrderHistory {
         this.userComment = userComment;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
     public Order getOrderByOrderId() {
         return orderByOrderId;
