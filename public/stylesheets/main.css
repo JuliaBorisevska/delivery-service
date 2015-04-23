@@ -23,7 +23,7 @@ html#custom, body#custom {
 
 #context{
 	width: 96%;
-	padding: 0 2%; /*10px*/
+	padding: 0 0%; /*10px*/
 	margin: 0 auto;
 	height: 1px;
 	min-height: 55%;
@@ -221,7 +221,7 @@ button:active, .button:active {
 }
 
 #main {
-	width: 99%;
+	width: 100%;
 	min-height: 100%;
 	background-color: white ;
 	border-radius: 10px;

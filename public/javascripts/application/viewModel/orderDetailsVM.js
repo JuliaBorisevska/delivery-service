@@ -21,7 +21,7 @@ define([
             //self.editedId = record.id;
             //self.name(record.name());
             //self.description(record.description());
-            $('#details').modal({
+            $('#status-confirm').modal({
             	  keyboard: false
             });
         };
