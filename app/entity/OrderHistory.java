@@ -4,6 +4,8 @@ import play.data.validation.Constraints;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Timestamp;
 
 /**
@@ -53,6 +55,7 @@ public class OrderHistory {
         this.userComment = userComment;
     }
 
+    @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
     public Order getOrderByOrderId() {

@@ -1,26 +1,56 @@
 <!-- ko if: $root.chosenSectionId().id == "ordadd" -->
+<div id="order-details">
 <h2>Изменение статуса заказа</h2>
-<div class="details-form">    
+<div class="details-part">    
     <div class="actions">
     <button type="button" data-bind="click: contactListVM.deleteContacts">Принят</button>
-    <button type="button">Не может быть выполнен</button>
+    <button type="button" data-bind="click: $root.orderDetailsVM.showConfirmModal">Модальное окно</button>
 </div>
+
+<!-- Modal -->
+	<div class="modal fade" id="status-confirm">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Изменить статус?</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label>Коментарий к изменению статуса:</label>
+						<textarea class="form-control" style="resize: none">
+						</textarea>
+					</div>
+				</div>
+				<div class="modal-footer">
+        			<button type="button">Да</button>
+					<button type="button" data-dismiss="modal">Отмена</button>
+				</div>
+			</div>
+		</div>
+   </div>
+<!-- /.modal -->
 </div>
 <h2>Информация о заказе</h2>
-<div class="details-form">    
+<div class="details-part">    
     <div class="field">
-        <label class="title">Имя:</label>
+        <label class="title">Текущее состояние заказа:</label>
         <input type="text" class="textfield" />
     </div>
     <div class="clr"></div>
     <div class="field">
-        <label class="title">Фамилия:</label>
+        <label class="title">Оценочная стоимость:</label>
         <input type="text" class="textfield" />
     </div>
     <div class="clr"></div>
     <div class="field">
-        <label class="title">Сообщение:</label>
+        <label class="title">Описание заказа:</label>
         <textarea class="textfield"></textarea>
     </div>
+</div>
+<h2>История заказа</h2>
+<div class="details-part">    
+    
+</div>
 </div>
 <!-- /ko -->

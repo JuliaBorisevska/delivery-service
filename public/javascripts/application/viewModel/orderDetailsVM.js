@@ -16,10 +16,20 @@ define([
                 	statusList.push(list[i]);
                 }
         };
+        
+        var showConfirmModal = function(status) {
+            //self.editedId = record.id;
+            //self.name(record.name());
+            //self.description(record.description());
+            $('#status-confirm').modal({
+            	  keyboard: false
+            });
+        };
 
 
         return {
             setOrder: setOrder,
+            showConfirmModal: showConfirmModal,
             order: order
         }
     }

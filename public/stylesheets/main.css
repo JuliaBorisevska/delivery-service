@@ -1,4 +1,4 @@
-html, body {
+html#custom, body#custom {
     margin: 0;
 	padding: 0;
 	color: #000000;
@@ -23,7 +23,7 @@ html, body {
 
 #context{
 	width: 96%;
-	padding: 0 2%; /*10px*/
+	padding: 0 0%; /*10px*/
 	margin: 0 auto;
 	height: 1px;
 	min-height: 55%;
@@ -36,7 +36,7 @@ html, body {
 
 #site_title { 
 	float: left; 
-	margin-top: 30px; 
+	margin-top: 20px; 
 	margin-left: 0.3%; 
 }
 
@@ -46,6 +46,9 @@ html, body {
 	text-align: left; 
 	font-style: italic;
 	font-size: 40px;
+	line-height: 1.4em; 
+	font-family: Tahoma, Geneva, sans-serif;
+	font-weight: bold;
 }
 
 #header_right { 
@@ -71,6 +74,13 @@ html, body {
     font-weight: bold;
 }
 
+.login-form tr,.login-form td,.login-form th {
+    border: 0px solid #dcdcdc;
+    margin: 5px auto;
+    padding: 5px;
+    text-align: left;
+}
+
 input[type="text"], input[type="password"], input[type="date"], textarea,
 input[type="tel"], input[type="number"], input[type="url"] {
     border: 1px solid #bfbfbf;
@@ -81,9 +91,15 @@ input[type="tel"], input[type="number"], input[type="url"] {
 }
 
 .list{
-	margin: 0 5%;
+	margin: 0.7% 5%;
 	padding: 0;
 	width: 90%;
+}
+
+table.list{
+	border-collapse: inherit;
+  	border-spacing: 2px;
+  	font-size: 12px;
 }
 
 table {
@@ -92,20 +108,23 @@ table {
     font-size: 12px;
 }
 
-tr, td, th {
+
+
+.list tr,.list td,.list th {
     border: 0px solid #dcdcdc;
     margin: 5px auto;
     padding: 5px;
     text-align: left;
 }
 
-th {
+.list th {
     border: 0px solid #dcdcdc;
     margin: 5px auto;
     padding: 5px;
     text-align: center;
     color: #fff;
 	background-color: #fdb520;
+	font-size: 13px;
 }
 
 #logout{
@@ -126,8 +145,10 @@ button, .button {
     text-decoration:none;
 }
 
-button:hover, .button:hover {
+button:hover, .button:hover{
     background-color: #fff;
+    color:#d5d5d5;
+    text-decoration:none;
 }
 
 button:active, .button:active {
@@ -183,21 +204,24 @@ button:active, .button:active {
 	height: 50px 
 }
 
-h2 {
+#order-details h2 {
   font-size: 1.5em;
   padding-bottom: 10px;
   border-bottom: 3px solid #fdb520;
   margin: 2.5% 5% 0px 5%;
+  font-family: Tahoma, Geneva, sans-serif;
+  line-height: 1.4em; 
+  font-weight: bold;
 }
 
-.details-form{
+.details-part{
 	width: 80%;
 	margin: auto;
 	padding: 5% 0 5% 0;
 }
 
 #main {
-	width: 99%;
+	width: 100%;
 	min-height: 100%;
 	background-color: white ;
 	border-radius: 10px;
