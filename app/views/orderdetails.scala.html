@@ -1,13 +1,41 @@
 <!-- ko if: $root.chosenSectionId().id == "ordadd" -->
+<div id="order-details">
 <h2>Изменение статуса заказа</h2>
-<div class="details-form">    
+<div class="details-part">    
     <div class="actions">
     <button type="button" data-bind="click: contactListVM.deleteContacts">Принят</button>
-    <button type="button">Не может быть выполнен</button>
+    <button type="button" data-bind="click: $root.orderDetailsVM.showConfirmModal">Модальное окно</button>
 </div>
+<!-- Modal -->
+  <div class="modal fade" id="details">
+       <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close"
+                                data-dismiss="modal"
+                                aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Изменить статус?</h4>
+                    </div>
+                    <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="descriptionInput">Коментарий к изменению статуса:</label>
+                                            <textarea class="form-control"
+                                                      id="descriptionInput"
+                                                      style="resize: none">
+                                            </textarea>
+                                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal">Отмена</button>
+                        <button type="button">Да</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+   </div>
+<!-- /.modal -->
 </div>
 <h2>Информация о заказе</h2>
-<div class="details-form">    
+<div class="details-part">    
     <div class="field">
         <label class="title">Имя:</label>
         <input type="text" class="textfield" />
@@ -22,5 +50,6 @@
         <label class="title">Сообщение:</label>
         <textarea class="textfield"></textarea>
     </div>
+</div>
 </div>
 <!-- /ko -->
