@@ -8,8 +8,9 @@ define(["application/service/initService",
         "application/viewModel/contactDetailsVM",
         "application/viewModel/userDetailsVM",
         "application/viewModel/orderDetailsVM",
-        "application/model/Order"],
-    function (initService, Callback, User, loginVM, contactListVM, orderlistVM, userlistVM, contactDetailsVM, userDetailsVM, orderDetailsVM, Order) {
+        "application/model/Order",
+        "application/model/Contact"],
+    function (initService, Callback, User, loginVM, contactListVM, orderlistVM, userlistVM, contactDetailsVM, userDetailsVM, orderDetailsVM, Order, Contact) {
 
     "use strict";
 
@@ -89,6 +90,9 @@ define(["application/service/initService",
         self.goTo = function(section) {
             switch (section.id){
             	case "lst":
+                    if (userDetailsVM.user() === undefined) {
+                        self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", "", ""));
+                    }
                     self.userlistVM.numbers([]);
                     self.userlistVM.currentPage(1);
             		self.userlistVM.list(self.userlistVM.currentPage(), self.userlistVM.PAGE_SIZE);
@@ -107,11 +111,14 @@ define(["application/service/initService",
             		self.orderDetailsVM.setOrder(new Order("", "", "", "", "", "", "", "","", ""), [],[]);
             		break;
                 case "useradd":
-                	self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", ""));
-            		
-                    //self.contactListVM.currentPage(1);
-                    //self.contactListVM.numbers([]);
-                    //self.contactListVM.list(self.contactListVM.currentPage(), self.contactListVM.PAGE_SIZE);
+                    if (userDetailsVM.user() === undefined) {
+                        self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", "", ""));
+                    }
+
+
+                    self.contactListVM.currentPage(1);
+                    self.contactListVM.numbers([]);
+                    self.contactListVM.list(self.contactListVM.currentPage(), self.contactListVM.PAGE_SIZE);
                     break;
             }
             location.hash = section.id;

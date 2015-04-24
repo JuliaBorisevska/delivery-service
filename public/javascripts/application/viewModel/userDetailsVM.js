@@ -14,6 +14,7 @@ define([
 
                 user = ko.observable(),
                 submit = function (root) {
+                    alert("hi");
                     var record = user(),
                         success = new Callback(function (params) {
                                 var reply = params.reply;
@@ -32,11 +33,13 @@ define([
                             }, self, {}
                         );
 
-                    //if (record.id) {
-                    //    userService.update(record, success, error);
-                    //} else {
-                    //    userService.add(record, success, error);
-                    //}
+                    if (record.id) {
+                        alert("try to update");
+                        userService.update(record, success, error);
+                    } else {
+                        alert("try to add");
+                        userService.add(record, success, error);
+                    }
 
                 }, setUser = function (c) {
                     user(c);

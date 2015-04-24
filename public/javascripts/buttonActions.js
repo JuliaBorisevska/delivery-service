@@ -6,6 +6,8 @@ $(document).ready(function () {
         height: wHeight * 0.25,
         width: dWidth,
         autoOpen: false,
+        //close: function() {},
+        modal: true,
         show: {
             effect: "blind",
             duration: 1000
