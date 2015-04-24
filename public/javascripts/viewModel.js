@@ -103,7 +103,8 @@ define(["application/service/initService",
             		//self.orderlistVM.changeStatus();
             		break;
             	case "ordadd":
-            		self.orderDetailsVM.setOrder(new Order("", "", "", "", "", "", "", "","", ""), []);
+            		self.orderDetailsVM.getFirstStatus();
+            		self.orderDetailsVM.setOrder(new Order("", "", "", "", "", "", "", "","", ""), [],[]);
             		break;
                 case "useradd":
                 	self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", ""));

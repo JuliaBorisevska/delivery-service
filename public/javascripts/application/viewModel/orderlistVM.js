@@ -94,6 +94,7 @@ define(["application/service/orderService",
                             if(reply.status === "SUCCESS") {
                                 var order = reply.data.order;
                                 var statuslist = reply.data.statuslist;
+                                var orderHistory = reply.data.orderHistory;
                                 root.orderDetailsVM.setOrder(
                                 		new Order(order.id, order.description,
                                 				new Contact(order.customer.contactId, order.customer.firstName, order.customer.lastName, order.customer.middleName,
@@ -107,7 +108,7 @@ define(["application/service/orderService",
                                                 new User(order.deliveryMng.id,order.deliveryMng.firstName, order.deliveryMng.lastName, order.deliveryMng.middleName, 
                                         				order.deliveryMng.roleTitle, order.deliveryMng.companyTitle, order.deliveryMng.login, order.deliveryMng.menu, null),
                                 				order.orderStatus, order.date, order.price),
-                                		statuslist
+                                		statuslist, orderHistory
                                 );
                                 location.hash = "ordadd";
                             }

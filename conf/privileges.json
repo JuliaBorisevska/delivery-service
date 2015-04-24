@@ -21,5 +21,6 @@
 		  {"id": "delivery", "title": "Доставка", "choice": ["closed", "accepted", "disabled"]},
 		  {"id": "closed", "title": "Закрыт", "choice": []},
 		  {"id": "canceled", "title": "Отменен", "choice": []},
-		  {"id": "disabled", "title": "Не может быть выполнен", "choice": ["new"]}] 
+		  {"id": "disabled", "title": "Не может быть выполнен", "choice": ["new"]}],
+"first_status": "new" 
 }

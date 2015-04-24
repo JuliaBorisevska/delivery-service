@@ -10,8 +10,10 @@ import dao.OrderDAO;
 import dao.StatusDAO;
 import dto.OrderDTO;
 import dto.OrderDetailsDTO;
+import dto.OrderHistoryDTO;
 import entity.Company;
 import entity.Order;
+import entity.OrderHistory;
 import entity.User;
 import play.Logger;
 import play.Logger.ALogger;
@@ -38,6 +40,7 @@ public class OrderController extends BaseController {
 	
 	
     @Transactional
+    @Pattern("ordadd")
     public static Result getOrder(Long id) {
         try {
         	User user = Application.recieveUserByToken();
@@ -59,11 +62,31 @@ public class OrderController extends BaseController {
 			ObjectNode result = Json.newObject();
     		result.put("order", Json.toJson(OrderDetailsDTO.getOrderDetails(order)));
     		result.put("statuslist", Json.toJson(ConfigContainer.getInstance().getStatusHandler().getStatusList(order.getStatusByStatusId().getTitle())));
-    		result.put("orderHistory", Json.toJson(order.getOrderHistory()));
+    		List<OrderHistoryDTO> dtoHistory = new ArrayList<>();
+    		for(OrderHistory history : order.getOrderHistory()) {
+    			dtoHistory.add(OrderHistoryDTO.getOrderHistory(history));
+    		}
+    		result.put("orderHistory", Json.toJson(dtoHistory));
     		return ok(Json.toJson(
                         	new Reply<>(Status.SUCCESS, result)));
         } catch (IOException | ParseException e) {
 			logger.error("Exception in getOrder method: {} ", e);
+            return badRequest(Json.toJson(
+                    new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
+		}
+    }
+    
+    @Transactional
+    @Pattern("ordadd")
+    public static Result getFirstStatus() {
+        try {
+        	String firstStatus = ConfigContainer.getInstance().getStatusHandler().getFirstStatusTitle();
+			ObjectNode result = Json.newObject();
+			result.put("firstStatus", Json.toJson(firstStatus));
+    		return ok(Json.toJson(
+                        	new Reply<>(Status.SUCCESS, result)));
+        } catch (IOException | ParseException e) {
+			logger.error("Exception in getFirstStatus method: {} ", e);
             return badRequest(Json.toJson(
                     new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
 		}

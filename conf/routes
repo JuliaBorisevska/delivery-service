@@ -22,6 +22,7 @@ DELETE        /user/:ids                          controllers.UserController.del
 POST          /user                               controllers.UserController.createUser()
 
 #Orders
+GET     /status/first                           controllers.OrderController.getFirstStatus()
 GET     /status/list                            controllers.OrderController.listStatuses()
 GET     /order/list/:page/:pageSize/:status     controllers.OrderController.listOrders(page:Integer, pageSize: Integer, status: String)
 GET     /order/:id                              controllers.OrderController.getOrder(id: Long)

@@ -1,6 +1,7 @@
 package handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
 import play.Logger;
 
 import java.io.File;
@@ -19,6 +20,8 @@ public class StatusHandler extends AbstractPrivelegesHandler {
     private Map<String, List<String>> statusMap = null;
 
     private Map<String, String> translateMap = null;
+    
+    private String firstStatusTitle = null;
 
     protected StatusHandler() throws IOException, ParseException {
         rootNode = mapper.readTree(new File(FILE_CONFIG_NAME));
@@ -55,6 +58,14 @@ public class StatusHandler extends AbstractPrivelegesHandler {
             statusMap.put(status.path("title").asText(), statusList);
             translateMap.put(status.path("id").asText(), status.path("title").asText());
         }
+        if (rootNode.has("first_status")){
+        	firstStatusTitle = getTranslate(rootNode.get("first_status").asText());
+        	logger.info("first status - {}", firstStatusTitle );
+        }else{
+        	logger.error("priveleges.json doesn't have the first status node");
+        	throw new ParseException("priveleges.json doesn't have the first status node", 0);
+        }
+        
     }
 
     protected String getTranslate(String id) {
@@ -69,8 +80,12 @@ public class StatusHandler extends AbstractPrivelegesHandler {
             return null;
         }
     }
+    
+    public String getFirstStatusTitle() {
+		return firstStatusTitle;
+	}
 
-    public List<String> getStatusList(String title) {
+	public List<String> getStatusList(String title) {
         if (statusMap.containsKey(title)) {
             return statusMap.get(title);
         } else {

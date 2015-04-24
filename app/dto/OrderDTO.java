@@ -29,19 +29,21 @@ public class OrderDTO {
     	dto.id = order.getId();
         dto.description = order.getDescription();
         dto.price  = order.getTotalPrice();
-        StringBuilder stringdate = new StringBuilder();
-        stringdate
+        StringBuilder stringDate = new StringBuilder();
+        stringDate
+        		.append(order.getOrderDate().toLocalDateTime().getDayOfMonth())
+        		.append(" ")
+        		.append(order.getOrderDate().toLocalDateTime().getMonth().name())
+        		.append(" ")
+        		.append(order.getOrderDate().toLocalDateTime().getYear())
+        		.append(" ")
                 .append(order.getOrderDate().toLocalDateTime().getHour())
                 .append(":")
                 .append(order.getOrderDate().toLocalDateTime().getMinute())
                 .append(":")
-                .append(order.getOrderDate().toLocalDateTime().getSecond())
-                .append(" ")
-                .append(order.getOrderDate().toLocalDateTime().getMonth().name())
-                .append(" ")
-                .append(order.getOrderDate().toLocalDateTime().getYear());
+                .append(order.getOrderDate().toLocalDateTime().getSecond());
 
-        dto.date = stringdate.toString();
+        dto.date = stringDate.toString();
         dto.orderStatus = order.getStatusByStatusId().getTitle();
     }
 }

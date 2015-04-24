@@ -36,6 +36,17 @@ define(["application/service/baseService"], function(baseService) {
                     done
                 );
         };
+        
+        self.getFirstStatus = function(success, error, done){
+        	baseService.send(
+                    "/status/first",
+                    "GET",
+                    {},
+                    success,
+                    error,
+                    done
+                );
+        };
 
         self.getOrder = function(id, success, error, done) {
             baseService.send(
@@ -74,7 +85,8 @@ define(["application/service/baseService"], function(baseService) {
             //add: self.add,
             list: self.list,
             getStatusList: self.getStatusList,
-            getOrder: self.getOrder
+            getOrder: self.getOrder,
+            getFirstStatus: self.getFirstStatus
             //update: self.update,
             //remove: self.remove,
 

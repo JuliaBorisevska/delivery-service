@@ -5,38 +5,22 @@
                     optionsCaption: 'Выберите статус заказа',
                     event: { change: $root.orderlistVM.changeStatus}"></select>
 </div>
-<table class="list"> 
+<table class="list table-hover"> 
     <thead>
         <tr>
         	<th>Дата заказа</th>
             <th>Описание заказа</th>
             <th>Цена заказа</th>
             <th>Статус</th>
-            <!-- <th>customer</th>
-            <th>recipient</th>
-            <th>user</th>
-            <th>process</th> -->
         </tr>
     </thead>
     <tbody data-bind="foreach: $root.orderlistVM.orders">
-<!--         <tr data-bind="click: $root.goToOrder"> -->
 		<tr data-bind="click: function(data, evt) {$root.orderlistVM.goToOrderDetails(data, evt, $root)}">
 			<td data-bind="text: date"></td>
             <td data-bind="text: description"></td>
             <td data-bind="text: price"></td>
             <td data-bind="text: orderStatus"></td>
-            <!-- <td data-bind="text: customer"></td>
-            <td data-bind="text: recipient"></td>
-            <td data-bind="text: user"></td> -->
-
-            <!-- <td >
-                <button data-bind="click: $root.orderlistVM.setNextStatusBtn" value="nextStatus"><span data-bind="text: nextStatus"/></button>
-
-            </td> -->
-
-
         </tr>
-
     </tbody>
 </table>
 <div class="pagination">

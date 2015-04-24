@@ -1,56 +1,151 @@
-<!-- ko if: $root.chosenSectionId().id == "ordadd" -->
+<!-- ko if: $root.chosenSectionId().id == "ordadd" && $root.orderDetailsVM.order() -->
 <div id="order-details">
+<!-- ko if: $root.orderDetailsVM.statusList().length != 0 -->
 <h2>Изменение статуса заказа</h2>
+<div class="hint">(для изменения статуса заказа выберите одно из предложенных состояний)</div>
 <div class="details-part">    
-    <div class="actions">
-    <button type="button" data-bind="click: contactListVM.deleteContacts">Принят</button>
-    <button type="button" data-bind="click: $root.orderDetailsVM.showConfirmModal">Модальное окно</button>
+    <!-- ko foreach: $root.orderDetailsVM.statusList -->
+    	<button type="button" class="status-btn" data-bind="text: $data, click: $root.orderDetailsVM.showConfirmModal"></button>
+    <!-- /ko -->
 </div>
-
 <!-- Modal -->
 	<div class="modal fade" id="status-confirm">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Изменить статус?</h4>
+					<h4 class="modal-title">Подтвердите изменение статуса</h4>
 				</div>
 				<div class="modal-body">
-					<div class="form-group">
-						<label>Коментарий к изменению статуса:</label>
-						<textarea class="form-control" style="resize: none">
-						</textarea>
-					</div>
+					<div class="field">
+        				<label class="title">Текущий статус:</label>
+        				<span data-bind="text: $root.orderDetailsVM.order().orderStatus"></span>
+    				</div>
+    				<div class="field">
+        				<label class="title">Новый статус:</label>
+        				<span data-bind="text: $root.orderDetailsVM.newStatus"></span>
+    				</div>
+    				<div class="clr"></div>
+    				<div class="field">
+        				<label class="title">Комментарий к изменению статуса:</label>
+        				<textarea class="textfield" data-bind="value: $root.orderDetailsVM.statusChangeComment"></textarea>
+    				</div>
 				</div>
 				<div class="modal-footer">
-        			<button type="button">Да</button>
+        			<button type="button" data-bind="click: $root.orderDetailsVM.changeStatus">Изменить</button>
 					<button type="button" data-dismiss="modal">Отмена</button>
 				</div>
 			</div>
 		</div>
    </div>
 <!-- /.modal -->
-</div>
+<!-- /ko -->
 <h2>Информация о заказе</h2>
-<div class="details-part">    
+<div class="details-part">
+	<!-- ko if: $root.orderDetailsVM.order().date != "" -->    
+    <div class="field">
+        <label class="title">Дата и время заказа:</label>
+        <span class="textfield" data-bind="text: $root.orderDetailsVM.order().date"></span>
+    </div>
+    <div class="clr"></div>
+    <!-- /ko -->
     <div class="field">
         <label class="title">Текущее состояние заказа:</label>
-        <input type="text" class="textfield" />
+        <!-- ko if: $root.orderDetailsVM.order().orderStatus == "" -->
+        	<span class="textfield" data-bind="text: $root.orderDetailsVM.firstStatus()"></span>
+        <!-- /ko -->
+        <!-- ko if: $root.orderDetailsVM.order().orderStatus != "" -->
+        	<span class="textfield" data-bind="text: $root.orderDetailsVM.order().orderStatus"></span>
+        <!-- /ko -->
     </div>
     <div class="clr"></div>
     <div class="field">
         <label class="title">Оценочная стоимость:</label>
-        <input type="text" class="textfield" />
+        <input type="text" class="textfield" data-bind="value: $root.orderDetailsVM.order().price"/>
     </div>
     <div class="clr"></div>
     <div class="field">
         <label class="title">Описание заказа:</label>
-        <textarea class="textfield"></textarea>
+        <textarea class="textfield" data-bind="value: $root.orderDetailsVM.order().description"></textarea>
     </div>
+    <div class="clr"></div>
+    <div class="field">
+        <label class="title">Заказчик:</label>
+        <div class="textfield">
+        	<span data-bind="text: $root.orderDetailsVM.order().customer.lastName">&nbsp;</span>
+            <span data-bind="text: $root.orderDetailsVM.order().customer.firstName">&nbsp;</span>
+            <span data-bind="text: $root.orderDetailsVM.order().customer.middleName"></span>
+            <button type="button" class="choose-btn">Выбрать</button>
+        </div>
+    </div>
+    <div class="clr"></div>
+    <div class="field">
+        <label class="title">Получатель:</label>
+        <div class="textfield">
+        	<span data-bind="text: $root.orderDetailsVM.order().recipient.lastName">&nbsp;</span>
+            <span data-bind="text: $root.orderDetailsVM.order().recipient.firstName">&nbsp;</span>
+            <span data-bind="text: $root.orderDetailsVM.order().recipient.middleName"></span>
+            <button type="button" class="choose-btn">Выбрать</button>
+        </div>
+    </div>
+    <div class="clr"></div>
+    <div class="field">
+        <label class="title">Менеджер по приему заказа:</label>
+        <div class="textfield">
+        	<span data-bind="text: $root.orderDetailsVM.order().user.lastName">&nbsp;</span>
+            <span data-bind="text: $root.orderDetailsVM.order().user.firstName">&nbsp;</span>
+            <span data-bind="text: $root.orderDetailsVM.order().user.middleName"></span>
+            <button type="button" class="choose-btn">Выбрать</button>
+        </div>
+    </div>
+    <div class="clr"></div>
+    <div class="field">
+        <label class="title">Специалист, обрабатывающий заказ:</label>
+        <div class="textfield">
+        	<span data-bind="text: $root.orderDetailsVM.order().processMng.lastName">&nbsp;</span>
+            <span data-bind="text: $root.orderDetailsVM.order().processMng.firstName">&nbsp;</span>
+            <span data-bind="text: $root.orderDetailsVM.order().processMng.middleName"></span>
+            <button type="button" class="choose-btn">Выбрать</button>
+        </div>
+    </div>
+    <div class="clr"></div>
+    <div class="field">
+        <label class="title">Менеджер службы доставки:</label>
+        <div class="textfield">
+        	<span data-bind="text: $root.orderDetailsVM.order().deliveryMng.lastName">&nbsp;</span>
+            <span data-bind="text: $root.orderDetailsVM.order().deliveryMng.firstName">&nbsp;</span>
+            <span data-bind="text: $root.orderDetailsVM.order().deliveryMng.middleName"></span>
+            <button type="button" class="choose-btn">Выбрать</button>
+        </div>
+    </div>
+    <div class="clr"></div>
 </div>
+<!-- ko if: $root.orderDetailsVM.orderHistoryList().length != 0 -->
 <h2>История заказа</h2>
 <div class="details-part">    
-    
+    <table class="history list"> 
+    <thead>
+        <tr>
+        	<th>Дата и время изменения</th>
+            <th>Новый статус</th>
+            <th>Кем изменен</th>
+            <th>Коментарий</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: $root.orderDetailsVM.orderHistoryList">
+		<tr>
+			<td data-bind="text: modificationDate"></td>
+            <td data-bind="text: status"></td>
+            <td>
+            	<span data-bind="text: user.lastName">&nbsp;</span>
+                <span data-bind="text: user.firstName">&nbsp;</span>
+                <span data-bind="text: user.middleName"></span>
+            </td>
+            <td data-bind="text: userComment"></td>
+        </tr>
+    </tbody>
+</table>
 </div>
+<!-- /ko -->
 </div>
 <!-- /ko -->
