@@ -9,8 +9,9 @@ define(["application/service/initService",
         "application/viewModel/userDetailsVM",
         "application/viewModel/orderDetailsVM",
         "application/model/Order",
-        "application/model/Contact"],
-    function (initService, Callback, User, loginVM, contactListVM, orderlistVM, userlistVM, contactDetailsVM, userDetailsVM, orderDetailsVM, Order, Contact) {
+        "application/model/Contact",
+        "application/viewModel/rolelistVM"],
+    function (initService, Callback, User, loginVM, contactListVM, orderlistVM, userlistVM, contactDetailsVM, userDetailsVM, orderDetailsVM, Order, Contact, rolelistVM) {
 
     "use strict";
 
@@ -28,6 +29,7 @@ define(["application/service/initService",
         self.chosenSectionId = ko.observable();
         self.user = ko.observable();
         self.menu = ko.observableArray();
+        self.rolelistVM = rolelistVM;
     	self.sections = [];
     	var app = Sammy(function() {
             this.get('#:section', function() {
@@ -114,8 +116,7 @@ define(["application/service/initService",
                     if (userDetailsVM.user() === undefined) {
                         self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", "", ""));
                     }
-
-
+                    self.rolelistVM.list();
                     self.contactListVM.currentPage(1);
                     self.contactListVM.numbers([]);
                     self.contactListVM.list(self.contactListVM.currentPage(), self.contactListVM.PAGE_SIZE);

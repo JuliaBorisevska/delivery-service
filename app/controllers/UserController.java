@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import dao.ContactDAO;
 import dao.UserDAO;
 import dto.UserDTO;
-import entity.Company;
-import entity.Contact;
-import entity.User;
+import entity.*;
 import play.Logger;
 import play.Logger.ALogger;
 import play.db.jpa.JPA;
@@ -33,19 +31,33 @@ public class UserController extends BaseController {
 		final Map<String, String[]> values = request().body().asFormUrlEncoded();
 		try {
 			String login = values.get("login")[0];
+			logger.info("start adding user with login '{}'", login);
 			String password = values.get("password")[0];
 			Contact contact = null;
 			Long numberOfContact = null;
+			Integer idOfRole = null;
+			String titleOfRole = null;
 			try {
-				numberOfContact = Long.valueOf(values.get("house")[0]);
+				idOfRole = Integer.valueOf(values.get("role[id]")[0]);
+				titleOfRole = values.get("role[title]")[0];
+				numberOfContact = Long.valueOf(values.get("contactId")[0]);
+				logger.info("id of role of new user '{}' - {}, title of role- {}, id of contact - {}", login, idOfRole, titleOfRole, numberOfContact);
+
 			} catch (ClassCastException e) {
 				throw e;
 			}
+
 			user.setIdentifier(login);
 			user.setPassword(password); // do hash
 			ContactDAO contactDAO = new ContactDAO(JPA.em());
 			user.setContactByContactId(contactDAO.findById(numberOfContact));
-
+			SecurityRole securityRole = new SecurityRole();
+			securityRole.setId(idOfRole);
+			securityRole.setName(titleOfRole);
+			user.setRoleByRoleId(securityRole);
+			UserState userState = userDAO.findByStateTitle(UserDAO.ACTIVE_USER);
+			user.setUserStateByUserStateId(userState);
+			userDAO.create(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -55,7 +67,19 @@ public class UserController extends BaseController {
 				new Reply<>(Status.SUCCESS, user)
 		));
 	}
-	
+
+	@Transactional
+	public static Result listRoles() {
+		logger.info("Start listRoles method");
+		UserDAO userDAO = new UserDAO(JPA.em());
+		List<SecurityRole> roleList = userDAO.listRoles();
+		ObjectNode result = Json.newObject();
+		result.put("list", Json.toJson(roleList));
+		return ok(Json.toJson(
+				new Reply<>(Status.SUCCESS, result)
+		));
+	}
+
     @Transactional
     @Pattern("lst")
     public static Result listUsers(Integer pageNumber, Integer pageSize) {

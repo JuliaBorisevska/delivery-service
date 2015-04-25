@@ -1,11 +1,7 @@
 package controllers;
 
 import be.objectify.deadbolt.java.actions.Pattern;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import controllers.BaseController.Reply;
-import controllers.BaseController.Status;
 import dao.OrderDAO;
 import dao.StatusDAO;
 import dto.OrderDTO;
@@ -15,6 +11,8 @@ import entity.Company;
 import entity.Order;
 import entity.OrderHistory;
 import entity.User;
+import handler.ConfigContainer;
+import org.apache.commons.lang3.StringUtils;
 import play.Logger;
 import play.Logger.ALogger;
 import play.db.jpa.JPA;
@@ -22,12 +20,8 @@ import play.db.jpa.Transactional;
 import play.libs.Json;
 import play.mvc.Result;
 import resource.MessageManager;
-import handler.ConfigContainer;
 
 import javax.persistence.EntityManager;
-
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;

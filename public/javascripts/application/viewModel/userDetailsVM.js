@@ -20,9 +20,8 @@ define([
                                 var reply = params.reply;
                                 if (reply.status === "SUCCESS") {
                                     clean();
-                                    alert("ke9999");
                                     root.userlistVM.list(1, root.userlistVM.PAGE_SIZE);
-                                    root.goTo("ctlst");
+                                    root.goTo("lst");
                                 }
                             }, self, {}
                         ),

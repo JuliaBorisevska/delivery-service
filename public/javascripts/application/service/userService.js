@@ -38,14 +38,15 @@ define(["application/service/baseService"], function (baseService) {
         };
 
         self.showModal = function () {
-            $('.select-user').dialog('open');
+            $('#select-user').modal({
+                keyboard: false
+            });
             return true;
         };
 
         self.closeModal = function () {
-            $('.select-user').dialog('close');
+            $('#select-user').modal('hide');
             return true;
-
         };
 
         return {
