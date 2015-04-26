@@ -1,12 +1,8 @@
 package dao;
 
-import entity.Company;
-import entity.Contact;
-import entity.User;
-import entity.UserState;
+import entity.*;
 import play.Logger;
 import play.Logger.ALogger;
-import play.db.jpa.JPA;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -15,19 +11,12 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
-
-
-
-
-
-
-
 import java.util.List;
 
 public class UserDAO extends AbstractDAO<User> {
 	private static ALogger logger = Logger.of(UserDAO.class);
-	private static final String ACTIVE_USER = "active";
-	private static final String INACTIVE_USER = "inactive";
+	public static final String ACTIVE_USER = "active";
+	public static final String INACTIVE_USER = "inactive";
 	
 	public UserDAO(EntityManager em) {
 		super(em);
@@ -132,6 +121,16 @@ public class UserDAO extends AbstractDAO<User> {
 		} catch (NoResultException nre) {
 			return null;
 		}
+	}
+
+	public List<SecurityRole> listRoles() {
+		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+		CriteriaQuery<SecurityRole> criteriaQuery = criteriaBuilder.createQuery(SecurityRole.class);
+		Root<SecurityRole> from = criteriaQuery.from(SecurityRole.class);
+		CriteriaQuery<SecurityRole> select = criteriaQuery.select(from);
+		TypedQuery<SecurityRole> q = em.createQuery(select);
+		return q.getResultList();
+
 	}
 
 }
