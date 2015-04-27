@@ -15,6 +15,17 @@ define(["application/service/baseService"], function(baseService) {
             );
         };
 */
+        self.changeStatus = function(id, status, comment, success, error, done) {
+            baseService.send(
+                "/order/status",
+                "POST",
+                {id: id, status: status, comment: comment},
+                success,
+                error,
+                done
+            );
+        };
+        
         self.list = function(page, pageSize, status, success, error, done) {
         	baseService.send(
         		"/order/list/" + page + "/" + pageSize + "/" + status,
@@ -86,7 +97,8 @@ define(["application/service/baseService"], function(baseService) {
             list: self.list,
             getStatusList: self.getStatusList,
             getOrder: self.getOrder,
-            getFirstStatus: self.getFirstStatus
+            getFirstStatus: self.getFirstStatus,
+            changeStatus: self.changeStatus
             //update: self.update,
             //remove: self.remove,
 

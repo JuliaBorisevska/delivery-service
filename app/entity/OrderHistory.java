@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "order_history", schema = "", catalog = "delivery_service")
 public class OrderHistory {
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	
     private Long id;
     private Timestamp modificationDate;
     private String userComment;
@@ -26,7 +26,8 @@ public class OrderHistory {
     private User userByUserId;
 
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id",unique=true, nullable = false)
     public Long getId() {
         return id;
     }
@@ -55,7 +56,6 @@ public class OrderHistory {
         this.userComment = userComment;
     }
 
-    @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
     public Order getOrderByOrderId() {

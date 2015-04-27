@@ -1,4 +1,4 @@
-<!-- ko if: $root.chosenSectionId().id == "ordadd" && $root.orderDetailsVM.order() -->
+<!-- ko if: ($root.chosenSectionId().id == "ordadd" || $root.chosenSectionId().id == "ordchange") && $root.orderDetailsVM.order() -->
 <div id="order-details">
 <!-- ko if: $root.orderDetailsVM.statusList().length != 0 -->
 <h2>Изменение статуса заказа</h2>
@@ -32,7 +32,7 @@
     				</div>
 				</div>
 				<div class="modal-footer">
-        			<button type="button" data-bind="click: $root.orderDetailsVM.changeStatus">Изменить</button>
+        			<button type="button" data-bind="click: function(data, evt) {$root.orderDetailsVM.changeStatus(data, evt, $root)}">Изменить</button>
 					<button type="button" data-dismiss="modal">Отмена</button>
 				</div>
 			</div>
@@ -95,7 +95,6 @@
         	<span data-bind="text: $root.orderDetailsVM.order().user.lastName">&nbsp;</span>
             <span data-bind="text: $root.orderDetailsVM.order().user.firstName">&nbsp;</span>
             <span data-bind="text: $root.orderDetailsVM.order().user.middleName"></span>
-            <button type="button" class="choose-btn">Выбрать</button>
         </div>
     </div>
     <div class="clr"></div>
@@ -105,7 +104,9 @@
         	<span data-bind="text: $root.orderDetailsVM.order().processMng.lastName">&nbsp;</span>
             <span data-bind="text: $root.orderDetailsVM.order().processMng.firstName">&nbsp;</span>
             <span data-bind="text: $root.orderDetailsVM.order().processMng.middleName"></span>
-            <button type="button" class="choose-btn">Выбрать</button>
+            <!-- ko if: $root.user().role === "ORDER_MNG" || $root.user().role === "SUPERVISOR" -->
+            	<button type="button" class="choose-btn">Выбрать</button>
+            <!-- /ko -->
         </div>
     </div>
     <div class="clr"></div>
@@ -115,7 +116,9 @@
         	<span data-bind="text: $root.orderDetailsVM.order().deliveryMng.lastName">&nbsp;</span>
             <span data-bind="text: $root.orderDetailsVM.order().deliveryMng.firstName">&nbsp;</span>
             <span data-bind="text: $root.orderDetailsVM.order().deliveryMng.middleName"></span>
-            <button type="button" class="choose-btn">Выбрать</button>
+            <!-- ko if: $root.user().role === "ORDER_MNG" || $root.user().role === "SUPERVISOR" -->
+            	<button type="button" class="choose-btn">Выбрать</button>
+            <!-- /ko -->
         </div>
     </div>
     <div class="clr"></div>

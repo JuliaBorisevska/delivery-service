@@ -34,6 +34,7 @@ define(["application/service/initService",
     	var app = Sammy(function() {
             this.get('#:section', function() {
                 var sectionId = this.params.section;
+                //alert(sectionId);
                 /*if (sectionId==="lgn"){
                 	self.contactListVM.numbers([]);
                     self.orderlistVM.numbers([]);
@@ -98,19 +99,23 @@ define(["application/service/initService",
                     self.userlistVM.numbers([]);
                     self.userlistVM.currentPage(1);
             		self.userlistVM.list(self.userlistVM.currentPage(), self.userlistVM.PAGE_SIZE);
+            		location.hash = section.id;
             		break;
             	case "ctlst":
             		self.contactListVM.currentPage(1);
             		self.contactListVM.numbers([]);
             		self.contactListVM.list(self.contactListVM.currentPage(), self.contactListVM.PAGE_SIZE);
+            		location.hash = section.id;
             		break;
             	case "ordlst":
             		self.orderlistVM.getStatusList();
             		//self.orderlistVM.changeStatus();
+            		location.hash = section.id;
             		break;
             	case "ordadd":
             		self.orderDetailsVM.getFirstStatus();
-            		self.orderDetailsVM.setOrder(new Order("", "", "", "", "", "", "", "","", ""), [],[]);
+            		self.orderDetailsVM.setOrder(new Order("", "", "", "", self.user(), "", "", "","", ""), [],[]);
+            		location.hash = section.id;
             		break;
                 case "useradd":
                     if (userDetailsVM.user() === undefined) {
@@ -120,9 +125,19 @@ define(["application/service/initService",
                     self.contactListVM.currentPage(1);
                     self.contactListVM.numbers([]);
                     self.contactListVM.list(self.contactListVM.currentPage(), self.contactListVM.PAGE_SIZE);
+                    location.hash = section.id;
                     break;
+                case "ordchange":
+                	if (self.chosenSectionId().id=="ordchange"){
+                		self.orderlistVM.getStatusList();
+                		location.hash  = "ordlst";
+                	}else{
+                		location.hash=self.chosenSectionId().id;
+                	}
+            		break; 
+            	default:
+            		location.hash = section.id;
             }
-            location.hash = section.id;
         };
         
         self.fill = function(vm, pageNumber){

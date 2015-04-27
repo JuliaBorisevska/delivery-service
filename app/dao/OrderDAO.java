@@ -6,6 +6,7 @@ import entity.Order;
 import entity.OrderHistory;
 import entity.Status;
 import entity.User;
+import entity.UserState;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -42,13 +43,6 @@ public class OrderDAO extends AbstractDAO<Order> {
         }
     }
 
-    public void delete(Integer id){
-        Order order = em.find(Order.class, id);
-        if(order!=null){
-            em.remove(order);
-        }
-    }
-
     @Override
     public void create(Order entity) {
         em.persist(entity);
@@ -58,74 +52,42 @@ public class OrderDAO extends AbstractDAO<Order> {
     public void update(Order entity) {
         em.persist(entity);
     }
-
     
-/*
-    public List<Order> getOrderListByCustomer(Integer pageNumber, Integer pageSize, Integer customerId){
-        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
-        Root<Order> from = criteriaQuery.from(Order.class);
-        CriteriaQuery<Order> select = criteriaQuery.select(from).where(criteriaBuilder.equal(from.get("customer_contact_id"), customerId));
-        TypedQuery<Order> q = em.createQuery(select);
-        q.setFirstResult((pageNumber - 1) * pageSize);
-        q.setMaxResults(pageSize);
-
-        return q.getResultList();
-    }
-    public List<Order> getOrderListByRecipient(Integer pageNumber, Integer pageSize, Integer recipientId){
-        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
-        Root<Order> from = criteriaQuery.from(Order.class);
-        CriteriaQuery<Order> select = criteriaQuery.select(from).where(criteriaBuilder.equal(from.get("recipient_contact_id"),recipientId));
-        TypedQuery<Order> q = em.createQuery(select);
-        q.setFirstResult((pageNumber - 1) * pageSize);
-        q.setMaxResults(pageSize);
-
-        return q.getResultList();
-    }
-*/
-    /*
-    public Order getOrderById(Long orderId, Company company){
-    	logger.info("Start getOrderById method with orderId - {}", orderId);
-    	Order order;
+    public Status findStatusByTitle(String title){
     	try{
-    		CriteriaBuilder cb = em.getCriteriaBuilder();
-        	CriteriaQuery<Order> criteriaQuery = cb.createQuery(Order.class);
-        	Root<Order> fromOrder = criteriaQuery.from(Order.class);
-        	//Fetch<Order,OrderHistory> orderFetch = fromOrder.fetch("orderHistory");
-        	//Join<Order,OrderHistory> orderJoin = fromOrder.join("orderHistory");
-        	//ListAttribute<? super Order, OrderHistory> listAttribute = fromOrder.getModel().getList("orderHistory", OrderHistory.class);
-        	//fromOrder.fetch(listAttribute);
-        	CriteriaQuery<Order> select = criteriaQuery.select(fromOrder).where(cb.equal(fromOrder.get("id"), orderId));
-        	TypedQuery<Order> q = em.createQuery(select);
-        	order = q.getSingleResult();
-        	if (order.getCustomerByContactId().getCompanyByCompanyId().getId()!=company.getId()){
-        		logger.warn("Order with orderId - {} doesn't belong the company with id - {}", orderId, company.getId());
-        		order = null;
-        	}
-    	}catch (NoResultException nre){
-    		logger.warn("No result found for orderId - {}", orderId);
-            order = null;
+            CriteriaBuilder builder = em.getCriteriaBuilder();
+            CriteriaQuery<Status> query = builder.createQuery(Status.class);
+            Root<Status> s = query.from(Status.class);
+            query.select(s).where(builder.equal(s.get("title"), title));
+            TypedQuery<Status> q = em.createQuery(query);
+            return q.getSingleResult();
+        } catch (NoResultException nre){
+            return null;
         }
-    	return order;
     }
-    */
+    
+    public void addToOrderHistory(OrderHistory history){
+    	logger.info("Start addToOrderHistory method");
+    	em.persist(history);
+    }
+    
+    public void changeOrderStatus(Order order, Status nextStatus, OrderHistory history){
+    	logger.info("Start changeOrderStatus method with orderId - {}, nextStatus - {}", order.getId(), nextStatus);
+    	order.setStatusByStatusId(nextStatus);
+    	history.setOrderByOrderId(order);
+    	addToOrderHistory(history);
+    }
     
     public Order getOrderById(Long orderId, Company company){
     	logger.info("Start getOrderById method with orderId - {}", orderId);
-    	Order order;
-    	try{
-    		Query query = em.createQuery("select o from Order o " +
-    		        "left join fetch o.orderHistory where o.id=:id");
-    		query.setParameter("id", orderId);
-    		order= (Order)query.getSingleResult();
-        	if (order.getCustomerByContactId().getCompanyByCompanyId().getId()!=company.getId()){
+    	Order order = em.find(Order.class, orderId);
+    	if (order != null){
+    		if (order.getCustomerByContactId().getCompanyByCompanyId().getId()!=company.getId()){
         		logger.warn("Order with orderId - {} doesn't belong the company with id - {}", orderId, company.getId());
         		order = null;
-        	}
-    	}catch (NoResultException nre){
+    		}
+    	}else{
     		logger.warn("No result found for orderId - {}", orderId);
-            order = null;
         }
     	return order;
     }

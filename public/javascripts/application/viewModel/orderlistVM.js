@@ -110,12 +110,14 @@ define(["application/service/orderService",
                                 				order.orderStatus, order.date, order.price),
                                 		statuslist, orderHistory
                                 );
-                                location.hash = "ordadd";
+                                location.hash = "ordchange";
                             }
                         }, self, {}
                     ),
                     new Callback(function(params){
                     	alert(params.reply.responseJSON.data);
+                    	getStatusList();
+                    	location.hash="ordlst";
                         }, self, {}
                     )
                 );

@@ -1,7 +1,11 @@
 package controllers;
 
 import be.objectify.deadbolt.java.actions.Pattern;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import controllers.BaseController.Reply;
+import controllers.BaseController.Status;
 import dao.OrderDAO;
 import dao.StatusDAO;
 import dto.OrderDTO;
@@ -12,7 +16,11 @@ import entity.Order;
 import entity.OrderHistory;
 import entity.User;
 import handler.ConfigContainer;
+
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import play.Logger;
 import play.Logger.ALogger;
 import play.db.jpa.JPA;
@@ -22,7 +30,9 @@ import play.mvc.Result;
 import resource.MessageManager;
 
 import javax.persistence.EntityManager;
+
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +44,7 @@ public class OrderController extends BaseController {
 	
 	
     @Transactional
-    @Pattern("ordadd")
+    @Pattern("ordchange")
     public static Result getOrder(Long id) {
         try {
         	User user = Application.recieveUserByToken();
@@ -175,6 +185,59 @@ public class OrderController extends BaseController {
     }
 
     @Transactional
+    @Pattern("ordchange")
+    public static Result changeOrderStatus() {
+    	try{
+    		OrderDAO orderDAO = new OrderDAO(JPA.em());
+            final Map<String, String[]> values = request().body().asFormUrlEncoded();
+            Long orderId = Long.valueOf(values.get("id")[0]);
+            String nextStatus = values.get("status")[0];
+        	String comment = values.get("comment")[0];
+            User user = Application.recieveUserByToken();
+        	if (user == null) {
+        		return badRequest(Json.toJson(
+					new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
+        	}
+        	Company company = user.getContactByContactId().getCompanyByCompanyId();
+            Order order = orderDAO.getOrderById(orderId, company);
+            if(order == null) {
+                return notFound(Json.toJson(new Reply<>(Status.ERROR, MessageManager.getProperty("order.notfound"))));
+            }
+            String currentStatus = order.getStatusByStatusId().getTitle();
+            List<String> statusList= ConfigContainer.getInstance().getStatusHandler().getStatusList(currentStatus);
+            if (statusList.contains(nextStatus)){
+            	logger.info("Start changeOrderStatus() with request parameters: orderId - {}, status - {}, comment - {}", orderId, nextStatus, comment);
+            	entity.Status next = orderDAO.findStatusByTitle(nextStatus);
+            	DateTime now = new DateTime(DateTimeZone.getDefault());
+            	//DateTime now = new DateTime(DateTimeZone.UTC);
+            	//logger.info("Time : {}", now);
+            	//logger.info("Default : {}", DateTimeZone.getDefault());
+            	OrderHistory history = new OrderHistory();
+            	//int offset = DateTimeZone.getDefault().getOffset(new DateTime());
+            	//now = now.minusMillis(offset);
+            	history.setModificationDate(new Timestamp(now.getMillis()));
+            	history.setStatusByStatusId(next);
+            	history.setUserByUserId(user);
+            	history.setUserComment(StringUtils.isBlank(comment)?null:comment);
+            	orderDAO.changeOrderStatus(order, next, history);
+            	return ok(Json.toJson(
+                        new Reply<>(Status.SUCCESS, null)));
+            }else{
+            	logger.error("Can't change status of the order from {} to {}", currentStatus, nextStatus);
+        		return badRequest(Json.toJson(
+                		new Reply<>(Status.ERROR, MessageManager.getProperty("message.status.unchanged"))));
+            }
+            
+    	}catch(Exception e){
+    		logger.error("Error in changeOrderStatus method: {}", e);
+    		return badRequest(Json.toJson(
+            		new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
+    	}
+    	
+    }
+    
+    /*
+    @Transactional
     @Pattern("ordadd")
     public static Result createOrder() {
     	OrderDAO orderDAO = new OrderDAO(JPA.em());
@@ -191,7 +254,7 @@ public class OrderController extends BaseController {
                 new Reply<>(Status.SUCCESS, order)
         ));
     }
-/*
+
     @Transactional
     public static Result updateOrder(Integer id) {
     	OrderDAO orderDAO = new OrderDAO(JPA.em());

@@ -57,9 +57,20 @@ define([
             });
         };
         
-        var changeStatus = function(){
-        	alert(statusChangeComment());
+        var changeStatus = function(data, event, root){
         	$('#status-confirm').modal('hide');
+        	orderService.changeStatus(order().id, newStatus(), statusChangeComment(),
+        			new Callback(function(params){
+                        reply = params.reply;
+                        if(reply.status === "SUCCESS") {
+                        	alert("Статус был успешно изменен!");
+                        	root.orderlistVM.goToOrderDetails(order(), event, root);
+                        }
+                    }, self, {}),
+                    new Callback(function(params){
+                	alert(params.reply.responseJSON.data);
+                    }, self, {})
+        	)
         }
 
         return {
