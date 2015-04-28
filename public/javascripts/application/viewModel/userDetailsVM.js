@@ -44,11 +44,17 @@ define([
                     user(c);
                 }, clean = function () {
                     user(null);
-                }, showModal = function () {
-                    userService.showModal();
+                }, showModal = function (root) {
+                    root.contactListVM.currentPage(1);
+                    root.contactListVM.numbers([]);
+                    root.contactListVM.list(root.contactListVM.currentPage(), root.contactListVM.PAGE_SIZE);
+                    $('#select-contact').modal({
+                        keyboard: false
+                    });
+                    return true;
                 }, closeModal = function () {
                     userService.closeModal();
-                }, availableRoles = userService.availableRoles;
+                };
 
 
             return {
@@ -56,8 +62,7 @@ define([
                 setUser: setUser,
                 user: user,
                 showModal: showModal,
-                closeModal: closeModal,
-                availableRoles: availableRoles
+                closeModal: closeModal
             }
         }
 

@@ -30,7 +30,7 @@ define(["application/service/userService",
                                 }
                                 for(var i = 0, lth = reply.data.list.length; i < lth; i++) {
                                     var user = reply.data.list[i];
-                                    users.push(new User(user.id, user.firstName, user.lastName, user.middleName, user.roleTitle, user.companyTitle, user.login, user.menu, user.password));
+                                    users.push(new User(user.id, user.firstName, user.lastName, user.middleName, user.roleTitle, user.companyTitle, user.login, user.menu, user.password, user.contactId));
                                 }
                             }
                         }, self, {}),
@@ -64,6 +64,9 @@ define(["application/service/userService",
         
         var goToUserDetails = function(data, event, root) {
         	root.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", "", ""));
+            alert(data.contactId);
+            root.contactListVM.checkedContact = data.contactId;
+            alert(root.contactListVM.checkedContact);
         	location.hash = "userchange";
         };
         
@@ -86,3 +89,4 @@ define(["application/service/userService",
     return new UserListVM();
 
 });
+

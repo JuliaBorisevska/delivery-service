@@ -1,15 +1,24 @@
 @()
-<!-- ko if: ($root.chosenSectionId().id == "useradd" || $root.chosenSectionId().id == "userchange") && $root.userDetailsVM.user -->
+<!-- ko if: ( $root.chosenSectionId().id == "useradd" || $root.chosenSectionId().id == "userchange" ) && $root.userDetailsVM.user -->
 
-<button id="show-contacts" data-bind="click: $root.userDetailsVM.showModal" type="button">Выберите контакт</button> <br>
-
-<label for="login">Логин</label> <input type="text" name="login" id="login" data-bind="value: $root.userDetailsVM.user().login"> <br>
-Пароль <input type="text" name="password" id="password" data-bind="value:  $root.userDetailsVM.user().password"> <br>
-<select data-bind="options: $root.rolelistVM.roles,
+<button class="choose-btn" id="show-contacts" data-bind="click: function() {$root.userDetailsVM.showModal($root)};" type="button">
+    Выберите контакт</button> <br>
+<div class="details-part">
+    <div class="field">
+        <label class="title" for="login">Логин</label>
+        <input class="textfield" type="text" name="login" id="login" data-bind="value: $root.userDetailsVM.user().login">
+    </div>
+    <div class="field">
+        <label class="title" for="password">Пароль</label>
+        <input class="textfield" type="text" name="password" id="password" data-bind="value:  $root.userDetailsVM.user().password"> <br>
+    </div>
+    <select data-bind="options: $root.rolelistVM.roles,
                      optionsText: 'title',
                      optionsCaption: 'Выберите роль пользователя',
                      value: $root.userDetailsVM.user().role"></select>
+</div>
 
-<button type="button" data-bind="click: function(){$root.userDetailsVM.user().contactId = $root.contactListVM.checkedContact; $root.userDetailsVM.submit($root);}">
-       Добавить пользователя</button>
+<button class="choose-btn" type="button" data-bind="click: function(){$root.userDetailsVM.submit($root);}">
+
+    Добавить пользователя</button>
 <!-- /ko -->
