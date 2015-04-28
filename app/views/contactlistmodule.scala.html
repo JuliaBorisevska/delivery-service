@@ -23,7 +23,7 @@
             <td><input type="radio" data-bind="value: id, checked: $root.contactListVM.checkedContact, click: $root.userDetailsVM.closeModal" ></td>
             	<!-- /ko -->
             	<!-- ko if: $root.chosenSectionId().id == "ordadd" || $root.chosenSectionId().id == "ordchange" -->
-            <td><input type="radio" data-bind="click: function(data, evt) {$root.orderDetailsVM.closeContactModal(data, evt, $root)}" ></td>
+            <td><input type="radio" data-bind="value: id, checked: $root.contactListVM.checkedCt, click: function(data, evt) {$root.orderDetailsVM.closeContactModal(data, evt, $root)}" ></td>
             	<!-- /ko -->
             <!-- ko if: $root.chosenSectionId().id != "ctlst" -->
             <td>
