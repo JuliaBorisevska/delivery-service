@@ -9,7 +9,7 @@ define([
     function OrderDetailsVM() {
         var self = this,
         	reply,
-        	contactRole,
+        	personRole,
             firstStatus = ko.observable(),
             order = ko.observable(),
             newStatus = ko.observable(),
@@ -59,7 +59,17 @@ define([
         };
         
         var showContactModal = function(data, event, root, role) {
-        	contactRole = role;
+        	//alert(JSON.stringify(data));
+        	personRole = role;
+        	switch (personRole){
+        	case "customer":
+        		root.contactListVM.checkedContact(order().customer().id);
+        		//alert(root.contactListVM.checkedContact());
+        		break;
+        	case "recipient":
+        		root.contactListVM.checkedContact(order().recipient().id);
+        		break;
+        	}
         	root.contactListVM.currentPage(1);
         	root.contactListVM.numbers([]);
         	root.contactListVM.list(root.contactListVM.currentPage(), root.contactListVM.PAGE_SIZE);
@@ -68,17 +78,49 @@ define([
             });
         };
         
+        var showUserModal = function(data, event, root, role) {
+        	personRole = role;
+        	switch (personRole){
+        	case "PROCESS_MNG":
+        		root.userlistVM.checkedUserId(order().processMng().id);
+        		//alert(root.contactListVM.checkedContact());
+        		break;
+        	case "DELIVERY_MNG":
+        		root.userlistVM.checkedUserId(order().deliveryMng().id);
+        		break;
+        	}
+        	root.userlistVM.numbers([]);
+            root.userlistVM.currentPage(1);
+    		root.userlistVM.list(root.userlistVM.currentPage(), root.userlistVM.PAGE_SIZE);
+            $('#select-user').modal({
+            	  keyboard: false
+            });
+        };
+        
         var closeContactModal = function(data, event, root) {
-        	switch (contactRole){
+        	switch (personRole){
         	case "customer":
         		order().customer(data);
         		break;
         	case "recipient":
-        		order().recipient=data;
+        		order().recipient(data);
         		break;
         	}
         	//alert(JSON.stringify(data));
         	$('#select-contact').modal('hide');
+        };
+        
+        var closeUserModal = function(data, event, root) {
+        	switch (personRole){
+        	case "PROCESS_MNG":
+        		order().processMng(data);
+        		break;
+        	case "DELIVERY_MNG":
+        		order().deliveryMng(data);
+        		break;
+        	}
+        	//alert(JSON.stringify(data));
+        	$('#select-user').modal('hide');
         };
         
         var changeStatus = function(data, event, root){
@@ -109,7 +151,9 @@ define([
             statusChangeComment: statusChangeComment,
             changeStatus: changeStatus,
             showContactModal: showContactModal,
-            closeContactModal: closeContactModal
+            closeContactModal: closeContactModal,
+            showUserModal: showUserModal,
+            closeUserModal: closeUserModal
         }
     }
 

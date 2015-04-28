@@ -82,9 +82,9 @@
     <div class="field">
         <label class="title">Получатель:</label>
         <div class="textfield">
-        	<span data-bind="text: $root.orderDetailsVM.order().recipient.lastName">&nbsp;</span>
-            <span data-bind="text: $root.orderDetailsVM.order().recipient.firstName">&nbsp;</span>
-            <span data-bind="text: $root.orderDetailsVM.order().recipient.middleName"></span>
+        	<span data-bind="text: $root.orderDetailsVM.order().recipient().lastName">&nbsp;</span>
+            <span data-bind="text: $root.orderDetailsVM.order().recipient().firstName">&nbsp;</span>
+            <span data-bind="text: $root.orderDetailsVM.order().recipient().middleName"></span>
             <button type="button" class="choose-btn" data-bind="click: function(data, evt) {$root.orderDetailsVM.showContactModal(data, evt, $root, 'recipient')}">Выбрать</button>
         </div>
     </div>
@@ -101,11 +101,11 @@
     <div class="field">
         <label class="title">Специалист, обрабатывающий заказ:</label>
         <div class="textfield">
-        	<span data-bind="text: $root.orderDetailsVM.order().processMng.lastName">&nbsp;</span>
-            <span data-bind="text: $root.orderDetailsVM.order().processMng.firstName">&nbsp;</span>
-            <span data-bind="text: $root.orderDetailsVM.order().processMng.middleName"></span>
+        	<span data-bind="text: $root.orderDetailsVM.order().processMng().lastName">&nbsp;</span>
+            <span data-bind="text: $root.orderDetailsVM.order().processMng().firstName">&nbsp;</span>
+            <span data-bind="text: $root.orderDetailsVM.order().processMng().middleName"></span>
             <!-- ko if: $root.user().role === "ORDER_MNG" || $root.user().role === "SUPERVISOR" -->
-            	<button type="button" class="choose-btn">Выбрать</button>
+            	<button type="button" class="choose-btn" data-bind="click: function(data, evt) {$root.orderDetailsVM.showUserModal(data, evt, $root, 'PROCESS_MNG')}">Выбрать</button>
             <!-- /ko -->
         </div>
     </div>
@@ -113,11 +113,11 @@
     <div class="field">
         <label class="title">Менеджер службы доставки:</label>
         <div class="textfield">
-        	<span data-bind="text: $root.orderDetailsVM.order().deliveryMng.lastName">&nbsp;</span>
-            <span data-bind="text: $root.orderDetailsVM.order().deliveryMng.firstName">&nbsp;</span>
-            <span data-bind="text: $root.orderDetailsVM.order().deliveryMng.middleName"></span>
+        	<span data-bind="text: $root.orderDetailsVM.order().deliveryMng().lastName">&nbsp;</span>
+            <span data-bind="text: $root.orderDetailsVM.order().deliveryMng().firstName">&nbsp;</span>
+            <span data-bind="text: $root.orderDetailsVM.order().deliveryMng().middleName"></span>
             <!-- ko if: $root.user().role === "ORDER_MNG" || $root.user().role === "SUPERVISOR" -->
-            	<button type="button" class="choose-btn">Выбрать</button>
+            	<button type="button" class="choose-btn" data-bind="click: function(data, evt) {$root.orderDetailsVM.showUserModal(data, evt, $root, 'DELIVERY_MNG')}">Выбрать</button>
             <!-- /ko -->
         </div>
     </div>

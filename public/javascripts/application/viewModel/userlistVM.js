@@ -14,6 +14,7 @@ define(["application/service/userService",
             users = ko.observableArray(),
             numbers = ko.observableArray([]);
         var checkedUsers = ko.observableArray();
+        var checkedUserId = ko.observable();
         var list = function(page, pageSize) {
                 userService.list(page, pageSize,
                     new Callback(function(params){
@@ -70,6 +71,7 @@ define(["application/service/userService",
         return {
             users: users,
             checkedUsers: checkedUsers,
+            checkedUserId: checkedUserId,
             numbers: numbers,
             list: list,
             goToUserDetails: goToUserDetails,
