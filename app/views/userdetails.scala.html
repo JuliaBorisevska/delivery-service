@@ -1,5 +1,5 @@
 @()
-<!-- ko if: $root.chosenSectionId().id == "useradd" && $root.userDetailsVM.user -->
+<!-- ko if: ($root.chosenSectionId().id == "useradd" || $root.chosenSectionId().id == "userchange") && $root.userDetailsVM.user -->
 
 <button id="show-contacts" data-bind="click: $root.userDetailsVM.showModal" type="button">Выберите контакт</button> <br>
 

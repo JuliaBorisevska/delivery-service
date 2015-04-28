@@ -19,7 +19,7 @@
                 <span data-bind="text: middleName"></span>
             </td>
                 <!-- /ko -->
-                <!-- ko if: $root.chosenSectionId().id == "useradd" -->
+                <!-- ko if: $root.chosenSectionId().id == "useradd" || $root.chosenSectionId().id == "userchenge"-->
             <td><input type="radio" data-bind="value: id, checked: $root.contactListVM.checkedContact, click: $root.userDetailsVM.closeModal" ></td>
             	<!-- /ko -->
             	<!-- ko if: $root.chosenSectionId().id == "ordadd" || $root.chosenSectionId().id == "ordchange" -->
