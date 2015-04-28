@@ -117,13 +117,10 @@ define(["application/service/initService",
             		self.orderDetailsVM.setOrder(new Order("", "", "", "", self.user(), "", "", "","", ""), [],[]);
             		location.hash = section.id;
             		break;
-                case "useradd":                    
-                    self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", "", ""));
-                    
-                    self.rolelistVM.list();
-                    self.contactListVM.currentPage(1);
-                    self.contactListVM.numbers([]);
-                    self.contactListVM.list(self.contactListVM.currentPage(), self.contactListVM.PAGE_SIZE);
+                case "useradd":
+                    self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", ""));
+
+
                     location.hash = section.id;
                     break;
                 case "ordchange":
