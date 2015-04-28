@@ -9,6 +9,7 @@ define([
     function OrderDetailsVM() {
         var self = this,
         	reply,
+        	contactRole,
             firstStatus = ko.observable(),
             order = ko.observable(),
             newStatus = ko.observable(),
@@ -57,6 +58,29 @@ define([
             });
         };
         
+        var showContactModal = function(data, event, root, role) {
+        	contactRole = role;
+        	root.contactListVM.currentPage(1);
+        	root.contactListVM.numbers([]);
+        	root.contactListVM.list(root.contactListVM.currentPage(), root.contactListVM.PAGE_SIZE);
+            $('#select-contact').modal({
+            	  keyboard: false
+            });
+        };
+        
+        var closeContactModal = function(data, event, root) {
+        	switch (contactRole){
+        	case "customer":
+        		order().customer(data);
+        		break;
+        	case "recipient":
+        		order().recipient=data;
+        		break;
+        	}
+        	//alert(JSON.stringify(data));
+        	$('#select-contact').modal('hide');
+        };
+        
         var changeStatus = function(data, event, root){
         	$('#status-confirm').modal('hide');
         	orderService.changeStatus(order().id, newStatus(), statusChangeComment(),
@@ -83,7 +107,9 @@ define([
             orderHistoryList: orderHistoryList,
             newStatus: newStatus,
             statusChangeComment: statusChangeComment,
-            changeStatus: changeStatus
+            changeStatus: changeStatus,
+            showContactModal: showContactModal,
+            closeContactModal: closeContactModal
         }
     }
 

@@ -117,10 +117,9 @@ define(["application/service/initService",
             		self.orderDetailsVM.setOrder(new Order("", "", "", "", self.user(), "", "", "","", ""), [],[]);
             		location.hash = section.id;
             		break;
-                case "useradd":
-                    if (userDetailsVM.user() === undefined) {
-                        self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", "", ""));
-                    }
+                case "useradd":                    
+                    self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", "", ""));
+                    
                     self.rolelistVM.list();
                     self.contactListVM.currentPage(1);
                     self.contactListVM.numbers([]);
@@ -131,6 +130,16 @@ define(["application/service/initService",
                 	if (self.chosenSectionId().id=="ordchange"){
                 		self.orderlistVM.getStatusList();
                 		location.hash  = "ordlst";
+                	}else{
+                		location.hash=self.chosenSectionId().id;
+                	}
+            		break; 
+                case "userchange":
+                	if (self.chosenSectionId().id=="userchange"){
+                		self.userlistVM.numbers([]);
+                        self.userlistVM.currentPage(1);
+                		self.userlistVM.list(self.userlistVM.currentPage(), self.userlistVM.PAGE_SIZE);
+                		location.hash  = "lst";
                 	}else{
                 		location.hash=self.chosenSectionId().id;
                 	}

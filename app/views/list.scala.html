@@ -18,7 +18,7 @@
                 </tr>
         	</thead>
         	<tbody data-bind="foreach: userlistVM.users">
-        		<tr>
+        		<tr data-bind="click: function(data, evt) {$root.userlistVM.goToUserDetails(data, evt, $root)}">
                     <td><input type="checkbox" data-bind="value: id, checked: $root.userlistVM.checkedUsers" /></td>
                     <td>
                     	<span data-bind="text:firstName"></span>&nbsp;

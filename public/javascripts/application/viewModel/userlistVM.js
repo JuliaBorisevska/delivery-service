@@ -60,11 +60,19 @@ define(["application/service/userService",
                 )
            checkedUsers([]);
         };
+        
+        var goToUserDetails = function(data, event, root) {
+        	root.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", "", ""));
+        	location.hash = "userchange";
+        };
+        
+        
         return {
             users: users,
             checkedUsers: checkedUsers,
             numbers: numbers,
             list: list,
+            goToUserDetails: goToUserDetails,
             deleteUsers: deleteUsers,
             totalPages: totalPages,
             currentPage: currentPage,

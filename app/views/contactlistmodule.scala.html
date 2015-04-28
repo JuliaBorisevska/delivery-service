@@ -11,17 +11,27 @@
     </thead>
     <tbody data-bind="foreach: contactListVM.contacts">
         <tr>
-                <!-- ko if: $root.chosenSectionId().id != "useradd" -->
+                <!-- ko if: $root.chosenSectionId().id == "ctlst" -->
             <td><input type="checkbox" data-bind="value: id, checked: $root.contactListVM.checkedContacts" ></td>
-                <!-- /ko -->
-                <!-- ko if: $root.chosenSectionId().id == "useradd" -->
-            <td><input type="radio" data-bind="value: id, checked: $root.contactListVM.checkedContact, click: $root.userDetailsVM.closeModal" ></td>
-                <!-- /ko -->
             <td data-bind="attr: { id: id }, click: function(contact, evt) {$root.contactListVM.goToDetails(contact, evt, $root)}">
                 <span data-bind="text: lastName">&nbsp;</span>
                 <span data-bind="text: firstName">&nbsp;</span>
                 <span data-bind="text: middleName"></span>
             </td>
+                <!-- /ko -->
+                <!-- ko if: $root.chosenSectionId().id == "useradd" -->
+            <td><input type="radio" data-bind="value: id, checked: $root.contactListVM.checkedContact, click: $root.userDetailsVM.closeModal" ></td>
+            	<!-- /ko -->
+            	<!-- ko if: $root.chosenSectionId().id == "ordadd" || $root.chosenSectionId().id == "ordchange" -->
+            <td><input type="radio" data-bind="click: function(data, evt) {$root.orderDetailsVM.closeContactModal(data, evt, $root)}" ></td>
+            	<!-- /ko -->
+            <!-- ko if: $root.chosenSectionId().id != "ctlst" -->
+            <td>
+            	<span data-bind="text: lastName">&nbsp;</span>
+                <span data-bind="text: firstName">&nbsp;</span>
+                <span data-bind="text: middleName"></span>
+            </td>    
+            <!-- /ko -->
             <td data-bind="text: birthday"></td>
             <td>
                 <span data-bind="text: town">,&nbsp;</span>

@@ -72,10 +72,10 @@
     <div class="field">
         <label class="title">Заказчик:</label>
         <div class="textfield">
-        	<span data-bind="text: $root.orderDetailsVM.order().customer.lastName">&nbsp;</span>
-            <span data-bind="text: $root.orderDetailsVM.order().customer.firstName">&nbsp;</span>
-            <span data-bind="text: $root.orderDetailsVM.order().customer.middleName"></span>
-            <button type="button" class="choose-btn">Выбрать</button>
+        	<span data-bind="text: $root.orderDetailsVM.order().customer().lastName">&nbsp;</span>
+            <span data-bind="text: $root.orderDetailsVM.order().customer().firstName">&nbsp;</span>
+            <span data-bind="text: $root.orderDetailsVM.order().customer().middleName"></span>
+            <button type="button" class="choose-btn" data-bind="click: function(data, evt) {$root.orderDetailsVM.showContactModal(data, evt, $root, 'customer')}">Выбрать</button>
         </div>
     </div>
     <div class="clr"></div>
@@ -85,7 +85,7 @@
         	<span data-bind="text: $root.orderDetailsVM.order().recipient.lastName">&nbsp;</span>
             <span data-bind="text: $root.orderDetailsVM.order().recipient.firstName">&nbsp;</span>
             <span data-bind="text: $root.orderDetailsVM.order().recipient.middleName"></span>
-            <button type="button" class="choose-btn">Выбрать</button>
+            <button type="button" class="choose-btn" data-bind="click: function(data, evt) {$root.orderDetailsVM.showContactModal(data, evt, $root, 'recipient')}">Выбрать</button>
         </div>
     </div>
     <div class="clr"></div>

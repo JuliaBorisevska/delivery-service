@@ -1,15 +1,5 @@
 @()
 <!-- ko if: $root.chosenSectionId().id == "useradd" && $root.userDetailsVM.user -->
-<!-- Modal -->
-<div class="modal fade" id="select-user">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            @contactlistmodule()
-        </div>
-    </div>
-
-</div>
-<!-- /.modal -->
 
 <button id="show-contacts" data-bind="click: $root.userDetailsVM.showModal" type="button">Выберите контакт</button> <br>
 

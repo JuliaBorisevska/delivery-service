@@ -19,9 +19,9 @@ define([
                         success = new Callback(function (params) {
                                 var reply = params.reply;
                                 if (reply.status === "SUCCESS") {
-                                    clean();
+                                    //clean();
                                     root.userlistVM.list(1, root.userlistVM.PAGE_SIZE);
-                                    root.goTo("lst");
+                                    location.hash="lst";
                                 }
                             }, self, {}
                         ),
