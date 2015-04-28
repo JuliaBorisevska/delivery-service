@@ -119,8 +119,7 @@ define(["application/service/initService",
             		break;
                 case "useradd":
                     self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", ""));
-
-
+                    self.rolelistVM.list();
                     location.hash = section.id;
                     break;
                 case "ordchange":
