@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
+
 import java.util.List;
 
 public class UserDAO extends AbstractDAO<User> {
@@ -76,7 +77,25 @@ public class UserDAO extends AbstractDAO<User> {
 		UserState state = findByStateTitle(ACTIVE_USER);
         countQuery.select(criteriaBuilder.count(from)).where(criteriaBuilder.equal(comp.get("id"), company.getId()),
         													criteriaBuilder.equal(from.get("userStateByUserStateId"), state));
-        return em.createQuery(countQuery).getSingleResult();
+        Long lngth = em.createQuery(countQuery).getSingleResult();
+        logger.info("Method total with parameter company - {} returns length - {}", company.getTitle(), lngth);
+        return lngth;
+    }
+	
+	public Long total(Company company, String roleTitle) {
+        	CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+            CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+            Root<User> from = countQuery.from(User.class);
+    		Join<User, Contact> contact = from.join("contactByContactId");
+    		Join<Contact, Company> comp = contact.join("companyByCompanyId");
+    		UserState state = findByStateTitle(ACTIVE_USER);
+            countQuery.select(criteriaBuilder.count(from)).where(criteriaBuilder.equal(comp.get("id"), company.getId()),
+            													criteriaBuilder.equal(from.get("userStateByUserStateId"), state),
+            													criteriaBuilder.equal(from.get("roleByRoleId").get("name"), roleTitle));
+            Long lngth = em.createQuery(countQuery).getSingleResult();
+            logger.info("Method total with parameters company - {}, roleTitle - {} returns length - {}", company.getTitle(), roleTitle, lngth);
+            return lngth;
+		
     }
 
 	public List<User> list(Integer pageNumber, Integer pageSize, Company company) {
@@ -88,6 +107,23 @@ public class UserDAO extends AbstractDAO<User> {
 		UserState state = findByStateTitle(ACTIVE_USER);
 		CriteriaQuery<User> select = criteriaQuery.select(from).where(criteriaBuilder.equal(comp.get("id"), company.getId()),
 				criteriaBuilder.equal(from.get("userStateByUserStateId"), state));
+		TypedQuery<User> q = em.createQuery(select);
+		q.setFirstResult((pageNumber - 1) * pageSize);
+		q.setMaxResults(pageSize);
+
+		return q.getResultList();
+	}
+	
+	public List<User> list(Integer pageNumber, Integer pageSize, Company company, String roleTitle) {
+		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+		CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+		Root<User> from = criteriaQuery.from(User.class);
+		Join<User, Contact> contact = from.join("contactByContactId");
+		Join<Contact, Company> comp = contact.join("companyByCompanyId");
+		UserState state = findByStateTitle(ACTIVE_USER);
+		CriteriaQuery<User> select = criteriaQuery.select(from).where(criteriaBuilder.equal(comp.get("id"), company.getId()),
+				criteriaBuilder.equal(from.get("userStateByUserStateId"), state),
+				criteriaBuilder.equal(from.get("roleByRoleId").get("name"), roleTitle));
 		TypedQuery<User> q = em.createQuery(select);
 		q.setFirstResult((pageNumber - 1) * pageSize);
 		q.setMaxResults(pageSize);

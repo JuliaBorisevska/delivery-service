@@ -112,6 +112,7 @@ public class OrderDAO extends AbstractDAO<Order> {
         Join<Order, Contact> fromContact = fromOrder.join("customerByContactId");
         countQuery.select(criteriaBuilder.count(fromOrder)).where(criteriaBuilder.equal(fromContact.get("companyByCompanyId"), company));
         Long lngth = em.createQuery(countQuery).getSingleResult();
+        logger.info("Method getLength with parameter company - {} returns length - {}", company.getTitle(), lngth);
         return lngth;
     }
 
@@ -144,6 +145,7 @@ public class OrderDAO extends AbstractDAO<Order> {
         countQuery.select(criteriaBuilder.count(fromOrder)).where(criteriaBuilder.equal(fromContact.get("companyByCompanyId"), company),
         														predicate);
         Long lngth = em.createQuery(countQuery).getSingleResult();
+        logger.info("Method getLength with parameters company - {}, statusTitleList - {} returns length - {}", company.getTitle(), statusTitleList, lngth);
         return lngth;
     }
 

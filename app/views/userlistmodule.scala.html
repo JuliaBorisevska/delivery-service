@@ -43,6 +43,6 @@
 			<!-- ko foreach: userlistVM.numbers -->
              <a id="block" href="#" data-bind="click: function (data, event) { $root.navigate($root.userlistVM,data,event); }, text: $data, css: { current: $root.userlistVM.currentPage() == $data}"></a>
 			<!-- /ko -->
-            <a id="next" href="#" data-bind="click: function (data, event) { $root.navigate($root.userlistVM,data,event); }, css: { disabled: userlistVM.currentPage() === userlistVM.totalPages()}">>></a>
-        	<a id="last" href="#" data-bind="click: function (data, event) { $root.navigate($root.userlistVM,data,event); }, css: { disabled: userlistVM.currentPage() === userlistVM.totalPages()}">В конец</a>
+            <a id="next" href="#" data-bind="click: function (data, event) { $root.navigate($root.userlistVM,data,event); }, css: { disabled: userlistVM.currentPage() >= userlistVM.totalPages()}">>></a>
+        	<a id="last" href="#" data-bind="click: function (data, event) { $root.navigate($root.userlistVM,data,event); }, css: { disabled: userlistVM.currentPage() >= userlistVM.totalPages()}">В конец</a>
         </div> 

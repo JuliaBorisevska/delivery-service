@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class SecurityRole implements Role {
 
     private Integer id;
-    private String title;
+    private String name;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +29,10 @@ public class SecurityRole implements Role {
     @Override
     @Column(name = "title", nullable = false, insertable = true, updatable = true)
     public String getName() {
-        return title;
+        return name;
     }
 
     public void setName(String title) {
-        this.title = title;
+        this.name = title;
     }
 }

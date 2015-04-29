@@ -12,11 +12,12 @@ define(["application/service/userService",
         	reply;
         var self = this,
             users = ko.observableArray(),
+            selectedRole = ko.observable(""),
             numbers = ko.observableArray([]);
         var checkedUsers = ko.observableArray();
         var checkedUserId = ko.observable();
         var list = function(page, pageSize) {
-                userService.list(page, pageSize,
+                userService.list(page, pageSize, selectedRole(),
                     new Callback(function(params){
                             reply = params.reply;
                             if(reply.status === "SUCCESS") {
@@ -75,6 +76,7 @@ define(["application/service/userService",
             users: users,
             checkedUsers: checkedUsers,
             checkedUserId: checkedUserId,
+            selectedRole: selectedRole,
             numbers: numbers,
             list: list,
             goToUserDetails: goToUserDetails,

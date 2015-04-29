@@ -89,6 +89,7 @@ define([
         		root.userlistVM.checkedUserId(order().deliveryMng().id);
         		break;
         	}
+        	root.userlistVM.selectedRole(personRole);
         	root.userlistVM.numbers([]);
             root.userlistVM.currentPage(1);
     		root.userlistVM.list(root.userlistVM.currentPage(), root.userlistVM.PAGE_SIZE);

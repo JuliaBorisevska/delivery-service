@@ -23,7 +23,7 @@
             <td><input type="radio" data-bind="attr: {name: id, value: id}, checked: $root.contactListVM.checkedContact, click: $root.userDetailsVM.closeModal" ></td>
             	<!-- /ko -->
             	<!-- ko if: $root.chosenSectionId().id == "ordadd" || $root.chosenSectionId().id == "ordchange" -->
-            <td><input type="radio" data-bind="value: id, checked: $root.contactListVM.checkedCt, click: function(data, evt) {$root.orderDetailsVM.closeContactModal(data, evt, $root)}" ></td>
+            <td><input type="radio" data-bind="value: id, checked: $root.contactListVM.checkedContact, click: function(data, evt) {$root.orderDetailsVM.closeContactModal(data, evt, $root)}" ></td>
             	<!-- /ko -->
             <!-- ko if: $root.chosenSectionId().id != "ctlst" -->
             <td>
@@ -49,6 +49,6 @@
         <!-- ko foreach: contactListVM.numbers -->
     <a id="block" href="#" data-bind="click: function (data, event) { $root.navigate($root.contactListVM,data,event); }, text: $data, css: { current: $root.contactListVM.currentPage() == $data}"></a>
         <!-- /ko -->
-    <a id="next" href="#" data-bind="click: function (data, event) { $root.navigate($root.contactListVM,data,event); }, css: { disabled: contactListVM.currentPage() === contactListVM.totalPages()}">>></a>
-    <a id="last" href="#" data-bind="click: function (data, event) { $root.navigate($root.contactListVM,data,event); }, css: { disabled: contactListVM.currentPage() === contactListVM.totalPages()}">В конец</a>
+    <a id="next" href="#" data-bind="click: function (data, event) { $root.navigate($root.contactListVM,data,event); }, css: { disabled: contactListVM.currentPage() >= contactListVM.totalPages()}">>></a>
+    <a id="last" href="#" data-bind="click: function (data, event) { $root.navigate($root.contactListVM,data,event); }, css: { disabled: contactListVM.currentPage() >= contactListVM.totalPages()}">В конец</a>
 </div>

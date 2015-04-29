@@ -93,6 +93,7 @@ define(["application/service/initService",
         self.goTo = function(section) {
             switch (section.id){
             	case "lst":
+            		self.userlistVM.selectedRole("");
                     if (userDetailsVM.user() === undefined) {
                         self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", "", ""));
                     }
@@ -132,6 +133,7 @@ define(["application/service/initService",
             		break; 
                 case "userchange":
                 	if (self.chosenSectionId().id=="userchange"){
+                		self.userlistVM.selectedRole("");
                 		self.userlistVM.numbers([]);
                         self.userlistVM.currentPage(1);
                 		self.userlistVM.list(self.userlistVM.currentPage(), self.userlistVM.PAGE_SIZE);

@@ -17,7 +17,8 @@ GET           /contact/:id                               controllers.ContactCont
 POST          /contact                                   controllers.ContactController.createContact()
 
 # Users
-GET           /user/list/:page/:pageSize                 controllers.UserController.listUsers(page: Integer, pageSize: Integer)
+GET           /user/list/:page/:pageSize/                 controllers.UserController.listUsers(page: Integer, pageSize: Integer, role="")
+GET           /user/list/:page/:pageSize/:role           controllers.UserController.listUsers(page: Integer, pageSize: Integer, role: String)
 DELETE        /user/:ids                                 controllers.UserController.deleteUsers(ids: String)
 POST          /user                                      controllers.UserController.createUser()
 

@@ -13,9 +13,9 @@ define(["application/service/baseService"], function (baseService) {
             );
         };
 
-        self.list = function (page, pageSize, success, error, done) {
+        self.list = function (page, pageSize, role, success, error, done) {
             baseService.send(
-                "/user/list/" + page + "/" + pageSize,
+                "/user/list/" + page + "/" + pageSize + "/" + role,
                 "GET",
                 {},
                 success,

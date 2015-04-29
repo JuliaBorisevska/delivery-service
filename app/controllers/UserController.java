@@ -1,7 +1,9 @@
 package controllers;
 
 import be.objectify.deadbolt.java.actions.Pattern;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import dao.ContactDAO;
 import dao.UserDAO;
 import dto.UserDTO;
@@ -17,6 +19,8 @@ import resource.MessageManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 
 
 public class UserController extends BaseController {
@@ -39,7 +43,7 @@ public class UserController extends BaseController {
 			String titleOfRole = null;
 			try {
 				idOfRole = Integer.valueOf(values.get("role[id]")[0]);
-				titleOfRole = values.get("role[title]")[0];
+				titleOfRole = values.get("role[title]")[0];            //изменить title на name???
 				numberOfContact = Long.valueOf(values.get("contactId")[0]);
 				logger.info("id of role of new user '{}' - {}, title of role- {}, id of contact - {}", login, idOfRole, titleOfRole, numberOfContact);
 
@@ -81,8 +85,8 @@ public class UserController extends BaseController {
 	}
 
     @Transactional
-    @Pattern("lst")
-    public static Result listUsers(Integer pageNumber, Integer pageSize) {
+    //@Pattern("lst")
+    public static Result listUsers(Integer pageNumber, Integer pageSize, String role) {
         logger.info("Start listUsers method");
     	if(pageNumber == null || pageSize == null || pageNumber <= 0 || pageNumber <= 0) {
                 return badRequest(Json.toJson(
@@ -95,9 +99,16 @@ public class UserController extends BaseController {
 		}
         Company company = user.getContactByContactId().getCompanyByCompanyId();
         UserDAO dao = new UserDAO(JPA.em());
-        Long total = dao.total(company);
+        Long total;
+        List<User> userList;
+        if (StringUtils.isBlank(role)){
+        	total = dao.total(company);
+        	userList = dao.list(pageNumber, pageSize, company);
+        }else{
+        	total = dao.total(company, role);
+        	userList = dao.list(pageNumber, pageSize, company, role);
+        }
         Integer totalPages = Double.valueOf(Math.ceil((double) total / pageSize)).intValue();
-        List<User> userList = dao.list(pageNumber, pageSize, company);
         List<UserDTO> dtoList = new ArrayList<>();
         for(User u : userList) {
             dtoList.add(UserDTO.getUser(u));
