@@ -93,7 +93,6 @@ define(["application/service/initService",
         self.goTo = function(section) {
             switch (section.id){
             	case "lst":
-            		self.userlistVM.selectedRole("");
                     if (userDetailsVM.user() === undefined) {
                         self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", "", ""));
                     }
@@ -120,7 +119,7 @@ define(["application/service/initService",
             		break;
                 case "useradd":
                     self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", ""));
-                    self.rolelistVM.list();
+
                     location.hash = section.id;
                     break;
                 case "ordchange":
@@ -137,6 +136,8 @@ define(["application/service/initService",
                 		self.userlistVM.numbers([]);
                         self.userlistVM.currentPage(1);
                 		self.userlistVM.list(self.userlistVM.currentPage(), self.userlistVM.PAGE_SIZE);
+                        self.rolelistVM.list();
+
                 		location.hash  = "lst";
                 	}else{
                 		location.hash=self.chosenSectionId().id;
