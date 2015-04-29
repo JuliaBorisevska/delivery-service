@@ -78,17 +78,9 @@ public class OrderDAO extends AbstractDAO<Order> {
     	addToOrderHistory(history);
     }
     
-    public Order getOrderById(Long orderId, Company company){
+    public Order getOrderById(Long orderId){
     	logger.info("Start getOrderById method with orderId - {}", orderId);
     	Order order = em.find(Order.class, orderId);
-    	if (order != null){
-    		if (order.getCustomerByContactId().getCompanyByCompanyId().getId()!=company.getId()){
-        		logger.warn("Order with orderId - {} doesn't belong the company with id - {}", orderId, company.getId());
-        		order = null;
-    		}
-    	}else{
-    		logger.warn("No result found for orderId - {}", orderId);
-        }
     	return order;
     }
     
@@ -105,20 +97,10 @@ public class OrderDAO extends AbstractDAO<Order> {
         return q.getResultList();
     }
     
-    public Long  getLength(Company company){
-        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        Root<Order> fromOrder = countQuery.from(Order.class);
-        Join<Order, Contact> fromContact = fromOrder.join("customerByContactId");
-        countQuery.select(criteriaBuilder.count(fromOrder)).where(criteriaBuilder.equal(fromContact.get("companyByCompanyId"), company));
-        Long lngth = em.createQuery(countQuery).getSingleResult();
-        logger.info("Method getLength with parameter company - {} returns length - {}", company.getTitle(), lngth);
-        return lngth;
-    }
-
-    
     public List<Order> getOrderList(Integer pageNumber, Integer pageSize, Company company, List<String> statusTitleList){
-        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        
+    	
+    	CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
         Root<Order> fromOrder = criteriaQuery.from(Order.class);
 		Join<Order, Contact> fromContact = fromOrder.join("customerByContactId");
@@ -132,6 +114,17 @@ public class OrderDAO extends AbstractDAO<Order> {
         q.setMaxResults(pageSize);
 
         return q.getResultList();
+    }
+    
+    public Long  getLength(Company company){
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Order> fromOrder = countQuery.from(Order.class);
+        Join<Order, Contact> fromContact = fromOrder.join("customerByContactId");
+        countQuery.select(criteriaBuilder.count(fromOrder)).where(criteriaBuilder.equal(fromContact.get("companyByCompanyId"), company));
+        Long lngth = em.createQuery(countQuery).getSingleResult();
+        logger.info("Method getLength with parameter company - {} returns length - {}", company.getTitle(), lngth);
+        return lngth;
     }
     
     public Long  getLength(Company company, List<String> statusTitleList){

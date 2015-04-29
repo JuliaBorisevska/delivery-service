@@ -2,8 +2,9 @@ define([
     "application/service/orderService",
     "application/util/callback",
     "application/model/orderHistory",
-    "application/model/contact"],
-    function(orderService, Callback, OrderHistory, Contact) {
+    "application/model/contact",
+    "application/model/orderForSave"],
+    function(orderService, Callback, OrderHistory, Contact, OrderForSave) {
     "use strict";
 
     function OrderDetailsVM() {
@@ -59,12 +60,10 @@ define([
         };
         
         var showContactModal = function(data, event, root, role) {
-        	//alert(JSON.stringify(data));
         	personRole = role;
         	switch (personRole){
         	case "customer":
         		root.contactListVM.checkedContact(order().customer().id);
-        		//alert(root.contactListVM.checkedContact());
         		break;
         	case "recipient":
         		root.contactListVM.checkedContact(order().recipient().id);
@@ -83,7 +82,6 @@ define([
         	switch (personRole){
         	case "PROCESS_MNG":
         		root.userlistVM.checkedUserId(order().processMng().id);
-        		//alert(root.contactListVM.checkedContact());
         		break;
         	case "DELIVERY_MNG":
         		root.userlistVM.checkedUserId(order().deliveryMng().id);
@@ -107,7 +105,6 @@ define([
         		order().recipient(data);
         		break;
         	}
-        	//alert(JSON.stringify(data));
         	$('#select-contact').modal('hide');
         };
         
@@ -120,7 +117,6 @@ define([
         		order().deliveryMng(data);
         		break;
         	}
-        	//alert(JSON.stringify(data));
         	$('#select-user').modal('hide');
         };
         
@@ -138,6 +134,31 @@ define([
                 	alert(params.reply.responseJSON.data);
                     }, self, {})
         	)
+        };
+        
+        var submit = function(root){
+            var record = new OrderForSave(order().id, order().user.id,
+            							  order().processMng().id, 
+            							  order().deliveryMng().id, 
+            							  order().customer().id, 
+            							  order().recipient().id, order().description, order().price),
+                success = new Callback(function(params){
+                        reply = params.reply;
+                        if(reply.status === "SUCCESS") {
+                        	root.orderlistVM.getStatusList();
+                            location.hash="ordlst";
+                        }
+                    }, self, {}
+                ),
+                error = new Callback(function(params){
+                	alert(params.reply.responseJSON.data);
+                    }, self, {}
+                );
+            if(record.id) {
+                orderService.update(record, success, error);
+            }else{
+                orderService.add(record, success, error);
+            }
         }
 
         return {
@@ -154,7 +175,8 @@ define([
             showContactModal: showContactModal,
             closeContactModal: closeContactModal,
             showUserModal: showUserModal,
-            closeUserModal: closeUserModal
+            closeUserModal: closeUserModal,
+            submit: submit
         }
     }
 

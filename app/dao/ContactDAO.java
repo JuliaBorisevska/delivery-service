@@ -94,7 +94,6 @@ public class ContactDAO extends AbstractDAO<Contact> {
     }
 
     public Contact findById(Long id) {
-
         return em.find(Contact.class, id);
     }
 

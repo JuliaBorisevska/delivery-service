@@ -23,6 +23,8 @@ DELETE        /user/:ids                                 controllers.UserControl
 POST          /user                                      controllers.UserController.createUser()
 
 #Orders
+POST    /order                             		controllers.OrderController.createOrder()
+PUT     /order/:id                         		controllers.OrderController.updateOrder(id: Long)
 GET     /status/first                           controllers.OrderController.getFirstStatus()
 GET     /status/list                            controllers.OrderController.listStatuses()
 POST    /order/status                            controllers.OrderController.changeOrderStatus()

@@ -122,6 +122,10 @@
         </div>
     </div>
     <div class="clr"></div>
+    <div class="field">
+        <button type="button" data-bind="click: function(){$root.orderDetailsVM.submit($root)}">Сохранить</button>
+    </div>
+    <div class="clr"></div>
 </div>
 <!-- ko if: $root.orderDetailsVM.orderHistoryList().length != 0 -->
 <h2>История заказа</h2>

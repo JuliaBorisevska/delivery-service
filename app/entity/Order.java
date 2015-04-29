@@ -15,7 +15,6 @@ import java.util.List;
 @Table(name = "order", schema = "", catalog = "delivery_service")
 public class Order {
 
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Timestamp orderDate;
     @Constraints.Required
@@ -37,7 +36,8 @@ public class Order {
     private List<OrderHistory> orderHistory;
 
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id",unique=true, nullable = false)
     public Long getId() {
         return id;
     }
