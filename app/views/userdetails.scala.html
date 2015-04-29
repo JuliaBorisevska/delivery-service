@@ -18,7 +18,7 @@
                      value: $root.userDetailsVM.user().role"></select>
 </div>
 
-<button class="choose-btn" type="button" data-bind="click: function(){$root.userDetailsVM.submit($root);}">
+<button class="choose-btn" type="button" data-bind="click: function(){$root.userDetailsVM.user().contactId = $root.contactListVM.checkedContact; $root.userDetailsVM.submit($root);}">
 
     Добавить пользователя</button>
 <!-- /ko -->
