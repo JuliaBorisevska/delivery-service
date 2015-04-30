@@ -45,7 +45,7 @@ public class OrderController extends BaseController {
 	public static final String DELIVERY_MNG_ROLE_NAME = "DELIVERY_MNG";
 	
     @Transactional
-    @Pattern("ordchange")
+    @Pattern("order_selection")
     public static Result getOrder(Long id) {
         try {
         	User user = Application.recieveUserByToken();
@@ -82,7 +82,7 @@ public class OrderController extends BaseController {
     }
     
     @Transactional
-    @Pattern("ordadd")
+    @Pattern("order_addition")
     public static Result getFirstStatus() {
         try {
         	String firstStatus = ConfigContainer.getInstance().getStatusHandler().getFirstStatusTitle();
@@ -98,7 +98,7 @@ public class OrderController extends BaseController {
     }
 
     @Transactional
-    @Pattern("ordlst")
+    @Pattern("order_list")
     public static Result listStatuses(){
     	try {
     		User user = Application.recieveUserByToken();
@@ -126,7 +126,7 @@ public class OrderController extends BaseController {
     }
     
     @Transactional
-    @Pattern("ordlst")
+    @Pattern("order_list")
     public static Result listOrders(Integer pageNumber, Integer pageSize, String status) {
     	try{
     		EntityManager em = JPA.em();
@@ -186,7 +186,7 @@ public class OrderController extends BaseController {
     }
 
     @Transactional
-    @Pattern("ordchange")
+    @Pattern("order_updating")
     public static Result changeOrderStatus() {
     	try{
     		OrderDAO orderDAO = new OrderDAO(JPA.em());
@@ -238,7 +238,7 @@ public class OrderController extends BaseController {
     }
     
     @Transactional
-    @Pattern("ordadd")
+    @Pattern("order_addition")
     public static Result createOrder() {
     	try{          
             final Map<String, String[]> values = request().body().asFormUrlEncoded();
@@ -310,6 +310,7 @@ public class OrderController extends BaseController {
     }
 
     @Transactional
+    @Pattern("order_updating")
     public static Result updateOrder(Long id) {
     	try{          
             final Map<String, String[]> values = request().body().asFormUrlEncoded();

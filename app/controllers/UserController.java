@@ -24,6 +24,7 @@ public class UserController extends BaseController {
 	private static ALogger logger = Logger.of(UserController.class);
 
 	@Transactional
+	@Pattern("user_addition")
 	public static Result createUser() {
 		logger.info("start to create user");
 
@@ -70,6 +71,7 @@ public class UserController extends BaseController {
 	}
 
 	@Transactional
+	@Pattern("user_list")
 	public static Result listRoles() {
 		logger.info("Start listRoles method");
 		UserDAO userDAO = new UserDAO(JPA.em());
@@ -120,7 +122,7 @@ public class UserController extends BaseController {
     }
 	
     @Transactional
-    @Pattern("lst")
+    @Pattern("user_deleting")
     public static Result deleteUsers(String ids) {
     	try{
     		logger.info("Start deleteUsers method with ids: {}", ids);
