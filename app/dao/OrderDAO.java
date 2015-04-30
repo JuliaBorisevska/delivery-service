@@ -53,6 +53,26 @@ public class OrderDAO extends AbstractDAO<Order> {
         em.persist(entity);
     }
     
+    public List<Status> getStatusList(){
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Status> criteriaQuery = criteriaBuilder.createQuery(Status.class);
+        Root<Status> from = criteriaQuery.from(Status.class);
+        CriteriaQuery<Status> select = criteriaQuery.select(from);
+        TypedQuery<Status> q = em.createQuery(select);
+        return q.getResultList();
+    }
+    
+    public List<Status> getStatusList(List<String> statusTitleList){
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Status> criteriaQuery = criteriaBuilder.createQuery(Status.class);
+        Root<Status> from = criteriaQuery.from(Status.class);
+        Expression<String> exp = from.get("title");
+        Predicate predicate = exp.in(statusTitleList);
+        CriteriaQuery<Status> select = criteriaQuery.select(from).where(predicate);
+        TypedQuery<Status> q = em.createQuery(select);
+        return q.getResultList();
+    }
+    
     public Status findStatusByTitle(String title){
     	try{
             CriteriaBuilder builder = em.getCriteriaBuilder();

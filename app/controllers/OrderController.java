@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import dao.ContactDAO;
 import dao.OrderDAO;
-import dao.StatusDAO;
 import dao.UserDAO;
 import dto.OrderDTO;
 import dto.OrderDetailsDTO;
@@ -104,16 +103,16 @@ public class OrderController extends BaseController {
     	try {
     		User user = Application.recieveUserByToken();
     		List<entity.Status> statusList;
-    		StatusDAO statusDAO =  new StatusDAO(JPA.em());
+    		OrderDAO orderDAO =  new OrderDAO(JPA.em());
     		if (user == null) {
     			return badRequest(Json.toJson(
 					new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
     		}
 			if (ConfigContainer.getInstance().getRolesHandler().hasOrders(user.getRoleByRoleId().getName())){
 				List<String> statusTitleList = ConfigContainer.getInstance().getRolesHandler().getOrdersList(user.getRoleByRoleId().getName());
-				statusList = statusDAO.getStatusList(statusTitleList);
+				statusList = orderDAO.getStatusList(statusTitleList);
 			}else{
-				statusList = statusDAO.getStatusList();
+				statusList = orderDAO.getStatusList();
 			}
 	    	ObjectNode result = Json.newObject();
 			result.put("statusList", Json.toJson(statusList));
@@ -312,18 +311,63 @@ public class OrderController extends BaseController {
 
     @Transactional
     public static Result updateOrder(Long id) {
-    	//OrderDAO orderDAO = new OrderDAO(JPA.em());
-        //Order order = orderDAO.getOrderById(id);
-        final Map<String, String[]> values = request().body().asFormUrlEncoded();
-        //logger.info("UpdateOrder Values: {}", values);
-        //String description = values.get("description")[0];
-        //String price = values.get("price")[0];
-        //order.setDescription(description);
-        // caution: no validation!
-        //order.setTotalPrice(Integer.valueOf(price));
-        //orderDAO.update(order);
-        return ok(Json.toJson(
-                new Reply<>(Status.SUCCESS, null)));
+    	try{          
+            final Map<String, String[]> values = request().body().asFormUrlEncoded();
+            logger.info("Start updateOrder with parameters: description - {}, price - {}, processMngId - {}, deliveryMngId - {}, customerId - {}, recipientId - {}",
+            		values.get("description")[0], values.get("price")[0], values.get("processMngId")[0],
+            		values.get("deliveryMngId")[0], values.get("customerId")[0], values.get("recipientId")[0]);
+            String description = StringUtils.isBlank(values.get("description")[0])?null:values.get("description")[0];
+            Double price = StringUtils.isBlank(values.get("price")[0])?null:Double.valueOf(values.get("price")[0]);
+            if (price == null || description==null) {
+        		return badRequest(Json.toJson(
+					new Reply<>(Status.ERROR, MessageManager.getProperty("order.empty.fields"))));
+        	}
+            Long processMngId = StringUtils.isBlank(values.get("processMngId")[0])?null:Long.valueOf(values.get("processMngId")[0]);
+            Long deliveryMngId = StringUtils.isBlank(values.get("deliveryMngId")[0])?null:Long.valueOf(values.get("deliveryMngId")[0]);
+            Long customerId = StringUtils.isBlank(values.get("customerId")[0])?null:Long.valueOf(values.get("customerId")[0]);
+            Long recipientId = StringUtils.isBlank(values.get("recipientId")[0])?null:Long.valueOf(values.get("recipientId")[0]);
+            if (processMngId == null || deliveryMngId==null || customerId==null || recipientId==null) {
+        		return badRequest(Json.toJson(
+					new Reply<>(Status.ERROR, MessageManager.getProperty("order.empty.fields"))));
+        	}
+            User user = Application.recieveUserByToken();
+        	if (user == null) {
+        		return badRequest(Json.toJson(
+					new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
+        	}
+        	Company company = user.getContactByContactId().getCompanyByCompanyId();
+        	EntityManager em = JPA.em();
+    		OrderDAO orderDAO = new OrderDAO(em);
+    		ContactDAO contactDAO = new ContactDAO(em);
+    		UserDAO userDAO = new UserDAO(em);
+            Order order = orderDAO.getOrderById(id);
+            Contact customer = contactDAO.findById(customerId);
+            Contact recipient = contactDAO.findById(recipientId);
+            User processMng = userDAO.findById(processMngId);
+            User deliveryMng = userDAO.findById(deliveryMngId);
+            if (customer == null || recipient==null || processMng==null || deliveryMng==null
+        		|| customer.getCompanyByCompanyId().getId()!=company.getId()
+            	|| recipient.getCompanyByCompanyId().getId()!=company.getId()
+            	|| processMng.getContactByContactId().getCompanyByCompanyId().getId()!=company.getId()
+            	|| deliveryMng.getContactByContactId().getCompanyByCompanyId().getId()!=company.getId()
+            	|| !PROCESS_MNG_ROLE_NAME.equals(processMng.getRoleByRoleId().getName())
+            	|| !DELIVERY_MNG_ROLE_NAME.equals(deliveryMng.getRoleByRoleId().getName())) {
+            	return badRequest(Json.toJson(
+					new Reply<>(Status.ERROR, MessageManager.getProperty("order.wrong.fields"))));
+        	}            
+            order.setDescription(description);
+            order.setTotalPrice(price);
+            order.setCustomerByContactId(customer);
+            order.setRecipientByContactId(recipient);
+            order.setProcessMngByUserId(processMng);
+            order.setDeliveryMngByUserId(deliveryMng);
+            return ok(Json.toJson(
+                    new Reply<>(Status.SUCCESS, null)));
+    	}catch(NumberFormatException e){
+    		logger.error("Error in createOrder method: {}", e);
+    		return badRequest(Json.toJson(
+            		new Reply<>(Status.ERROR, MessageManager.getProperty("order.wrong.fields"))));
+    	}
     }
 
    
