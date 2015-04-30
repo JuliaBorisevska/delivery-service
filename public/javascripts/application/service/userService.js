@@ -38,9 +38,7 @@ define(["application/service/baseService"], function (baseService) {
         return {
             add: self.add,
             list: self.list,
-            remove: self.remove,
-            showModal: self.showModal,
-            closeModal: self.closeModal
+            remove: self.remove
         }
     }
 

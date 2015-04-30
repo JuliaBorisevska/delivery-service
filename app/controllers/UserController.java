@@ -1,13 +1,12 @@
 package controllers;
 
 import be.objectify.deadbolt.java.actions.Pattern;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import dao.ContactDAO;
 import dao.UserDAO;
 import dto.UserDTO;
 import entity.*;
+import org.apache.commons.lang3.StringUtils;
 import play.Logger;
 import play.Logger.ALogger;
 import play.db.jpa.JPA;
@@ -19,8 +18,6 @@ import resource.MessageManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
 
 
 public class UserController extends BaseController {
@@ -85,8 +82,8 @@ public class UserController extends BaseController {
 	}
 
     @Transactional
-    //@Pattern("lst")
-    public static Result listUsers(Integer pageNumber, Integer pageSize, String role) {
+	@Pattern("user_list")
+	public static Result listUsers(Integer pageNumber, Integer pageSize, String role) {
         logger.info("Start listUsers method");
     	if(pageNumber == null || pageSize == null || pageNumber <= 0 || pageNumber <= 0) {
                 return badRequest(Json.toJson(
