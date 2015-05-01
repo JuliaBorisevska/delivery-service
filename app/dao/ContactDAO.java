@@ -2,6 +2,8 @@ package dao;
 
 import entity.Company;
 import entity.Contact;
+import play.Logger;
+import play.Logger.ALogger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -9,10 +11,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
-
-import play.Logger;
-import play.Logger.ALogger;
-
 import java.util.List;
 
 /**
@@ -51,16 +49,16 @@ public class ContactDAO extends AbstractDAO<Contact> {
         em.persist(entity);
     }
 
-    public List<Contact> getContactList(Integer pageNumber, Integer pageSize, Integer companyId) {
+    public List<Contact> getContactList(Integer pageNumber, Integer pageSize, Company company) {
 
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Contact> criteriaQuery = criteriaBuilder.createQuery(Contact.class);
         Root<Contact> from = criteriaQuery.from(Contact.class);
+        Join<Contact, Company> comp = from.join("companyByCompanyId");
 
         CriteriaQuery<Contact> select = criteriaQuery.select(from);
-
         //where
-        criteriaQuery.where(criteriaBuilder.equal(from.get("company_id"), companyId));
+        criteriaQuery.where(criteriaBuilder.equal(comp.get("id"), company.getId()));
 
         TypedQuery<Contact> q = em.createQuery(select);
         q.setFirstResult((pageNumber - 1) * pageSize);
@@ -88,11 +86,17 @@ public class ContactDAO extends AbstractDAO<Contact> {
         return em.find(Contact.class, id);
     }
 
-    public Long numberOfContacts() {
+    public Long numberOfContacts(Company company) {
 
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        countQuery.select(criteriaBuilder.count(countQuery.from(Contact.class)));
+
+        Root<Contact> from = countQuery.from(Contact.class);
+        Join<Contact, Company> comp = from.join("companyByCompanyId");
+
+        countQuery.select(criteriaBuilder.count(from))
+                .where(criteriaBuilder.equal(comp.get("id"), company.getId()));
+
         return em.createQuery(countQuery).getSingleResult();
     }
 }

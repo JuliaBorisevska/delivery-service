@@ -1,5 +1,7 @@
 package entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.List;
@@ -19,6 +21,7 @@ public class Contact {
     private String street;
     private Integer house;
     private Integer flat;
+    @JsonIgnore
     private List<Phone> phones;
 
     @Id

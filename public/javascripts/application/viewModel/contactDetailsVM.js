@@ -27,7 +27,7 @@ define([
                     error = new Callback(function(params){
                             reply = params.reply;
                             var message = reply.responseText ? reply.responseText : reply.statusText;
-                            alert("contactDetailsVM error!");
+                            alert("Error write to DB");
                         }, self, {}
                     );
 
@@ -40,7 +40,6 @@ define([
             },
             setContact = function(c){
                 contact(c);
-                //debugger;
             },
             clean = function(){
                 contact(null);
