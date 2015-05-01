@@ -61,12 +61,12 @@
     <div class="clr"></div>
     <div class="field">
         <label class="title">Оценочная стоимость:</label>
-        <input type="text" class="textfield" data-bind="value: $root.orderDetailsVM.order().price"/>
+        <input type="text" class="textfield" data-bind="value: $root.orderDetailsVM.order().price, enable: $root.user().role === 'ORDER_MNG' || $root.user().role === 'SUPERVISOR'"/>
     </div>
     <div class="clr"></div>
     <div class="field">
         <label class="title">Описание заказа:</label>
-        <textarea class="textfield" data-bind="value: $root.orderDetailsVM.order().description"></textarea>
+        <textarea class="textfield" data-bind="value: $root.orderDetailsVM.order().description, enable: $root.user().role === 'ORDER_MNG' || $root.user().role === 'SUPERVISOR'"></textarea>
     </div>
     <div class="clr"></div>
     <div class="field">
@@ -75,7 +75,9 @@
         	<span data-bind="text: $root.orderDetailsVM.order().customer().lastName">&nbsp;</span>
             <span data-bind="text: $root.orderDetailsVM.order().customer().firstName">&nbsp;</span>
             <span data-bind="text: $root.orderDetailsVM.order().customer().middleName"></span>
-            <button type="button" class="choose-btn" data-bind="click: function(data, evt) {$root.orderDetailsVM.showContactModal(data, evt, $root, 'customer')}">Выбрать</button>
+            <!-- ko if: $root.user().role === "ORDER_MNG" || $root.user().role === "SUPERVISOR" -->
+            	<button type="button" class="choose-btn" data-bind="click: function(data, evt) {$root.orderDetailsVM.showContactModal(data, evt, $root, 'customer')}">Выбрать</button>
+        	<!-- /ko -->
         </div>
     </div>
     <div class="clr"></div>
@@ -85,7 +87,9 @@
         	<span data-bind="text: $root.orderDetailsVM.order().recipient().lastName">&nbsp;</span>
             <span data-bind="text: $root.orderDetailsVM.order().recipient().firstName">&nbsp;</span>
             <span data-bind="text: $root.orderDetailsVM.order().recipient().middleName"></span>
-            <button type="button" class="choose-btn" data-bind="click: function(data, evt) {$root.orderDetailsVM.showContactModal(data, evt, $root, 'recipient')}">Выбрать</button>
+            <!-- ko if: $root.user().role === "ORDER_MNG" || $root.user().role === "SUPERVISOR" -->
+            	<button type="button" class="choose-btn" data-bind="click: function(data, evt) {$root.orderDetailsVM.showContactModal(data, evt, $root, 'recipient')}">Выбрать</button>
+        	<!-- /ko -->
         </div>
     </div>
     <div class="clr"></div>
@@ -122,10 +126,12 @@
         </div>
     </div>
     <div class="clr"></div>
+    <!-- ko if: $root.user().role === "ORDER_MNG" || $root.user().role === "SUPERVISOR" -->
     <div class="field">
         <button type="button" data-bind="click: function(){$root.orderDetailsVM.submit($root)}">Сохранить</button>
     </div>
     <div class="clr"></div>
+    <!-- /ko -->
 </div>
 <!-- ko if: $root.orderDetailsVM.orderHistoryList().length != 0 -->
 <h2>История заказа</h2>
