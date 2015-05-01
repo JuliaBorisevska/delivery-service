@@ -45,7 +45,6 @@ define([
                 }, clean = function () {
                     user(null);
                 }, showModal = function (root) {
-                    root.rolelistVM.list();
                     root.contactListVM.currentPage(1);
                     root.contactListVM.numbers([]);
                     root.contactListVM.list(root.contactListVM.currentPage(), root.contactListVM.PAGE_SIZE);

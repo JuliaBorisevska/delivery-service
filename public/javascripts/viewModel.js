@@ -119,13 +119,15 @@ define(["application/service/initService",
             		break;
                 case "useradd":
                     self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", ""));
+                    self.rolelistVM.list();
 
                     location.hash = section.id;
                     break;
                 case "ordchange":
                 	if (self.chosenSectionId().id=="ordchange"){
                 		self.orderlistVM.getStatusList();
-                		location.hash  = "ordlst";
+
+                        location.hash  = "ordlst";
                 	}else{
                 		location.hash=self.chosenSectionId().id;
                 	}
