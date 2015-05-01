@@ -5,6 +5,7 @@ import dao.UserDAO;
 import dto.UserDTO;
 import entity.User;
 import handler.ConfigContainer;
+import org.apache.commons.lang3.StringUtils;
 import org.mindrot.jbcrypt.BCrypt;
 import play.Logger;
 import play.Logger.ALogger;
@@ -35,10 +36,13 @@ public class Application extends BaseController {
     	logger.info("Start recieveUserByToken method");
     	User user = null;
         if (request().cookie("token") != null) {
-            String token = request().cookie("token").value();
-    		UserDAO userDAO = new UserDAO(JPA.em());
-            user = userDAO.findByToken(token);
-    	}
+            String token = null;
+            if (!StringUtils.isEmpty(request().cookie("token").value())) {
+                token = request().cookie("token").value();
+                UserDAO userDAO = new UserDAO(JPA.em());
+                user = userDAO.findByToken(token);
+            }
+        }
     	return user;
     }
     
@@ -89,9 +93,27 @@ public class Application extends BaseController {
     public static Result login() {
         try {
             final Map<String, String[]> values = request().body().asFormUrlEncoded();
-            String login = values.get("user")[0];
-            String password = values.get("password")[0];
-            logger.info("Start login method with login: {}", login);
+            String login = null;
+            String password = null;
+            try {
+                if (values.containsKey("user")) {
+                    login = values.get("user")[0];
+                    if (StringUtils.isEmpty(login))
+                        throw new IllegalArgumentException("parameter 'user' is empty");
+                    logger.info("start to login user with login '{}'", login);
+                } else throw new IllegalArgumentException("parameter 'user' is missing");
+
+                if (values.containsKey("password")) {
+                    password = values.get("password")[0];
+                    if (StringUtils.isEmpty(password))
+                        throw new IllegalArgumentException("parameter 'password' is empty");
+                } else throw new IllegalArgumentException("parameter 'password' is missing");
+            } catch (IllegalArgumentException e) {
+                logger.error("parameters error", e);
+                return badRequest(Json.toJson(
+                        new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
+            }
+
             EntityManager em = JPA.em();
             UserDAO dao = new UserDAO(em);
             User user = dao.findByLogin(login);

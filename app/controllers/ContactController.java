@@ -30,13 +30,12 @@ public class ContactController extends BaseController {
     @Transactional
     @Pattern("contact_selection")
     public static Result getContact(Long id) {
-
+        logger.info("get contact with id: {}", id);
         ContactDAO contactDAO = new ContactDAO(JPA.em());
         Contact contact = contactDAO.findById(id);
         if(contact == null) {
             return notFound(Json.toJson(new Reply()));
         }
-
         Reply<Contact> reply = new Reply<>(Status.SUCCESS, contact);
         return ok(Json.toJson(reply));
     }
@@ -44,6 +43,7 @@ public class ContactController extends BaseController {
     @Transactional
     @Pattern("contact_list")
     public static Result listContacts(Integer pageNumber, Integer pageSize) {
+        logger.info("get list of contacts, page: {}, size: {}", pageNumber, pageSize);
 
         if(pageNumber == null || pageSize == null || pageNumber <= 0 || pageNumber <= 0) {
             return badRequest(Json.toJson(new Reply()));
@@ -72,7 +72,6 @@ public class ContactController extends BaseController {
     @Transactional
     @Pattern("contact_addition")
     public static Result createContact() {
-
         Contact contact = new Contact();
         ContactDAO contactDAO = new ContactDAO(JPA.em());
         final Map<String, String[]> values = request().body().asFormUrlEncoded();
