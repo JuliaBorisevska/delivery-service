@@ -25,7 +25,7 @@
                     </td>
                     <!-- /ko -->
                     <!-- ko if: $root.chosenSectionId().id == "ordadd" || $root.chosenSectionId().id == "ordchange" -->
-                    <td><input type="radio" data-bind="value: id, checked: $root.userlistVM.checkedUserId" /></td>
+                    <td><input type="radio" name="userselect" data-bind="value: id, checked: $root.userlistVM.checkedUserId, click: function(data, evt) {$root.orderDetailsVM.closeUserModal(data, evt, $root)} " /></td>
                     <td>
                     	<span data-bind="text:firstName"></span>&nbsp;
                     	<span data-bind="text:lastName"></span>&nbsp;

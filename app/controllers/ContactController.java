@@ -1,5 +1,7 @@
 package controllers;
 
+import be.objectify.deadbolt.java.actions.Pattern;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import dao.CompanyDAO;
@@ -28,6 +30,7 @@ public class ContactController extends BaseController {
 	private static ALogger logger = Logger.of(ContactController.class);
 	
     @Transactional
+    @Pattern("contact_selection")
     public static Result getContact(Long id) {
 
         ContactDAO contactDAO = new ContactDAO(JPA.em());
@@ -41,6 +44,7 @@ public class ContactController extends BaseController {
     }
 
     @Transactional
+    @Pattern("contact_list")
     public static Result listContacts(Integer pageNumber, Integer pageSize) {
 
         if(pageNumber == null || pageSize == null || pageNumber <= 0 || pageNumber <= 0) {
@@ -62,6 +66,7 @@ public class ContactController extends BaseController {
     }
 
     @Transactional
+    @Pattern("contact_addition")
     public static Result createContact() {
 
         Contact contact = new Contact();
@@ -80,6 +85,7 @@ public class ContactController extends BaseController {
     }
 
     @Transactional
+    @Pattern("contact_addition")
     public static Result updateContact(Long id) {
 
         ContactDAO contactDAO = new ContactDAO(JPA.em());
@@ -139,6 +145,7 @@ public class ContactController extends BaseController {
     }
 
     @Transactional
+    @Pattern("contact_deleting")
     public static Result deleteContacts(String ids) {
     	try{
     		logger.info("Start deleteContacts method with ids: {}", ids);

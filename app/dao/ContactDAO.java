@@ -39,17 +39,8 @@ public class ContactDAO extends AbstractDAO<Contact> {
 			em.remove(contacts.get(0));
 			logger.info("Contact with id - {} and company id - {} is deleted",entity.getId(), entity.getCompanyByCompanyId().getId());
 		}
-    	//delete(entity.getId());
     }
-/*
-    public void delete(Long id) {
 
-        Contact contact = em.find(Contact.class, id);
-        if(contact != null) {
-            em.remove(contact);
-        }
-    }
-*/
     @Override
     public void create(Contact entity) {
         em.persist(entity);
@@ -94,7 +85,6 @@ public class ContactDAO extends AbstractDAO<Contact> {
     }
 
     public Contact findById(Long id) {
-
         return em.find(Contact.class, id);
     }
 

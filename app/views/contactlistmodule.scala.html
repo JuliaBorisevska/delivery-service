@@ -12,7 +12,7 @@
     <tbody data-bind="foreach: contactListVM.contacts">
         <tr>
                 <!-- ko if: $root.chosenSectionId().id == "ctlst" -->
-            <td><input type="checkbox" data-bind="value: id, checked: $root.contactListVM.checkedContacts" ></td>
+            <td><input type="checkbox" data-bind="checkedValue: $data, checked: $root.contactListVM.checkedContacts" ></td>
             <td data-bind="attr: { id: id }, click: function(contact, evt) {$root.contactListVM.goToDetails(contact, evt, $root)}">
                 <span data-bind="text: lastName">&nbsp;</span>
                 <span data-bind="text: firstName">&nbsp;</span>

@@ -32,7 +32,7 @@ define(["application/service/contactService",
                             for(var i = 0, lth = reply.data.list.length; i < lth; i++) {
                                 var contact = reply.data.list[i];
                                 contacts.push(new Contact(contact.id, contact.firstName, contact.lastName, contact.middleName,
-                                    contact.birthday, contact.town, contact.street, contact.house, contact.flat,
+                                    contact.birthday, contact.email, contact.town, contact.street, contact.house, contact.flat,
                                     contact.companyByCompanyId.id));
                             }
                         }
@@ -58,7 +58,7 @@ define(["application/service/contactService",
                             var contact = reply.data;
                             root.contactDetailsVM.setContact(
                                 new Contact(contact.id, contact.firstName, contact.lastName, contact.middleName,
-                                    contact.birthday, contact.town, contact.street, contact.house, contact.flat,
+                                    contact.birthday, contact.email, contact.town, contact.street, contact.house, contact.flat,
                                     contact.companyByCompanyId.id)
                             );
                             location.hash = "ctadd";
@@ -81,7 +81,11 @@ define(["application/service/contactService",
         		alert("Контакты не выбраны");
         		return;
         	}
-        	contactService.remove(checkedContacts(),
+        	var checkedContactsIds = [];
+        	for(var i = 0, l = checkedContacts().length; i < l; i++) {
+        		checkedContactsIds.push(checkedContacts()[i].id);
+            }
+        	contactService.remove(checkedContactsIds,
                     new Callback(function(params){
                             reply = params.reply;
                             if(reply.status === "SUCCESS") {
@@ -97,12 +101,27 @@ define(["application/service/contactService",
                 );
            checkedContacts([]);
         };
+        
+        var goToMailSending = function(data, event, root) {
+        	root.emailDetailsVM.contactsForSending([]);
+        	for(var i = 0, l = checkedContacts().length; i < l; i++) {
+        		if (checkedContacts()[i].email){
+        			root.emailDetailsVM.contactsForSending.push(checkedContacts()[i]);
+        		}
+            }
+        	if (root.emailDetailsVM.contactsForSending().length<1){
+        		alert("Контакты не выбраны или у них отсутствует email");
+        		return;
+        	}
+        	location.hash = "email";
+        };
 
         return {
             contacts: contacts,
             numbers: numbers,
             list: list,
             deleteContacts: deleteContacts,
+            goToMailSending: goToMailSending,
             checkedContacts: checkedContacts,
             checkedContact: checkedContact,
             totalPages: totalPages,

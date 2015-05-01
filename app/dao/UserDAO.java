@@ -53,6 +53,10 @@ public class UserDAO extends AbstractDAO<User> {
 		em.persist(entity);
 	}
 	
+	public User findById(Long id) {
+        return em.find(User.class, id);
+    }
+	
 	public UserState findByStateTitle(String title) {
 
         try{

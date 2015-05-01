@@ -8,10 +8,11 @@ define(["application/service/initService",
         "application/viewModel/contactDetailsVM",
         "application/viewModel/userDetailsVM",
         "application/viewModel/orderDetailsVM",
+        "application/viewModel/emailDetailsVM",
         "application/model/Order",
         "application/model/Contact",
         "application/viewModel/rolelistVM"],
-    function (initService, Callback, User, loginVM, contactListVM, orderlistVM, userlistVM, contactDetailsVM, userDetailsVM, orderDetailsVM, Order, Contact, rolelistVM) {
+    function (initService, Callback, User, loginVM, contactListVM, orderlistVM, userlistVM, contactDetailsVM, userDetailsVM, orderDetailsVM, emailDetailsVM, Order, Contact, rolelistVM) {
 
     "use strict";
 
@@ -26,6 +27,7 @@ define(["application/service/initService",
         self.contactDetailsVM = contactDetailsVM;
         self.orderDetailsVM = orderDetailsVM;
         self.userDetailsVM = userDetailsVM;
+        self.emailDetailsVM = emailDetailsVM;
         self.chosenSectionId = ko.observable();
         self.user = ko.observable();
         self.menu = ko.observableArray();
@@ -131,7 +133,17 @@ define(["application/service/initService",
                 	}else{
                 		location.hash=self.chosenSectionId().id;
                 	}
-            		break; 
+            		break;
+                case "email":
+                	if (self.chosenSectionId().id=="email"){
+                		self.contactListVM.currentPage(1);
+                		self.contactListVM.numbers([]);
+                		self.contactListVM.list(self.contactListVM.currentPage(), self.contactListVM.PAGE_SIZE);
+                		location.hash  = "ctlst";
+                	}else{
+                		location.hash=self.chosenSectionId().id;
+                	}
+            		break;
                 case "userchange":
                 	if (self.chosenSectionId().id=="userchange"){
                 		self.userlistVM.selectedRole("");

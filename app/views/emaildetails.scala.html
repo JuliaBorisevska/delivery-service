@@ -1,0 +1,10 @@
+<!-- ko if: $root.chosenSectionId().id == "email" -->
+<div class="field">
+        <label class="title">Кому:</label>
+        <ul data-bind="foreach: $root.emailDetailsVM.contactsForSending">
+        	<li data-bind="text: lastName">
+            </li>
+        </ul>
+</div>
+<div class="clr"></div>
+<!-- /ko -->
