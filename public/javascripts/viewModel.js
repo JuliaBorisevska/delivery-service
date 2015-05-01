@@ -95,6 +95,7 @@ define(["application/service/initService",
         self.goTo = function(section) {
             switch (section.id){
             	case "lst":
+            		self.userlistVM.selectedRole("");
                     if (userDetailsVM.user() === undefined) {
                         self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", "", ""));
                     }
@@ -128,7 +129,6 @@ define(["application/service/initService",
                 case "ordchange":
                 	if (self.chosenSectionId().id=="ordchange"){
                 		self.orderlistVM.getStatusList();
-
                         location.hash  = "ordlst";
                 	}else{
                 		location.hash=self.chosenSectionId().id;
