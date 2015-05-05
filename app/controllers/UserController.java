@@ -105,7 +105,7 @@ public class UserController extends BaseController {
     @Transactional
     @Pattern("user_list")
     public static Result listUsers(Integer pageNumber, Integer pageSize, String role) {
-        logger.info("Start listUsers method");
+        logger.info("Get list of users; number of page: {}, size of page: {}, role: {}", pageNumber, pageSize, role);
         if (pageNumber == null || pageSize == null || pageNumber <= 0 || pageNumber <= 0) {
             return badRequest(Json.toJson(
                     new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
@@ -143,8 +143,8 @@ public class UserController extends BaseController {
     @Transactional
     @Pattern("user_deleting")
     public static Result deleteUsers(String ids) {
+        logger.info("Start deleteUsers method with ids: {}", ids);
         try {
-            logger.info("Start deleteUsers method with ids: {}", ids);
             java.util.regex.Pattern separator;
             separator = java.util.regex.Pattern.compile(",");
             String[] idArray = separator.split(ids);

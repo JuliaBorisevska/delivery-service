@@ -41,7 +41,7 @@ define(["application/service/contactService",
                 new Callback(function(params){
                         reply = params.reply;
                         var message = reply.responseText ? reply.responseText : reply.statusText;
-                        alert(message);
+                        alert("ctlst something wrong...");
                     }, self, {}
                 )
             )
@@ -49,10 +49,7 @@ define(["application/service/contactService",
         
         var goToDetails = function(contact, event, root) {
 
-            //location.hash = "ctadd";
-
-            contactService.get(contact.id,
-                new Callback(function(params){
+            contactService.get(contact.id, new Callback(function(params){
                         reply = params.reply;
                         if(reply.status === "SUCCESS") {
                             var contact = reply.data;
@@ -62,7 +59,6 @@ define(["application/service/contactService",
                                     contact.companyByCompanyId.id)
                             );
                             location.hash = "ctadd";
-                            //debugger;
                         }
                     }, self, {}
                 ),

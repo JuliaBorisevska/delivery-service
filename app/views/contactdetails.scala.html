@@ -2,6 +2,8 @@
 <!-- ko if: $root.chosenSectionId().id == "ctadd" -->
 
 <!-- ko if: $root.contactDetailsVM.contact() -->
+<input type="hidden" name="id" data-bind="attr: {value: $root.contactDetailsVM.contact.id}"/>
+
 <table class="list">
        <tr>
               <td>Имя</td>
@@ -25,7 +27,7 @@
        </tr>
        <tr>
               <td>Компания</td>
-              <td><input type="text" name="company" id="company" data-bind="value: $root.contactDetailsVM.contact().companyId"></td>
+              <td><input type="text" name="company" id="company" data-bind="value: $root.contactDetailsVM.contact().companyId" disabled></td>
        </tr>
        <tr>
               <td>Город</td>
@@ -44,6 +46,6 @@
               <td><input type="text" name="flat" id="flat" data-bind="value: $root.contactDetailsVM.contact().flat"></td>
        </tr>
 </table>
-<a class="button" href="#" data-bind="">Добавить</a>
+<a class="button" href="#" data-bind="click: function(){$root.contactDetailsVM.submit($root)}">Редактировать</a>
 <!-- /ko -->
 <!-- /ko -->
