@@ -39,7 +39,6 @@ public class RolesHandler extends AbstractPrivelegesHandler {
         orders = new HashMap<>();
         jsonRoles = new HashMap<>();
         sectionsPermissions = new HashMap<>();
-        JsonNode rootNode = mapper.readTree(new File(FILE_CONFIG_NAME));
         List<String> bufferOrderList = null;
         if (!rootNode.has("roles")) {
             throw new ParseException("roles path not exist", 0);
@@ -124,11 +123,11 @@ public class RolesHandler extends AbstractPrivelegesHandler {
         List<SecurityPermission> permissions = new ArrayList<>();
         for (String section : sections) {
             if (sectionsPermissions.containsKey(section)) {
-                logger.info("sections-permission map contains section {}", section);
+                logger.debug("sections-permission map contains section {}", section);
                 for (SecurityPermission permission : sectionsPermissions.get(section)) {
                     if (!permissions.contains(permission)) {
                         permissions.add(permission);
-                        logger.info("permission {} add to section {}", permission.getValue(), section);
+                        logger.debug("permission {} add to section {}", permission.getValue(), section);
                     }
                     logger.info("permission {} have contained yet at section {}", permission.getValue(), section);
                 }
@@ -137,7 +136,6 @@ public class RolesHandler extends AbstractPrivelegesHandler {
                 return Collections.emptyList();
             }
         }
-
         return permissions;
     }
 

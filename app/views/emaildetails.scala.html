@@ -6,5 +6,18 @@
             </li>
         </ul>
 </div>
+<select data-bind="options: $root.emaillistVM.templates,
+                     optionsText: 'title',
+                     optionsCaption: 'Выберите шаблон',
+                     value: $root.emailDetailsVM.template"></select>
 <div class="clr"></div>
+<div class="field">
+
+        <!-- <textarea cols="100" rows="7" data-bind="value: Object.keys($root.emailDetailsVM.template)" name="mail" id="mail">></textarea> -->
+</div>
+
+
+<button class="choose-btn" type="button" data-bind="click: function(){$root.emailDetailsVM.submit($root);}">
+
+    Отправить</button>
 <!-- /ko -->
