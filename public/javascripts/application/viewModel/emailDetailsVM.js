@@ -8,6 +8,23 @@ define([
                 reply,
                 contactsForSending = ko.observableArray(),
                 template = ko.observable(),
+                getDisabledState = ko.observable(null),
+                getEnabledState = ko.observable('disabled'),
+                getreadonlyState = ko.observable('readonly'),
+                enable = function () {
+                    if (getDisabledState()) {
+                        getDisabledState(undefined);
+                        getEnabledState('disabled');
+                        getreadonlyState('readonly');
+
+                    }
+                    else {
+                        getDisabledState('disabled');
+                        getEnabledState(undefined);
+                        getreadonlyState(undefined);
+
+                    }
+                },
                 setTemplate = function (c) {
                     template(c);
                 },
@@ -53,7 +70,11 @@ define([
                 template: template,
                 submit: submit,
                 setTemplate: setTemplate,
-                contactsForSending: contactsForSending
+                contactsForSending: contactsForSending,
+                getDisabledState: getDisabledState,
+                enable: enable,
+                getreadonlyState: getreadonlyState,
+                getEnabledState: getEnabledState
             }
         }
 

@@ -1,19 +1,27 @@
 <!-- ko if: $root.chosenSectionId().id == "email" -->
 <div class="field">
-        <label class="title">Кому:</label>
-        <ul data-bind="foreach: $root.emailDetailsVM.contactsForSending">
-        	<li data-bind="text: lastName">
+    <label class="title">Кому:</label>
+    <ul data-bind="foreach: $root.emailDetailsVM.contactsForSending">
+        <li data-bind="text: lastName">
             </li>
-        </ul>
+    </ul>
 </div>
-<select data-bind="options: $root.emaillistVM.templates,
+<button data-bind="click: $root.emailDetailsVM.enable">Вкл/откл шаблоны</button>
+<div>
+    <label data-bind="attr: { 'disabled': $root.emailDetailsVM.getEnabledState() }"></label> <input data-bind="attr: { 'disabled': $root.emailDetailsVM.getEnabledState() }" type="text" name="theme" id="theme">
+</div>
+
+
+<select id="list" data-bind="
+                     attr: { 'disabled': $root.emailDetailsVM.getDisabledState() },
+                     options: $root.emaillistVM.templates,
                      optionsText: 'title',
                      optionsCaption: 'Выберите шаблон',
                      value: $root.emailDetailsVM.template"></select>
 <div class="clr"></div>
 <div class="field">
 
-        <!-- <textarea cols="100" rows="7" data-bind="value: Object.keys($root.emailDetailsVM.template)" name="mail" id="mail">></textarea> -->
+    <textarea cols="100" rows="7" id="mailtext" data-bind="value: Object.keys($root.emailDetailsVM.template), attr: { 'readonly': $root.emailDetailsVM.getreadonlyState() }" name="mail" id="mail">></textarea>
 </div>
 
 
