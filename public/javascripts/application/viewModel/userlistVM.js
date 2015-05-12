@@ -64,8 +64,9 @@ define(["application/service/userService",
         };
         
         var goToUserDetails = function(data, event, root) {
-        	root.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", "", ""));
-            alert(data.contactId);
+            root.rolelistVM.list();
+            root.userDetailsVM.setUser(new User(data.id, data.firstName, data.lastName, data.middleName, data.company, data.role, data.login, data.menu, data.password, data.contactId));
+            alert(Object.keys(data));
             root.contactListVM.checkedContact = data.contactId;
             alert(root.contactListVM.checkedContact);
         	location.hash = "userchange";
