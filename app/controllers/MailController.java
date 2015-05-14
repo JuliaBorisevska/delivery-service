@@ -29,6 +29,13 @@ public class MailController extends BaseController {
 
     List<MailTemplate> listTemplates = null;
 
+    public static Result reloadTemplates() {
+        MailConfigurator.reload();
+        return ok(Json.toJson(
+                new Reply<>(Status.SUCCESS, Json.newObject())
+        ));
+    }
+
     public static Result send() {
         STGroup group = null;
         ST template = null;
@@ -133,7 +140,7 @@ class MailConfigurator {
 
     private static volatile MailConfigurator instance;
 
-    private STGroup group = new STGroupFile(TEMPLATE_NAME, FIRST_DELIMETER, SECOND_DELIMETER);
+    private STGroup group = null;
 
     private List<MailTemplate> rawTemplateStrings = null;
 
@@ -142,15 +149,20 @@ class MailConfigurator {
         return rawTemplateStrings;
     }
 
+    public static void reload() {
+        instance = null;
+        getInstance();
+    }
+
     private MailConfigurator() {
         rawTemplateStrings = new ArrayList<>();
+        group = new STGroupFile(TEMPLATE_NAME, FIRST_DELIMETER, SECOND_DELIMETER);
         for (String titleOfTemplate : group.getTemplateNames()) {
             rawTemplateStrings.add(new MailTemplate(titleOfTemplate, group.rawGetTemplate(titleOfTemplate).getTemplateSource()));
         }
     }
 
     public static MailConfigurator getInstance() {
-        instance = null;
         MailConfigurator localContainer = instance;
 
         if (localContainer == null) {

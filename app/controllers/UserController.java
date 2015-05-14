@@ -80,7 +80,7 @@ public class UserController extends BaseController {
         Long id = null;
 
         try {
-            if (values.containsKey("id") && StringUtils.isEmpty(values.get("id")[0])) {
+            if (values.containsKey("id") && !StringUtils.isEmpty(values.get("id")[0])) {
                 id = Long.parseLong(values.get("id")[0]);
             } else
                 throw new IllegalArgumentException("id is missing or empty");

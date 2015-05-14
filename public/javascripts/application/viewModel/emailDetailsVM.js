@@ -28,6 +28,15 @@ define([
                 setTemplate = function (c) {
                     template(c);
                 },
+                reloadTemplates = function () {
+                    emailService.reloadTemplates(
+                        new Callback(function () {
+                        }, self, {}),
+                        new Callback(function (params) {
+                            alert(params.reply.responseJSON.data);
+                        }, self, {})
+                    )
+                },
                 submit = function (root) {
                     var record = template(),
                         success = new Callback(function (params) {
@@ -74,7 +83,8 @@ define([
                 getDisabledState: getDisabledState,
                 enable: enable,
                 getreadonlyState: getreadonlyState,
-                getEnabledState: getEnabledState
+                getEnabledState: getEnabledState,
+                reloadTemplates: reloadTemplates
             }
         }
 

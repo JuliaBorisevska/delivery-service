@@ -28,9 +28,21 @@ define(["application/service/baseService"], function (baseService) {
             );
         };
 
+        self.reloadTemplates = function (success, error, done) {
+            baseService.send(
+                "/mail/reloadTemplates",
+                "GET",
+                {},
+                success,
+                error,
+                done
+            );
+        };
+
         return {
             list: self.list,
-            sending: self.sending
+            sending: self.sending,
+            reloadTemplates: self.reloadTemplates
         }
     }
 
