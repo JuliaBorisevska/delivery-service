@@ -13,6 +13,17 @@ define(["application/service/baseService"], function (baseService) {
             );
         };
 
+        self.update = function (user, success, error, done) {
+            baseService.send(
+                "/user/update",
+                "POST",
+                user,
+                success,
+                error,
+                done
+            );
+        };
+
         self.list = function (page, pageSize, role, success, error, done) {
             baseService.send(
                 "/user/list/" + page + "/" + pageSize + "/" + role,
@@ -38,7 +49,8 @@ define(["application/service/baseService"], function (baseService) {
         return {
             add: self.add,
             list: self.list,
-            remove: self.remove
+            remove: self.remove,
+            update: self.update
         }
     }
 

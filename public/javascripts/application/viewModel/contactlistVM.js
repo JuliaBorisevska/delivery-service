@@ -1,12 +1,11 @@
 define(["application/service/contactService",
-        "application/util/callback",
-        "application/model/contact"], function(contactService, Callback, Contact) {
+    "application/util/callback",
+    "application/model/contact"], function (contactService, Callback, Contact) {
     "use strict";
 
     function ContactListVM() {
         var self = this,
             contacts = ko.observableArray(),
-
             PAGE_SIZE = 3,
             SHOW_PAGES = 3,
             currentPage = ko.observable(1),
@@ -15,21 +14,21 @@ define(["application/service/contactService",
             numbers = ko.observableArray([]),
             reply;
         var checkedContacts = ko.observableArray();
-        var list = function(page, pageSize) {
+        var list = function (page, pageSize) {
             contactService.list(page, pageSize,
-                new Callback(function(params){
+                new Callback(function (params) {
                         reply = params.reply;
-                        if(reply.status === "SUCCESS") {
+                        if (reply.status === "SUCCESS") {
 
                             totalPages(reply.data.totalPages);
-                            if (numbers().length==0){
+                            if (numbers().length == 0) {
                                 numbers([]);
-                                for (var k=1; k<=(totalPages()<SHOW_PAGES?totalPages():SHOW_PAGES); k++){
+                                for (var k = 1; k <= (totalPages() < SHOW_PAGES ? totalPages() : SHOW_PAGES); k++) {
                                     numbers.push(k);
                                 }
                             }
                             contacts([]);
-                            for(var i = 0, lth = reply.data.list.length; i < lth; i++) {
+                            for (var i = 0, lth = reply.data.list.length; i < lth; i++) {
                                 var contact = reply.data.list[i];
                                 contacts.push(new Contact(contact.id, contact.firstName, contact.lastName, contact.middleName,
                                     contact.birthday, contact.email, contact.town, contact.street, contact.house, contact.flat,
@@ -38,7 +37,7 @@ define(["application/service/contactService",
                         }
                     }, self, {}
                 ),
-                new Callback(function(params){
+                new Callback(function (params) {
                         reply = params.reply;
                         var message = reply.responseText ? reply.responseText : reply.statusText;
                         alert("ctlst something wrong...");
@@ -46,12 +45,12 @@ define(["application/service/contactService",
                 )
             )
         };
-        
-        var goToDetails = function(contact, event, root) {
 
-            contactService.get(contact.id, new Callback(function(params){
+        var goToDetails = function (contact, event, root) {
+
+            contactService.get(contact.id, new Callback(function (params) {
                         reply = params.reply;
-                        if(reply.status === "SUCCESS") {
+                        if (reply.status === "SUCCESS") {
                             var contact = reply.data;
                             root.contactDetailsVM.setContact(
                                 new Contact(contact.id, contact.firstName, contact.lastName, contact.middleName,
@@ -62,7 +61,7 @@ define(["application/service/contactService",
                         }
                     }, self, {}
                 ),
-                new Callback(function(params){
+                new Callback(function (params) {
                         reply = params.reply;
                         var message = reply.responseText ? reply.responseText : reply.statusText;
                         alert("get contact error! contactlistVM");
@@ -71,45 +70,49 @@ define(["application/service/contactService",
             );
 
         };
-        
-        var deleteContacts = function() {
-        	if (checkedContacts().length<1){
-        		alert("Контакты не выбраны");
-        		return;
-        	}
-        	var checkedContactsIds = [];
-        	for(var i = 0, l = checkedContacts().length; i < l; i++) {
-        		checkedContactsIds.push(checkedContacts()[i].id);
+
+        var deleteContacts = function () {
+            if (checkedContacts().length < 1) {
+                alert("Контакты не выбраны");
+                return;
             }
-        	contactService.remove(checkedContactsIds,
-                    new Callback(function(params){
-                            reply = params.reply;
-                            if(reply.status === "SUCCESS") {
-                                currentPage(1);
-                                numbers([]);
-                                list(currentPage(), PAGE_SIZE);
-                            }
-                        }, self, {}
-                    ),
-                    new Callback(function(params){
-                    	alert(params.reply.responseJSON.data);
-                    }, self, {})
-                );
-           checkedContacts([]);
+            var checkedContactsIds = [];
+            for (var i = 0, l = checkedContacts().length; i < l; i++) {
+                checkedContactsIds.push(checkedContacts()[i].id);
+            }
+            contactService.remove(checkedContactsIds,
+                new Callback(function (params) {
+                        reply = params.reply;
+                        if (reply.status === "SUCCESS") {
+                            currentPage(1);
+                            numbers([]);
+                            list(currentPage(), PAGE_SIZE);
+                        }
+                    }, self, {}
+                ),
+                new Callback(function (params) {
+                    alert(params.reply.responseJSON.data);
+                }, self, {})
+            );
+            checkedContacts([]);
         };
-        
-        var goToMailSending = function(data, event, root) {
-        	root.emailDetailsVM.contactsForSending([]);
-        	for(var i = 0, l = checkedContacts().length; i < l; i++) {
-        		if (checkedContacts()[i].email){
-        			root.emailDetailsVM.contactsForSending.push(checkedContacts()[i]);
-        		}
+
+        var goToMailSending = function (data, event, root) {
+            root.emailDetailsVM.contactsForSending([]);
+
+            for (var i = 0, l = checkedContacts().length; i < l; i++) {
+                if (checkedContacts()[i].email) {
+                    root.emailDetailsVM.contactsForSending.push(checkedContacts()[i]);
+                }
             }
-        	if (root.emailDetailsVM.contactsForSending().length<1){
-        		alert("Контакты не выбраны или у них отсутствует email");
-        		return;
-        	}
-        	location.hash = "email";
+            if (root.emailDetailsVM.contactsForSending().length < 1) {
+                alert("Контакты не выбраны или у них отсутствует email");
+                return;
+            }
+            root.emaillistVM.list();
+            checkedContacts([]);
+
+            location.hash = "email";
         };
 
         return {
