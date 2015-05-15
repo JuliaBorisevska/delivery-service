@@ -120,6 +120,10 @@ define(["application/service/initService",
             		self.orderDetailsVM.setOrder(new Order("", "", "", "", self.user(), "", "", "","", ""), [],[]);
             		location.hash = section.id;
             		break;
+            	case "ctsearch":
+            		self.contactDetailsVM.setContact(new Contact("", "", "", "", "", "", "", "","", "",""));
+            		location.hash = section.id;
+            		break;
                 case "useradd":
                     self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", ""));
                     self.rolelistVM.list();

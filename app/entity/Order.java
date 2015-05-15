@@ -1,9 +1,15 @@
 package entity;
 
 
+import play.Logger;
+import play.Logger.ALogger;
 import play.data.validation.Constraints;
+import search.ClientProvider;
+import search.SearchContactService;
 
 import javax.persistence.*;
+
+import org.elasticsearch.client.Client;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -15,6 +21,7 @@ import java.util.List;
 @Table(name = "order", schema = "", catalog = "delivery_service")
 public class Order {
 
+	private static ALogger logger = Logger.of(Order.class);
     private Long id;
     private Timestamp orderDate;
     @Constraints.Required
@@ -35,6 +42,20 @@ public class Order {
     private Contact recipientByContactId;
     private List<OrderHistory> orderHistory;
 
+    @PostPersist
+    private void addToElasticSearch() {
+    	//Client client = ClientProvider.instance().getClient();
+    	
+    	logger.info("order with id {} was added to elasticsearch index delivery", this.id);
+    }
+    
+    @PostUpdate
+    private void updateInElasticSearch() {
+    	//Client client = ClientProvider.instance().getClient();
+    	
+    	logger.info("order with id {} was updated in elasticsearch index delivery", this.id);
+    }
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id",unique=true, nullable = false)

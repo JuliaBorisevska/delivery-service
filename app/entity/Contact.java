@@ -3,13 +3,22 @@ package entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+
+import org.elasticsearch.client.Client;
+
+import play.Logger;
+import play.Logger.ALogger;
+import search.ClientProvider;
+import search.SearchContactService;
+
 import java.sql.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "contact")
 public class Contact {
-
+	private static ALogger logger = Logger.of(Contact.class);
+	
     private Long id;
     private String firstName;
     private String lastName;
@@ -24,6 +33,21 @@ public class Contact {
     @JsonIgnore
     private List<Phone> phones;
 
+    @PostPersist
+    private void addToElasticSearch() {
+    	Client client = ClientProvider.instance().getClient();
+    	client.prepareIndex("delivery", "contact", String.valueOf(this.id))
+        .setSource(SearchContactService.putContactJsonDocument(this)).execute().actionGet();
+    	logger.info("Contact with id {} was added to elasticsearch index delivery", this.id);
+    }
+    
+    @PostUpdate
+    private void updateInElasticSearch() {
+    	//Client client = ClientProvider.instance().getClient();
+    	
+    	logger.info("Contact with id {} was updated in elasticsearch index delivery", this.id);
+    }
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, insertable = true, updatable = true)

@@ -13,7 +13,6 @@ define([
             reply,
             contact = ko.observable(),
             submit = function(root){
-
                 var record = contact(),
                     success = new Callback(function(params){
                             reply = params.reply;
@@ -38,6 +37,25 @@ define([
                 }
 
             },
+            search = function(root){
+                var record = contact(),
+                    success = new Callback(function(params){
+                            reply = params.reply;
+                            if(reply.status === "SUCCESS") {
+                                clean();
+                                root.contactListVM.list(root.contactListVM.currentPage, root.contactListVM.PAGE_SIZE);
+                                location.hash = "ctlst";
+                            }
+                        }, self, {}
+                    ),
+                    error = new Callback(function(params){
+                            reply = params.reply;
+                            var message = reply.responseText ? reply.responseText : reply.statusText;
+                            alert("Error write to DB");
+                        }, self, {}
+                    );
+                    contactService.search(record, success, error);
+            },
             setContact = function(c){
                 contact(c);
             },
@@ -47,6 +65,7 @@ define([
 
         return {
             submit: submit,
+            search: search,
             setContact: setContact,
             contact: contact
         }
