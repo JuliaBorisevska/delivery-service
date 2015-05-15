@@ -100,8 +100,6 @@ public class RolesHandler extends AbstractPrivelegesHandler {
                 }
                 sectionsPermissions.put(section.path("id").asText(), permissions);
             }
-
-
         }
     }
 
@@ -129,7 +127,7 @@ public class RolesHandler extends AbstractPrivelegesHandler {
                         permissions.add(permission);
                         logger.debug("permission {} add to section {}", permission.getValue(), section);
                     }
-                    logger.info("permission {} have contained yet at section {}", permission.getValue(), section);
+                    logger.debug("permission {} have contained yet at section {}", permission.getValue(), section);
                 }
             } else {
                 logger.warn("section {} is not existing at section list", section);
