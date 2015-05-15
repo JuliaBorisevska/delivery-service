@@ -49,7 +49,8 @@ define(["application/service/baseService"], function (baseService) {
         return {
             add: self.add,
             list: self.list,
-            remove: self.remove
+            remove: self.remove,
+            update: self.update
         }
     }
 

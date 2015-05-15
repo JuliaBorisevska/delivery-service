@@ -24,8 +24,12 @@
     <textarea cols="100" rows="7" id="mailtext" data-bind="value: Object.keys($root.emailDetailsVM.template), attr: { 'readonly': $root.emailDetailsVM.getreadonlyState() }" name="mail" id="mail">></textarea>
 </div>
 
-
+reloadTemplates
 <button class="choose-btn" type="button" data-bind="click: function(){$root.emailDetailsVM.submit($root);}">
 
     Отправить</button>
+
+<button class="choose-btn" type="button" data-bind="click: function(){$root.emailDetailsVM.reloadTemplates($root);}">
+
+    Перезагрузить шаблоны</button>
 <!-- /ko -->

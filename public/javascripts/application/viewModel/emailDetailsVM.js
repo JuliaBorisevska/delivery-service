@@ -28,14 +28,15 @@ define([
                 setTemplate = function (c) {
                     template(c);
                 },
-                reloadTemplates = function () {
+                reloadTemplates = function (root) {
                     emailService.reloadTemplates(
                         new Callback(function () {
                         }, self, {}),
                         new Callback(function (params) {
                             alert(params.reply.responseJSON.data);
                         }, self, {})
-                    )
+                    );
+                    root.emaillistVM.list();
                 },
                 submit = function (root) {
                     var record = template(),
