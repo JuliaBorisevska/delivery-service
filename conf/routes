@@ -13,6 +13,7 @@ POST          /logout                                    controllers.Application
 GET           /contact/list/:page/:pageSize              controllers.ContactController.listContacts(page: Integer, pageSize: Integer)
 DELETE        /contact/:ids                              controllers.ContactController.deleteContacts(ids: String)
 GET           /contact/:id                               controllers.ContactController.getContact(id: Long)
+POST          /contact/search                              controllers.ContactController.findContacts()
 POST          /contact                                   controllers.ContactController.createContact()
 PUT           /contact/:id                               controllers.ContactController.updateContact(id: Long)
 

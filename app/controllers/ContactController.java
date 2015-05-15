@@ -1,12 +1,16 @@
 package controllers;
 
 import be.objectify.deadbolt.java.actions.Pattern;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import dao.ContactDAO;
 import entity.Company;
 import entity.Contact;
 import entity.User;
+
 import org.apache.commons.lang3.StringUtils;
+
 import play.Logger;
 import play.Logger.ALogger;
 import play.db.jpa.JPA;
@@ -14,6 +18,7 @@ import play.db.jpa.Transactional;
 import play.libs.Json;
 import play.mvc.Result;
 import resource.MessageManager;
+import search.SearchContactService;
 
 import java.sql.Date;
 import java.util.List;
@@ -66,6 +71,24 @@ public class ContactController extends BaseController {
 
         return ok(Json.toJson(
                 new Reply<>(Status.SUCCESS, result)
+        ));
+    }
+    
+    @Transactional
+    @Pattern("contact_search")
+    public static Result findContacts() {
+
+        //ContactDAO contactDAO = new ContactDAO(JPA.em());
+        final Map<String, String[]> values = request().body().asFormUrlEncoded();
+        try {
+        	SearchContactService.searchContacts();
+            //setContactFields(contact, values);
+        	
+        } catch (Exception e) {
+        	logger.error("Exception in findContacts method: {} ", e);
+        }
+        return ok(Json.toJson(
+                new Reply<>(Status.SUCCESS, null)
         ));
     }
 

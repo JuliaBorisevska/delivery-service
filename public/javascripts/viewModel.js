@@ -95,50 +95,53 @@ define(["application/service/initService",
                     alert(params.reply.responseJSON.data);
                 }, this, {})
             );
-            self.goTo = function (section) {
-                switch (section.id) {
-                    case "lst":
-                        self.userlistVM.selectedRole("");
-                        if (userDetailsVM.user() === undefined) {
-                            self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", "", ""));
-                        }
-                        self.userlistVM.numbers([]);
-                        self.userlistVM.currentPage(1);
-                        self.userlistVM.list(self.userlistVM.currentPage(), self.userlistVM.PAGE_SIZE);
-                        location.hash = section.id;
-                        break;
-                    case "ctlst":
-                        self.contactListVM.currentPage(1);
-                        self.contactListVM.numbers([]);
-                        self.contactListVM.list(self.contactListVM.currentPage(), self.contactListVM.PAGE_SIZE);
-                        location.hash = section.id;
-                        break;
-                    case "ordlst":
-                        self.orderlistVM.getStatusList();
-                        //self.orderlistVM.changeStatus();
-                        location.hash = section.id;
-                        break;
-                    case "ordadd":
-                        self.orderDetailsVM.getFirstStatus();
-                        self.orderDetailsVM.setOrder(new Order("", "", "", "", self.user(), "", "", "", "", ""), [], []);
-                        location.hash = section.id;
-                        break;
-                    case "useradd":
-                        self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", ""));
-                        self.rolelistVM.list();
+        self.goTo = function(section) {
+            switch (section.id){
+            	case "lst":
+            		self.userlistVM.selectedRole("");
+                    if (userDetailsVM.user() === undefined) {
+                        self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", "", ""));
+                    }
+                    self.userlistVM.numbers([]);
+                    self.userlistVM.currentPage(1);
+            		self.userlistVM.list(self.userlistVM.currentPage(), self.userlistVM.PAGE_SIZE);
+            		location.hash = section.id;
+            		break;
+            	case "ctlst":
+            		self.contactListVM.currentPage(1);
+            		self.contactListVM.numbers([]);
+            		self.contactListVM.list(self.contactListVM.currentPage(), self.contactListVM.PAGE_SIZE);
+            		location.hash = section.id;
+            		break;
+            	case "ordlst":
+            		self.orderlistVM.getStatusList();
+            		//self.orderlistVM.changeStatus();
+            		location.hash = section.id;
+            		break;
+            	case "ordadd":
+            		self.orderDetailsVM.getFirstStatus();
+            		self.orderDetailsVM.setOrder(new Order("", "", "", "", self.user(), "", "", "","", ""), [],[]);
+            		location.hash = section.id;
+            		break;
+            	case "ctsearch":
+            		self.contactDetailsVM.setContact(new Contact("", "", "", "", "", "", "", "","", "",""));
+            		location.hash = section.id;
+            		break;
+                case "useradd":
+                    self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", ""));
+                    self.rolelistVM.list();
 
-                        location.hash = section.id;
-                        break;
-                    case "ordchange":
-                        if (self.chosenSectionId().id == "ordchange") {
-                            self.orderlistVM.getStatusList();
-                            location.hash = "ordlst";
-                        } else {
-                            location.hash = self.chosenSectionId().id;
-                        }
-                        break;
-
-                    case "email":
+                    location.hash = section.id;
+                    break;
+                case "ordchange":
+                	if (self.chosenSectionId().id=="ordchange"){
+                		self.orderlistVM.getStatusList();
+                        location.hash  = "ordlst";
+                	}else{
+                		location.hash=self.chosenSectionId().id;
+                	}
+            		break;
+                case "email":
                         if (self.chosenSectionId().id == "email") {
                             self.emailDetailsVM.setTemplate(new Template("", ""));
                             self.emaillistVM.list();
@@ -151,8 +154,7 @@ define(["application/service/initService",
                             location.hash = self.chosenSectionId().id;
                         }
                         break;
-
-                    case "userchange":
+                case "userchange":
                         if (self.chosenSectionId().id == "userchange") {
                             self.userlistVM.selectedRole("");
                             self.userlistVM.numbers([]);
@@ -165,7 +167,7 @@ define(["application/service/initService",
                             location.hash = self.chosenSectionId().id;
                         }
                         break;
-                    default:
+                default:
                         location.hash = section.id;
                 }
             };

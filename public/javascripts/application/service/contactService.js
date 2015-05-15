@@ -46,6 +46,17 @@ define(["application/service/baseService"], function(baseService) {
             );
         };
         
+        self.search = function(contact, success, error, done) {
+            baseService.send(
+                "/contact/search",
+                "POST",
+                contact,
+                success,
+                error,
+                done
+            );
+        };
+        
         self.remove = function(ids, success, error, done) {
             baseService.send(
                 "/contact/" + ids,
@@ -62,7 +73,8 @@ define(["application/service/baseService"], function(baseService) {
             add: self.add,
             get: self.get,
             update: self.update,
-            remove: self.remove
+            remove: self.remove,
+            search: self.search
         }
     }
 
