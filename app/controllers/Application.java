@@ -113,15 +113,14 @@ public class Application extends BaseController {
             try {
                 if (values.containsKey("user")) {
                     login = values.get("user")[0];
-                    if (StringUtils.isEmpty(login))
-                        throw new IllegalArgumentException("parameter 'user' is empty");
                     logger.info("start to login user with login '{}'", login);
                 } else throw new IllegalArgumentException("parameter 'user' is missing");
 
                 if (values.containsKey("password")) {
                     password = values.get("password")[0];
-                    if (StringUtils.isEmpty(password))
-                        throw new IllegalArgumentException("parameter 'password' is empty");
+                    if (StringUtils.isEmpty(password) || StringUtils.isEmpty(login))
+                        return badRequest(Json.toJson(
+                                new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
                 } else throw new IllegalArgumentException("parameter 'password' is missing");
             } catch (IllegalArgumentException e) {
                 logger.error("parameters error", e);
