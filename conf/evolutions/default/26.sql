@@ -1,4 +1,4 @@
---- !Ups
+# --- !Ups
 
 ALTER TABLE `delivery_service`.`contact` MODIFY `email` varchar(50);
 INSERT INTO `contact` (`first_name`, `last_name`, `middle_name`, `birth_date`, `company_id`, `email`) VALUES ('Артем', 'Седельник', 'Викторович', '1970-12-15', 2, 'antonkw.mail@gmail.com');
