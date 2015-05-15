@@ -22,11 +22,23 @@ define(["application/service/baseService"], function(baseService) {
                 error,
                 done
             );
-        }
+        };
+
+        var reloadSettings = function (success, error, done) {
+            baseService.send(
+                "/settings",
+                "GET",
+                {},
+                success,
+                error,
+                done
+            );
+        };
 
         return {
             login: login,
-            logout: logout
+            logout: logout,
+            reloadSettings: reloadSettings
         }
     }
 

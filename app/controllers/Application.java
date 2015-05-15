@@ -1,5 +1,6 @@
 package controllers;
 
+import be.objectify.deadbolt.java.actions.Pattern;
 import be.objectify.deadbolt.java.actions.Unrestricted;
 import dao.UserDAO;
 import dto.UserDTO;
@@ -29,6 +30,20 @@ public class Application extends BaseController {
     public static Result index() {
         logger.info("Start index method");
         return ok(main.render());
+    }
+
+    @Transactional
+    @Pattern("update_settings")
+    public static Result reloadSettings() {
+        try {
+            ConfigContainer.reload();
+        } catch (IOException | ParseException e) {
+            logger.error("Exception in reloading settings", e);
+            return badRequest(Json.toJson(
+                    new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
+        }
+        return ok(Json.toJson(
+                new Reply<>(Status.SUCCESS, Json.newObject())));
     }
     
     @Transactional
@@ -98,15 +113,14 @@ public class Application extends BaseController {
             try {
                 if (values.containsKey("user")) {
                     login = values.get("user")[0];
-                    if (StringUtils.isEmpty(login))
-                        throw new IllegalArgumentException("parameter 'user' is empty");
                     logger.info("start to login user with login '{}'", login);
                 } else throw new IllegalArgumentException("parameter 'user' is missing");
 
                 if (values.containsKey("password")) {
                     password = values.get("password")[0];
-                    if (StringUtils.isEmpty(password))
-                        throw new IllegalArgumentException("parameter 'password' is empty");
+                    if (StringUtils.isEmpty(password) || StringUtils.isEmpty(login))
+                        return badRequest(Json.toJson(
+                                new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
                 } else throw new IllegalArgumentException("parameter 'password' is missing");
             } catch (IllegalArgumentException e) {
                 logger.error("parameters error", e);

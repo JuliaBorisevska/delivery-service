@@ -1,3 +1,4 @@
 <!-- ko if: $root.chosenSectionId().id == "settings" -->
-       settings
+<button class="choose-btn" type="button" data-bind="click: function(){$root.loginVM.reloadSettings();}">
+    Перезагрузить конфигурационный файл</button>
 <!-- /ko -->

@@ -1,6 +1,8 @@
 package controllers;
 
+import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Pattern;
+import be.objectify.deadbolt.java.actions.Restrict;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dao.ContactDAO;
 import dao.OrderDAO;
@@ -270,6 +272,7 @@ public class OrderController extends BaseController {
 
     @Transactional
     @Pattern("order_updating")
+    @Restrict({@Group("ORDER_MNG"), @Group("SUPERVISOR")})
     public static Result updateOrder(Long id) {
         final Map<String, String[]> values = request().body().asFormUrlEncoded();
         logger.info("Start updateOrder with parameters: description - {}, price - {}, processMngId - {}, deliveryMngId - {}, customerId - {}, recipientId - {}",

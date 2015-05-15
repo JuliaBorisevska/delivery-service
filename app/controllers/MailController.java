@@ -1,6 +1,7 @@
 package controllers;
 
 
+import be.objectify.deadbolt.java.actions.Pattern;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -29,6 +30,7 @@ public class MailController extends BaseController {
 
     List<MailTemplate> listTemplates = null;
 
+    @Pattern("update_templates")
     public static Result reloadTemplates() {
         MailConfigurator.reload();
         return ok(Json.toJson(
@@ -155,6 +157,7 @@ class MailConfigurator {
     }
 
     private MailConfigurator() {
+        logger.info("new MailConfigurator created");
         rawTemplateStrings = new ArrayList<>();
         group = new STGroupFile(TEMPLATE_NAME, FIRST_DELIMETER, SECOND_DELIMETER);
         for (String titleOfTemplate : group.getTemplateNames()) {

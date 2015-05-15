@@ -11,11 +11,35 @@
 			{"name": "Редактирование заказа", "id": "ordchange", "permissions": ["order_updating", "contact_list", "user_list"]},
 			{"name": "Поиск контактов", "id": "ctsearch", "permissions": ["contact_search"]},
 			{"name": "Поиск заказов", "id": "ordsearch", "permissions": ["order_search"]},
-			{"name": "Настройки системы", "id": "settings", "permissions": ["sections_configuration"]},
-			{"name": "Отправка Email", "id": "email", "permissions": ["mail_sending"]} ],
+  {
+	"name": "Настройки системы",
+	"id": "settings",
+	"permissions": [
+	  "sections_configuration",
+	  "update_settings"
+	]
+  },
+  {
+	"name": "Отправка Email",
+	"id": "email",
+	"permissions": [
+	  "mail_sending",
+	  "update_templates"
+	]
+  }
+],
 "roles": [ {"title": "SUPERVISOR", "menu": ["ctlst","ctchange", "email", "ordlst", "ctadd", "ordadd","ordchange","ctsearch", "ordsearch"]},
-		{"title": "ADMIN", "menu": ["lst", "settings", "useradd", "userchange"]},
 		{"title": "ORDER_MNG", "menu": ["ordadd","ordlst", "ordchange", "ctlst","ctchange", "email", "ctadd", "ctsearch"], "order": ["new"]},
+  {
+	"title": "ADMIN",
+	"menu": [
+	  "lst",
+	  "settings",
+	  "useradd",
+	  "userchange",
+	  "email"
+	]
+  },
 		{"title": "PROCESS_MNG", "menu": ["ordlst", "ordchange"], "order": ["accepted", "processing"]},
 		{"title": "DELIVERY_MNG", "menu": ["ordlst", "ordchange"], "order": ["ready", "delivery"]} ],
 "status": [{"id": "new", "title": "Новый", "choice": ["canceled", "accepted", "disabled"]},
