@@ -18,7 +18,7 @@ define([
                             reply = params.reply;
                             if(reply.status === "SUCCESS") {
                                 clean();
-                                root.contactListVM.list(root.contactListVM.currentPage, root.contactListVM.PAGE_SIZE);
+                                root.contactListVM.list(root.contactListVM.currentPage(), root.contactListVM.PAGE_SIZE);
                                 location.hash = "ctlst";
                             }
                         }, self, {}

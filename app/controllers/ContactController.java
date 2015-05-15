@@ -96,10 +96,17 @@ public class ContactController extends BaseController {
     @Pattern("contact_addition")
     public static Result createContact() {
         Contact contact = new Contact();
+        User user = Application.recieveUserByToken();
+        if (user == null) {
+        	return badRequest(Json.toJson(
+                    new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
+        }
+        Company company = user.getContactByContactId().getCompanyByCompanyId();
         ContactDAO contactDAO = new ContactDAO(JPA.em());
         final Map<String, String[]> values = request().body().asFormUrlEncoded();
         try {
             setContactFields(contact, values);
+            contact.setCompanyByCompanyId(company);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -111,7 +118,7 @@ public class ContactController extends BaseController {
     }
 
     @Transactional
-    @Pattern("contact_addition")
+    @Pattern("contact_updating")
     public static Result updateContact(Long id) {
 
         ContactDAO contactDAO = new ContactDAO(JPA.em());

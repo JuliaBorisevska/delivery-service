@@ -57,7 +57,7 @@ define(["application/service/contactService",
                                     contact.birthday, contact.email, contact.town, contact.street, contact.house, contact.flat,
                                     contact.companyByCompanyId.id)
                             );
-                            location.hash = "ctadd";
+                            location.hash = "ctchange";
                         }
                     }, self, {}
                 ),

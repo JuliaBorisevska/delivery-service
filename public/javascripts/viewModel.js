@@ -123,6 +123,10 @@ define(["application/service/initService",
             		self.orderDetailsVM.setOrder(new Order("", "", "", "", self.user(), "", "", "","", ""), [],[]);
             		location.hash = section.id;
             		break;
+            	case "ctadd":
+            		self.contactDetailsVM.setContact(new Contact("", "", "", "", "", "", "", "","", "",""));
+            		location.hash = section.id;
+            		break;
             	case "ctsearch":
             		self.contactDetailsVM.setContact(new Contact("", "", "", "", "", "", "", "","", "",""));
             		location.hash = section.id;
@@ -137,6 +141,14 @@ define(["application/service/initService",
                 	if (self.chosenSectionId().id=="ordchange"){
                 		self.orderlistVM.getStatusList();
                         location.hash  = "ordlst";
+                	}else{
+                		location.hash=self.chosenSectionId().id;
+                	}
+            		break;
+                case "ctchange":
+                	if (self.chosenSectionId().id=="ctchange"){
+                		self.orderlistVM.getStatusList();
+                        location.hash  = "ctlst";
                 	}else{
                 		location.hash=self.chosenSectionId().id;
                 	}

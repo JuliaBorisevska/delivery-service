@@ -1,7 +1,7 @@
 @()
 
 <!-- ko if: $root.contactDetailsVM.contact() -->
-<!-- ko if: $root.chosenSectionId().id == "ctadd" || $root.chosenSectionId().id == "ctsearch" -->
+<!-- ko if: $root.chosenSectionId().id == "ctadd" || $root.chosenSectionId().id == "ctsearch" || $root.chosenSectionId().id == "ctchange"-->
 <input type="hidden" name="id" data-bind="attr: {value: $root.contactDetailsVM.contact.id}"/>
 
 <table class="list">
@@ -47,8 +47,8 @@
        </tr>
 </table>
 <!-- /ko -->
-<!-- ko if: $root.chosenSectionId().id == "ctadd"  -->
-<a class="button" href="#" data-bind="click: function(){$root.contactDetailsVM.submit($root)}">Редактировать</a>
+<!-- ko if: $root.chosenSectionId().id == "ctadd" || $root.chosenSectionId().id == "ctchange"  -->
+<a class="button" href="#" data-bind="click: function(){$root.contactDetailsVM.submit($root)}">Сохранить</a>
 <!-- /ko -->
 <!-- ko if: $root.chosenSectionId().id == "ctsearch" -->
 <a class="button" href="#" data-bind="click: function(){$root.contactDetailsVM.search($root)}">Найти</a>
