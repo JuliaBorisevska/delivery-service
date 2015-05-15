@@ -36,11 +36,23 @@ define(["application/service/authService",
                 );
             };
 
+        var reloadSettings = function () {
+            authService.reloadSettings(
+                new Callback(function () {
+                }, self, {}),
+                new Callback(function (params) {
+                    alert(params.reply.responseJSON.data);
+                }, self, {})
+            );
+        };
+
+
         return {
             login: login,
             password: password,
             loginButton: loginButton,
-            logoutButton: logoutButton
+            logoutButton: logoutButton,
+            reloadSettings: reloadSettings
         }
     }
 

@@ -8,6 +8,7 @@ GET           /init                                      controllers.Application
 GET           /user                                      controllers.Application.getCurrentUser()
 POST          /login                                     controllers.Application.login()
 POST          /logout                                    controllers.Application.logout()
+GET         /settings                                  controllers.Application.reloadSettings()
 
 # Contacts
 GET           /contact/list/:page/:pageSize              controllers.ContactController.listContacts(page: Integer, pageSize: Integer)

@@ -30,6 +30,11 @@ public class ConfigContainer implements AbstractHandler {
         }
     }
 
+    public static void reload() throws IOException, ParseException {
+        instance = null;
+        getInstance();
+    }
+
     public static ConfigContainer getInstance() throws IOException, ParseException {
         ConfigContainer localContainer = instance;
         if (localContainer == null) {

@@ -1,5 +1,6 @@
 package controllers;
 
+import be.objectify.deadbolt.java.actions.Pattern;
 import be.objectify.deadbolt.java.actions.Unrestricted;
 import dao.UserDAO;
 import dto.UserDTO;
@@ -29,6 +30,20 @@ public class Application extends BaseController {
     public static Result index() {
         logger.info("Start index method");
         return ok(main.render());
+    }
+
+    @Transactional
+    @Pattern("update_settings")
+    public static Result reloadSettings() {
+        try {
+            ConfigContainer.reload();
+        } catch (IOException | ParseException e) {
+            logger.error("Exception in reloading settings", e);
+            return badRequest(Json.toJson(
+                    new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
+        }
+        return ok(Json.toJson(
+                new Reply<>(Status.SUCCESS, Json.newObject())));
     }
     
     @Transactional

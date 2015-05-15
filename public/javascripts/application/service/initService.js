@@ -22,7 +22,7 @@ define(["application/service/baseService"], function(baseService) {
                 error,
                 done
             );
-        }
+        };
 
         return {
         	initSections: initSections,
