@@ -14,7 +14,8 @@ import play.db.jpa.Transactional;
 import play.libs.Json;
 import play.mvc.Result;
 import resource.MessageManager;
-import search.SearchContactService;
+import search.ContactSearchBean;
+import search.ContactSearchService;
 
 import java.sql.Date;
 import java.util.List;
@@ -77,8 +78,11 @@ public class ContactController extends BaseController {
         //ContactDAO contactDAO = new ContactDAO(JPA.em());
         final Map<String, String[]> values = request().body().asFormUrlEncoded();
         try {
-            SearchContactService.searchContacts();
-            //setContactFields(contact, values);
+        	//ContactSearchService service = new ContactSearchService();
+        	//ContactSearchBean searchBean = new ContactSearchBean();
+        	//service.search(searchBean);
+            
+        	//setContactFields(contact, values);
 
         } catch (Exception e) {
             logger.error("Exception in findContacts method: {} ", e);
