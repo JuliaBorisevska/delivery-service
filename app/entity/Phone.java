@@ -2,6 +2,8 @@ package entity;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * @Author ValentineS.
  */
@@ -15,6 +17,7 @@ public class Phone {
     private Integer basicNumber;
     private PhoneType phoneTypeByPhoneTypeId;
     private String userComment;
+    @JsonIgnore
     private Contact contactByContactId;
 
     @Id

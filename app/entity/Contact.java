@@ -1,7 +1,5 @@
 package entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 
 import org.elasticsearch.client.Client;
@@ -9,7 +7,7 @@ import org.elasticsearch.client.Client;
 import play.Logger;
 import play.Logger.ALogger;
 import search.ClientProvider;
-import search.SearchContactService;
+//import search.ContactSearchService;
 
 import java.sql.Date;
 import java.util.List;
@@ -30,15 +28,15 @@ public class Contact {
     private String street;
     private Integer house;
     private Integer flat;
-    @JsonIgnore
     private List<Phone> phones;
 
     @PostPersist
     private void addToElasticSearch() {
+    	/*ContactSearchService service = new ContactSearchService();
     	Client client = ClientProvider.instance().getClient();
-    	client.prepareIndex("delivery", "contact", String.valueOf(this.id))
-        .setSource(SearchContactService.putContactJsonDocument(this)).execute().actionGet();
-    	logger.info("Contact with id {} was added to elasticsearch index delivery", this.id);
+    	client.prepareIndex(ContactSearchService.INDEX_NAME, ContactSearchService.TYPE_NAME, String.valueOf(this.id))
+        .setSource(service.putJsonDocument(this)).execute().actionGet();
+    	logger.info("Contact with id {} was added to elasticsearch index delivery", this.id);*/
     }
     
     @PostUpdate
