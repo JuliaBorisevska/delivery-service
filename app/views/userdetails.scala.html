@@ -12,46 +12,20 @@
         <label class="title" for="password">Пароль</label>
         <input class="textfield" type="text" name="password" id="password" data-bind="value:  $root.userDetailsVM.user().password"> <br>
     </div>
+        <!-- ko if: ($root.chosenSectionId().id == "userchange" )-->
+    <select data-bind="options: $root.rolelistVM.roles,
+                     optionsText: 'title',
+                     optionsCaption: $root.userDetailsVM.role().title,
+                     value: $root.userDetailsVM.role()"></select>
+        <!-- /ko -->
+        <!-- ko if: ($root.chosenSectionId().id == "useradd" )-->
     <select data-bind="options: $root.rolelistVM.roles,
                      optionsText: 'title',
                      optionsCaption: 'Выберите роль пользователя',
-                     value: $root.userDetailsVM.user().role"></select>
+                     value: $root.userDetailsVM.role()"></select>
+        <!-- /ko -->
 </div>
-<div>
-    <table class="list table-hover">
-        <thead>
-            <tr>
-                <th>&nbsp;</th>
-                <th>
-                    Полное имя
-                </th>
-                <th>
-                    Логин
-                </th>
-                <th>
-                    Роль
-                </th>
-            </tr>
-        </thead>
-        <tbody data-bind="foreach: $root.userDetailsVM.phones">
-            <tr>
-                <td><input type="checkbox" data-bind="value: id, checked: $root.userlistVM.checkedUsers" /></td>
-                <td data-bind="click: function(data, evt) {$root.userlistVM.goToUserDetails(data, evt, $root)}">
-                    <span data-bind="text:number"></span>&nbsp;
-                    <span data-bind="text:operatorCode"></span>&nbsp;
-                    <span data-bind="textcountryCode"></span>
-                </td>
 
-
-                <td data-bind="text: type"></td>
-                <td data-bind="text: comment"></td>
-            </tr>
-        </tbody>
-
-    </table>
-    <button class="choose-btn" id="show-contacts" data-bind="click: function() {$root.userDetailsVM.showModalPhone($root)};" type="button">
-        Добавить телефон</button> <br>
-</div>
 <button class="choose-btn" type="button" data-bind="click: function(){$root.userDetailsVM.user().contactId = $root.contactListVM.checkedContact; $root.userDetailsVM.submit($root);}">
 
     Добавить пользователя</button>

@@ -33,6 +33,9 @@ public class UserController extends BaseController {
         String password = null;
         if (values.containsKey("password")) {
             password = values.get("password")[0];
+            if (StringUtils.isNotEmpty(password)) {
+                user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+            }
         }
         Contact contact = null;
         Long numberOfContact = null;
@@ -41,6 +44,10 @@ public class UserController extends BaseController {
         if (values.containsKey("role[id]") && values.containsKey("role[title]")) {
             idOfRole = Integer.valueOf(values.get("role[id]")[0]);
             titleOfRole = values.get("role[title]")[0];
+            SecurityRole securityRole = new SecurityRole();
+            securityRole.setId(idOfRole);
+            securityRole.setName(titleOfRole);
+            user.setRoleByRoleId(securityRole);
         } else {
             if (!values.containsKey("role")) {
                 throw new IllegalArgumentException("role is misssing");
@@ -58,17 +65,14 @@ public class UserController extends BaseController {
         } catch (ClassCastException e) {
             throw e;
         }
-        if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password) || numberOfContact == null ||
+        if (StringUtils.isEmpty(login) || numberOfContact == null ||
                 StringUtils.isEmpty(titleOfRole) || idOfRole == null) {
 
             throw new IllegalArgumentException("login/password/num.of contact/titleOfRole/idOfRole misssing");
         }
         user.setIdentifier(login);
-        user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
-        SecurityRole securityRole = new SecurityRole();
-        securityRole.setId(idOfRole);
-        securityRole.setName(titleOfRole);
-        user.setRoleByRoleId(securityRole);
+
+
     }
 
     @Transactional
@@ -84,6 +88,7 @@ public class UserController extends BaseController {
                 id = Long.parseLong(values.get("id")[0]);
             } else
                 throw new IllegalArgumentException("id is missing or empty");
+            user = userDAO.findById(id);
             setUsersParams(user, values);
             UserState userState = userDAO.findByStateTitle(UserDAO.ACTIVE_USER);
             user.setUserStateByUserStateId(userState);
@@ -151,16 +156,16 @@ public class UserController extends BaseController {
         UserDAO dao = new UserDAO(JPA.em());
         Long total;
         List<User> userList;
-        if (StringUtils.isBlank(role)){
+        if (StringUtils.isBlank(role)) {
             total = dao.total(company);
             userList = dao.list(pageNumber, pageSize, company);
-        }else{
+        } else {
             total = dao.total(company, role);
             userList = dao.list(pageNumber, pageSize, company, role);
         }
         Integer totalPages = Double.valueOf(Math.ceil((double) total / pageSize)).intValue();
         List<UserDTO> dtoList = new ArrayList<>();
-        for(User u : userList) {
+        for (User u : userList) {
             dtoList.add(UserDTO.getUser(u));
         }
         ObjectNode result = Json.newObject();
