@@ -1,9 +1,7 @@
 package search;
 
-import static org.elasticsearch.node.NodeBuilder.nodeBuilder;
-
-import org.elasticsearch.client.Client;
-import org.elasticsearch.node.Node;
+import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.transport.InetSocketTransportAddress;
 
 import play.Logger;
 import play.Logger.ALogger;
@@ -14,8 +12,7 @@ public class ClientProvider {
 	private static ClientProvider instance = null;
     private static Object lock      = new Object();
     
-    private Client client;
-    private Node node;
+    private TransportClient transportClient;
 
     public static ClientProvider instance(){
         
@@ -30,20 +27,18 @@ public class ClientProvider {
     }
 
     public void prepareClient(){
-        node   = nodeBuilder().node();
-        client = node.client();
+    	transportClient = new TransportClient();
+    	transportClient.addTransportAddress(new InetSocketTransportAddress("localhost", 9300));
         logger.info("Client is prepared");
     }
-
-    public void closeNode(){
-        
-        if(!node.isClosed())
-            node.close();
-        logger.info("Node is closed");
+  
+public void closeClient(){
+		transportClient.close();
+        logger.info("Client is closed");
     }
     
-    public Client getClient(){
-        return client;
+    public TransportClient getClient(){
+        return transportClient;
     }
     
 }

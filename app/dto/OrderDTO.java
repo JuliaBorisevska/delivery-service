@@ -1,10 +1,11 @@
 package dto;
 
-import entity.Contact;
-import entity.Order;
-import entity.Status;
 
-import java.util.ArrayList;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import entity.Order;
 
 
 /**
@@ -29,7 +30,7 @@ public class OrderDTO {
     	dto.id = order.getId();
         dto.description = order.getDescription();
         dto.price  = order.getTotalPrice();
-        StringBuilder stringDate = new StringBuilder();
+        /*StringBuilder stringDate = new StringBuilder();
         stringDate
         		.append(order.getOrderDate().toLocalDateTime().getDayOfMonth())
         		.append(" ")
@@ -42,8 +43,10 @@ public class OrderDTO {
                 .append(order.getOrderDate().toLocalDateTime().getMinute())
                 .append(":")
                 .append(order.getOrderDate().toLocalDateTime().getSecond());
-
-        dto.date = stringDate.toString();
+*/
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime dateTime = LocalDateTime.fromDateFields(order.getOrderDate());
+        dto.date = dateTime.toString(fmt);
         dto.orderStatus = order.getStatusByStatusId().getTitle();
     }
 }

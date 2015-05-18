@@ -2,6 +2,7 @@ package dao;
 
 import entity.Company;
 import entity.Contact;
+import entity.Order;
 import play.Logger;
 import play.Logger.ALogger;
 
@@ -9,8 +10,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
 import java.util.List;
 
 /**
@@ -99,4 +103,15 @@ public class ContactDAO extends AbstractDAO<Contact> {
 
         return em.createQuery(countQuery).getSingleResult();
     }
+    
+    public List<Contact> getContactListByIds(List<Long> ids){
+    	CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Contact> criteriaQuery = criteriaBuilder.createQuery(Contact.class);
+        Root<Contact> fromContact = criteriaQuery.from(Contact.class);
+        Expression<Long> exp = fromContact.get("id");
+        Predicate predicate = exp.in(ids);
+        CriteriaQuery<Contact> select = criteriaQuery.select(fromContact).where(predicate);
+        TypedQuery<Contact> q = em.createQuery(select);
+        return q.getResultList();
+    } 
 }

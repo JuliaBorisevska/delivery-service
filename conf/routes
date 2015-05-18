@@ -14,7 +14,7 @@ GET         /settings                                  controllers.Application.r
 GET           /contact/list/:page/:pageSize              controllers.ContactController.listContacts(page: Integer, pageSize: Integer)
 DELETE        /contact/:ids                              controllers.ContactController.deleteContacts(ids: String)
 GET           /contact/:id                               controllers.ContactController.getContact(id: Long)
-POST          /contact/search                              controllers.ContactController.findContacts()
+POST          /contact/search/:page/:pageSize            controllers.ContactController.findContacts(page: Integer, pageSize: Integer)
 POST          /contact                                   controllers.ContactController.createContact()
 PUT           /contact/:id                               controllers.ContactController.updateContact(id: Long)
 
@@ -34,6 +34,8 @@ POST        /order/status                              controllers.OrderControll
 GET         /order/list/:page/:pageSize/:status        controllers.OrderController.listOrders(page:Integer, pageSize: Integer, status: String)
 GET         /order/:id                                 controllers.OrderController.getOrder(id: Long)
 GET         /order/list/:page/:pageSize/               controllers.OrderController.listOrders(page:Integer, pageSize: Integer, status="")
+POST         /order/search/:page/:pageSize/:status     controllers.OrderController.searchOrders(page:Integer, pageSize: Integer, status: String)
+POST         /order/search/:page/:pageSize/            controllers.OrderController.searchOrders(page:Integer, pageSize: Integer, status="")
 
 #Roles
 GET           /role/list                                 controllers.UserController.listRoles()

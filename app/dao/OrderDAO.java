@@ -4,6 +4,7 @@ import entity.Company;
 import entity.Contact;
 import entity.Order;
 import entity.OrderHistory;
+import entity.SecurityRole;
 import entity.Status;
 import entity.User;
 import entity.UserState;
@@ -30,6 +31,8 @@ import java.util.List;
 
 public class OrderDAO extends AbstractDAO<Order> {
 	private static ALogger logger = Logger.of(OrderDAO.class);
+	public static final String PROCESS_MNG_ROLE_NAME = "PROCESS_MNG";
+    public static final String DELIVERY_MNG_ROLE_NAME = "DELIVERY_MNG";
 	
     public OrderDAO(EntityManager em) {
         super(em);
@@ -104,22 +107,59 @@ public class OrderDAO extends AbstractDAO<Order> {
     	return order;
     }
     
-    public List<Order> getOrderList(Integer pageNumber, Integer pageSize, Company company){
+    public List<Order> getOrderList(Integer pageNumber, Integer pageSize, Company company, SecurityRole userRole){
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
         Root<Order> fromOrder = criteriaQuery.from(Order.class);
 		Join<Order, Contact> fromContact = fromOrder.join("customerByContactId");
-        CriteriaQuery<Order> select = criteriaQuery.select(fromOrder).where(criteriaBuilder.equal(fromContact.get("companyByCompanyId"), company));
+		Join<Order, User> fromUser = null;
+		CriteriaQuery<Order> select = null;
+		if (PROCESS_MNG_ROLE_NAME.equals(userRole.getName())){
+			fromUser = fromOrder.join("processMngByUserId");
+		}
+		if (DELIVERY_MNG_ROLE_NAME.equals(userRole.getName())){
+			fromUser = fromOrder.join("deliveryMngByUserId");
+		}
+        if (fromUser!=null){
+        	select = criteriaQuery.select(fromOrder).where(
+        			criteriaBuilder.equal(fromUser.get("roleByRoleId"), userRole),
+					criteriaBuilder.equal(fromContact.get("companyByCompanyId"), company));
+        }else{
+        	select = criteriaQuery.select(fromOrder).where(
+        			criteriaBuilder.equal(fromContact.get("companyByCompanyId"), company));
+        }
         TypedQuery<Order> q = em.createQuery(select);
         q.setFirstResult((pageNumber - 1) * pageSize);
         q.setMaxResults(pageSize);
-
         return q.getResultList();
     }
     
-    public List<Order> getOrderList(Integer pageNumber, Integer pageSize, Company company, List<String> statusTitleList){
-        
-    	
+    public Long  getLength(Company company, SecurityRole userRole){
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Order> fromOrder = countQuery.from(Order.class);
+        Join<Order, Contact> fromContact = fromOrder.join("customerByContactId");
+        Join<Order, User> fromUser = null;
+		if (PROCESS_MNG_ROLE_NAME.equals(userRole.getName())){
+			fromUser = fromOrder.join("processMngByUserId");
+		}
+		if (DELIVERY_MNG_ROLE_NAME.equals(userRole.getName())){
+			fromUser = fromOrder.join("deliveryMngByUserId");
+		}
+        if (fromUser!=null){
+        	countQuery.select(criteriaBuilder.count(fromOrder)).where(
+        			criteriaBuilder.equal(fromContact.get("companyByCompanyId"), company),
+        			criteriaBuilder.equal(fromUser.get("roleByRoleId"), userRole));
+        }else{
+        	countQuery.select(criteriaBuilder.count(fromOrder)).where(
+        			criteriaBuilder.equal(fromContact.get("companyByCompanyId"), company));
+        }
+        Long lngth = em.createQuery(countQuery).getSingleResult();
+        logger.info("Method getLength with parameter company - {} returns length - {}", company.getTitle(), lngth);
+        return lngth;
+    }
+    
+    public List<Order> getOrderList(Integer pageNumber, Integer pageSize, Company company, List<String> statusTitleList, SecurityRole userRole){
     	CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
         Root<Order> fromOrder = criteriaQuery.from(Order.class);
@@ -127,8 +167,24 @@ public class OrderDAO extends AbstractDAO<Order> {
 		Join<Order, Status> fromStatus = fromOrder.join("statusByStatusId");
         Expression<String> exp = fromStatus.get("title");
         Predicate predicate = exp.in(statusTitleList);
-        CriteriaQuery<Order> select = criteriaQuery.select(fromOrder).where(criteriaBuilder.equal(fromContact.get("companyByCompanyId"), company),
-        																	predicate);
+        Join<Order, User> fromUser = null;
+		CriteriaQuery<Order> select = null;
+		if (PROCESS_MNG_ROLE_NAME.equals(userRole.getName())){
+			fromUser = fromOrder.join("processMngByUserId");
+		}
+		if (DELIVERY_MNG_ROLE_NAME.equals(userRole.getName())){
+			fromUser = fromOrder.join("deliveryMngByUserId");
+		}
+        if (fromUser!=null){
+        	select = criteriaQuery.select(fromOrder).where(
+        			criteriaBuilder.equal(fromUser.get("roleByRoleId"), userRole),
+					criteriaBuilder.equal(fromContact.get("companyByCompanyId"), company),
+					predicate);
+        }else{
+        	select = criteriaQuery.select(fromOrder).where(
+        			criteriaBuilder.equal(fromContact.get("companyByCompanyId"), company),
+        			predicate);
+        }
         TypedQuery<Order> q = em.createQuery(select);
         q.setFirstResult((pageNumber - 1) * pageSize);
         q.setMaxResults(pageSize);
@@ -136,18 +192,7 @@ public class OrderDAO extends AbstractDAO<Order> {
         return q.getResultList();
     }
     
-    public Long  getLength(Company company){
-        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        Root<Order> fromOrder = countQuery.from(Order.class);
-        Join<Order, Contact> fromContact = fromOrder.join("customerByContactId");
-        countQuery.select(criteriaBuilder.count(fromOrder)).where(criteriaBuilder.equal(fromContact.get("companyByCompanyId"), company));
-        Long lngth = em.createQuery(countQuery).getSingleResult();
-        logger.info("Method getLength with parameter company - {} returns length - {}", company.getTitle(), lngth);
-        return lngth;
-    }
-    
-    public Long  getLength(Company company, List<String> statusTitleList){
+    public Long  getLength(Company company, List<String> statusTitleList, SecurityRole userRole){
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
         Root<Order> fromOrder = countQuery.from(Order.class);
@@ -155,11 +200,37 @@ public class OrderDAO extends AbstractDAO<Order> {
         Join<Order, Status> fromStatus = fromOrder.join("statusByStatusId");
         Expression<String> exp = fromStatus.get("title");
         Predicate predicate = exp.in(statusTitleList);
-        countQuery.select(criteriaBuilder.count(fromOrder)).where(criteriaBuilder.equal(fromContact.get("companyByCompanyId"), company),
-        														predicate);
+        Join<Order, User> fromUser = null;
+		if (PROCESS_MNG_ROLE_NAME.equals(userRole.getName())){
+			fromUser = fromOrder.join("processMngByUserId");
+		}
+		if (DELIVERY_MNG_ROLE_NAME.equals(userRole.getName())){
+			fromUser = fromOrder.join("deliveryMngByUserId");
+		}
+        if (fromUser!=null){
+        	countQuery.select(criteriaBuilder.count(fromOrder)).where(
+        			criteriaBuilder.equal(fromContact.get("companyByCompanyId"), company),
+        			criteriaBuilder.equal(fromUser.get("roleByRoleId"), userRole),
+        			predicate);
+        }else{
+        	countQuery.select(criteriaBuilder.count(fromOrder)).where(
+        			criteriaBuilder.equal(fromContact.get("companyByCompanyId"), company),
+        			predicate);
+        }
         Long lngth = em.createQuery(countQuery).getSingleResult();
         logger.info("Method getLength with parameters company - {}, statusTitleList - {} returns length - {}", company.getTitle(), statusTitleList, lngth);
         return lngth;
     }
+    
+    public List<Order> getOrderListByIds(List<Long> ids){
+    	CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
+        Root<Order> fromOrder = criteriaQuery.from(Order.class);
+        Expression<Long> exp = fromOrder.get("id");
+        Predicate predicate = exp.in(ids);
+        CriteriaQuery<Order> select = criteriaQuery.select(fromOrder).where(predicate);
+        TypedQuery<Order> q = em.createQuery(select);
+        return q.getResultList();
+    } 
 
 }

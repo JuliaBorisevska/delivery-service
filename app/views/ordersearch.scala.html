@@ -1,3 +1,38 @@
-<!-- ko if: $root.chosenSectionId().id == "ordsearch" -->
-       order search
+<!-- ko if: $root.chosenSectionId().id == "ordsearch" && $root.orderlistVM.searchOrder() -->
+<div class="details-part">  
+    <div class="field">
+        <label class="title">Фамилия заказчика:</label>
+        <input type="text" class="textfield" data-bind="value: $root.orderlistVM.searchOrder().customer"/>
+    </div>
+    <div class="clr"></div>
+    <div class="field">
+        <label class="title">Фамилия получателя:</label>
+        <input type="text" class="textfield" data-bind="value: $root.orderlistVM.searchOrder().recipient"/>
+    </div>
+    <div class="clr"></div>
+    <div class="field">
+        <label class="title">Дата заказа:</label>
+        <div class="textfield">
+        	<span>от&nbsp;</span>
+        	<input type="text" class="smallfield" data-bind="value: $root.orderlistVM.searchOrder().dateMin"/>
+        	<span>до&nbsp;</span>
+        	<input type="text" class="smallfield" data-bind="value: $root.orderlistVM.searchOrder().dateMax"/>
+        </div>
+    </div>
+    <div class="clr"></div>
+    <div class="field">
+        <label class="title">Цена заказа:</label>
+        <div class="textfield">
+        	<span>от&nbsp;</span>
+        	<input type="text" class="smallfield" data-bind="value: $root.orderlistVM.searchOrder().priceMin"/>
+        	<span>до&nbsp;</span>
+        	<input type="text" class="smallfield" data-bind="value: $root.orderlistVM.searchOrder().priceMax"/>
+        </div>
+    </div>
+    <div class="clr"></div>
+    <div class="field">
+        <button type="button" data-bind="click: $root.orderlistVM.findOrders">Найти</button>
+    </div>
+    <div class="clr"></div>
+</div>
 <!-- /ko -->

@@ -7,7 +7,7 @@ import org.elasticsearch.client.Client;
 import play.Logger;
 import play.Logger.ALogger;
 import search.ClientProvider;
-//import search.ContactSearchService;
+import search.ContactSearchService;
 
 import java.sql.Date;
 import java.util.List;
@@ -31,21 +31,23 @@ public class Contact {
     private List<Phone> phones;
 
     @PostPersist
+    @PostUpdate
     private void addToElasticSearch() {
-    	/*ContactSearchService service = new ContactSearchService();
+    	ContactSearchService service = new ContactSearchService();
     	Client client = ClientProvider.instance().getClient();
     	client.prepareIndex(ContactSearchService.INDEX_NAME, ContactSearchService.TYPE_NAME, String.valueOf(this.id))
         .setSource(service.putJsonDocument(this)).execute().actionGet();
-    	logger.info("Contact with id {} was added to elasticsearch index delivery", this.id);*/
+    	logger.info("Contact with id {} was added/updated to/in elasticsearch index delivery", this.id);
     }
     
-    @PostUpdate
-    private void updateInElasticSearch() {
-    	//Client client = ClientProvider.instance().getClient();
-    	
-    	logger.info("Contact with id {} was updated in elasticsearch index delivery", this.id);
+    @PostRemove
+    private void deleteFromElasticSearch() {
+    	Client client = ClientProvider.instance().getClient();
+    	client.prepareDelete(ContactSearchService.INDEX_NAME, ContactSearchService.TYPE_NAME, String.valueOf(this.id))
+    	.execute().actionGet();
+    	logger.info("Contact with id {} was deleted from elasticsearch index delivery", this.id);
     }
-    
+       
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, insertable = true, updatable = true)

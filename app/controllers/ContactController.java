@@ -1,12 +1,17 @@
 package controllers;
 
 import be.objectify.deadbolt.java.actions.Pattern;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import dao.ContactDAO;
 import entity.Company;
 import entity.Contact;
 import entity.User;
+
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.LocalDate;
+
 import play.Logger;
 import play.Logger.ALogger;
 import play.db.jpa.JPA;
@@ -14,8 +19,11 @@ import play.db.jpa.Transactional;
 import play.libs.Json;
 import play.mvc.Result;
 import resource.MessageManager;
+import search.ContactSearchBean;
+import search.ContactSearchService;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,31 +47,31 @@ public class ContactController extends BaseController {
         Reply<Contact> reply = new Reply<>(Status.SUCCESS, contact);
         return ok(Json.toJson(reply));
     }
+    
+    private static ObjectNode formContactListJsonNode(List<Contact> contactList, Long total, Integer pageSize){
+    	Integer totalPages = Double.valueOf(Math.ceil((double) total / pageSize)).intValue();
+    	ObjectNode result = Json.newObject();
+        result.put("totalPages", totalPages);
+        result.put("list", Json.toJson(contactList));
+        return result;
+    }
 
     @Transactional
     @Pattern("contact_list")
     public static Result listContacts(Integer pageNumber, Integer pageSize) {
         logger.info("get list of contacts, page: {}, size: {}", pageNumber, pageSize);
-
         if (pageNumber == null || pageSize == null || pageNumber <= 0 || pageNumber <= 0) {
             return badRequest(Json.toJson(new Reply()));
         }
-
         User user = Application.recieveUserByToken();
         if (user == null) {
             return badRequest(Json.toJson(
                     new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
         }
-
         ContactDAO contactDAO = new ContactDAO(JPA.em());
         Long total = contactDAO.numberOfContacts(user.getContactByContactId().getCompanyByCompanyId());
-        Integer totalPages = Double.valueOf(Math.ceil((double) total / pageSize)).intValue();
         List<Contact> contactList = contactDAO.getContactList(pageNumber, pageSize, user.getContactByContactId().getCompanyByCompanyId());
-
-        ObjectNode result = Json.newObject();
-        result.put("totalPages", totalPages);
-        result.put("list", Json.toJson(contactList));
-
+        ObjectNode result = formContactListJsonNode(contactList, total, pageSize);
         return ok(Json.toJson(
                 new Reply<>(Status.SUCCESS, result)
         ));
@@ -71,23 +79,57 @@ public class ContactController extends BaseController {
 
     @Transactional
     @Pattern("contact_search")
-    public static Result findContacts() {
-
-        //ContactDAO contactDAO = new ContactDAO(JPA.em());
+    public static Result findContacts(Integer pageNumber, Integer pageSize) {
         final Map<String, String[]> values = request().body().asFormUrlEncoded();
         try {
-        	//ContactSearchService service = new ContactSearchService();
-        	//ContactSearchBean searchBean = new ContactSearchBean();
-        	//service.search(searchBean);
-            
-        	//setContactFields(contact, values);
-
-        } catch (Exception e) {
-            logger.error("Exception in findContacts method: {} ", e);
-        }
-        return ok(Json.toJson(
-                new Reply<>(Status.SUCCESS, null)
-        ));
+        	if (!values.containsKey("firstName") || !values.containsKey("lastName") 
+            		|| !values.containsKey("middleName") || !values.containsKey("birthday") 
+            		|| !values.containsKey("town") || !values.containsKey("street")
+            		|| !values.containsKey("house") || !values.containsKey("flat")
+            		|| pageNumber == null || pageSize == null || pageNumber <= 0 || pageNumber <= 0){
+                return badRequest(Json.toJson(
+                        new Reply<>(Status.ERROR, MessageManager.getProperty("order.wrong.fields"))));
+            }
+        	User user = Application.recieveUserByToken();
+            if (user == null) {
+                return badRequest(Json.toJson(
+                        new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
+            }
+            Company company = user.getContactByContactId().getCompanyByCompanyId();
+            logger.info("Start findContacts with parameters: number of page: {}, size of page: {},"
+            		+ "firstName: {}, lastName: {}, middleName: {}, dateMin: {}, town: {}, street: {},"
+            		+ "house: {}, flat: {}",
+            		pageNumber, pageSize, values.get("firstName")[0], values.get("lastName")[0],
+            		values.get("middleName")[0], values.get("birthday")[0], values.get("town")[0], 
+            		values.get("street")[0], values.get("house")[0], values.get("flat")[0]);
+        	ContactSearchService service = new ContactSearchService();
+        	ContactSearchBean searchBean = new ContactSearchBean();
+        	searchBean.setCompanyId(company.getId());
+            searchBean.setPageNumber(pageNumber);
+            searchBean.setPageSize(pageSize);
+            searchBean.setFirstName(StringUtils.isBlank(values.get("firstName")[0]) ? null : values.get("firstName")[0]);
+            searchBean.setLastName(StringUtils.isBlank(values.get("lastName")[0]) ? null : values.get("lastName")[0]);
+            searchBean.setMiddleName(StringUtils.isBlank(values.get("middleName")[0]) ? null : values.get("middleName")[0]);
+            searchBean.setTown(StringUtils.isBlank(values.get("town")[0]) ? null : values.get("town")[0]);
+            searchBean.setStreet(StringUtils.isBlank(values.get("street")[0]) ? null : values.get("street")[0]);
+            searchBean.setHouse(StringUtils.isBlank(values.get("house")[0]) ? null : Integer.valueOf(values.get("house")[0]));
+            searchBean.setFlat(StringUtils.isBlank(values.get("flat")[0]) ? null : Integer.valueOf(values.get("flat")[0]));
+            searchBean.setDateMin(StringUtils.isBlank(values.get("birthday")[0]) ? null : new Date(LocalDate.parse(values.get("birthday")[0]).toDateTimeAtStartOfDay().getMillis()));
+            List<Contact> contactList = new ArrayList<>();
+        	service.search(searchBean);
+        	if (!searchBean.getIds().isEmpty()){
+        		ContactDAO contactDAO = new ContactDAO(JPA.em());
+        		contactDAO.getContactListByIds(searchBean.getIds());
+        	}
+        	ObjectNode result = formContactListJsonNode(contactList, searchBean.getTotalPages(), pageSize);
+            return ok(Json.toJson(
+                    new Reply<>(Status.SUCCESS, result)
+            ));
+        } catch (NumberFormatException e) {
+       	 logger.error("Exception in findContacts method: {} ", e);
+         return badRequest(Json.toJson(
+                 new Reply<>(Status.ERROR, MessageManager.getProperty("order.wrong.fields"))));
+        } 
     }
 
     @Transactional

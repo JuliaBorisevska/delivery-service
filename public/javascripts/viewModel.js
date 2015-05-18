@@ -12,9 +12,10 @@ define(["application/service/initService",
         "application/viewModel/orderDetailsVM",
         "application/viewModel/emailDetailsVM",
         "application/model/Order",
+        "application/model/OrderForSearch",
         "application/model/Contact",
         "application/viewModel/rolelistVM"],
-    function (initService, Callback, Template, User, loginVM, contactListVM, orderlistVM, userlistVM, emaillistVM, contactDetailsVM, userDetailsVM, orderDetailsVM, emailDetailsVM, Order, Contact, rolelistVM) {
+    function (initService, Callback, Template, User, loginVM, contactListVM, orderlistVM, userlistVM, emaillistVM, contactDetailsVM, userDetailsVM, orderDetailsVM, emailDetailsVM, Order, OrderForSearch, Contact, rolelistVM) {
 
         "use strict";
 
@@ -96,6 +97,7 @@ define(["application/service/initService",
                 }, this, {})
             );
         self.goTo = function(section) {
+        	self.orderlistVM.searchOrder(null);
             switch (section.id){
             	case "lst":
             		self.userlistVM.selectedRole("");
@@ -115,6 +117,11 @@ define(["application/service/initService",
             		break;
             	case "ordlst":
             		self.orderlistVM.getStatusList();
+            		//self.orderlistVM.changeStatus();
+            		location.hash = section.id;
+            		break;
+            	case "ordsearch":
+            		self.orderlistVM.searchOrder(new OrderForSearch("", "", "", "", "", ""));
             		//self.orderlistVM.changeStatus();
             		location.hash = section.id;
             		break;

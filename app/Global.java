@@ -18,7 +18,7 @@ public class Global extends GlobalSettings {
 
 	@Override
 	public void onStop(Application arg0) {
-		ClientProvider.instance().closeNode();
+		ClientProvider.instance().closeClient();
 		logger.info("Application stopped");
 		super.onStop(arg0);
 	}
