@@ -19,7 +19,9 @@
        </tr>
        <tr>
               <td>Дата рождения</td>
-              <td><input type="text" name="birthday" id="birthday" data-bind="value: $root.contactDetailsVM.contact().birthday"></td>
+              <td>
+
+                     <input type="text" class="datepicker" name="birthday" id="birthday" data-bind="datepicker: {}, value: $root.contactDetailsVM.contact().birthday"></td>
        </tr>
        <tr>
               <td>Email</td>
@@ -46,6 +48,9 @@
               <td><input type="text" name="flat" id="flat" data-bind="value: $root.contactDetailsVM.contact().flat"></td>
        </tr>
 </table>
+
+
+
 <!-- /ko -->
 <!-- ko if: $root.chosenSectionId().id == "ctadd" || $root.chosenSectionId().id == "ctchange"  -->
 <a class="button" href="#" data-bind="click: function(){$root.contactDetailsVM.submit($root)}">Сохранить</a>

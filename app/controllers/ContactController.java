@@ -19,8 +19,6 @@ import play.db.jpa.Transactional;
 import play.libs.Json;
 import play.mvc.Result;
 import resource.MessageManager;
-import search.ContactSearchBean;
-import search.ContactSearchService;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -225,7 +223,6 @@ public class ContactController extends BaseController {
         } catch (ClassCastException cce) {
             throw cce;
         }
-
     }
 
     @Transactional
