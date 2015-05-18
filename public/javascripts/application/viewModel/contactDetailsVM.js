@@ -3,15 +3,19 @@
  */
 
 define([
+
     "application/service/contactService",
-    "application/util/callback"],
-    function(contactService, Callback) {
+        "application/util/callback",
+        "application/model/phone"],
+    function (contactService, Callback, Phone) {
     "use strict";
 
     function ContactDetailsVM() {
         var self = this,
             reply,
             contact = ko.observable(),
+
+            phones = ko.observableArray(),
             submit = function(root){
                 var record = contact(),
                     success = new Callback(function(params){
@@ -69,6 +73,7 @@ define([
             setContact: setContact,
             contact: contact
         }
+
     }
 
     return new ContactDetailsVM();

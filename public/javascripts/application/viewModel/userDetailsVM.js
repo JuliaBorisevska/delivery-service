@@ -11,6 +11,15 @@ define([
             var self = this,
 
                 reply,
+                phones = ko.observableArray([]),
+                addPhone = function (p) {
+                    phones.push(p);
+                },
+                checkedPhones = ko.observableArray([]),
+                role = ko.observable(),
+                setRole = function (c) {
+                    role(c);
+                },
 
                 user = ko.observable(),
                 submit = function (root) {
@@ -56,6 +65,13 @@ define([
                 }, closeModal = function () {
                     $('#select-contact').modal('hide');
                     return true;
+                }, showModalPhone = function (root) {
+
+
+                    $('#select-contact').modal({
+                        keyboard: false
+                    });
+                    return true;
                 };
 
 
@@ -64,7 +80,13 @@ define([
                 setUser: setUser,
                 user: user,
                 showModal: showModal,
-                closeModal: closeModal
+                closeModal: closeModal,
+                role: role,
+                setRole: setRole,
+                phones: phones,
+                addPhone: addPhone,
+                checkedPhones: checkedPhones
+
             }
         }
 

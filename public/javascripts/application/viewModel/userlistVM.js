@@ -1,6 +1,7 @@
 define(["application/service/userService",
     "application/util/callback",
-    "application/model/user"], function (userService, Callback, User) {
+    "application/model/user",
+    "application/model/role"], function (userService, Callback, User, Role) {
     "use strict";
 
     function UserListVM() {
@@ -31,7 +32,7 @@ define(["application/service/userService",
                         }
                         for (var i = 0, lth = reply.data.list.length; i < lth; i++) {
                             var user = reply.data.list[i];
-                            users.push(new User(user.id, user.firstName, user.lastName, user.middleName, user.roleTitle, user.companyTitle, user.login, user.menu, user.password, user.contactId));
+                            users.push(new User(user.id, user.firstName, user.lastName, user.middleName, new Role(user.roleId, user.roleTitle), user.companyTitle, user.login, user.menu, user.password, user.contactId));
                         }
                     }
                 }, self, {}),
@@ -65,10 +66,13 @@ define(["application/service/userService",
 
         var goToUserDetails = function (data, event, root) {
             root.rolelistVM.list();
+            alert(Object.keys(data.role));
 
-            root.userDetailsVM.setUser(new User(data.id, data.firstName, data.lastName, data.middleName, data.company, data.role, data.login, data.menu, data.password, data.contactId));
-            root.userDetailsVM.user().role = data.role;
-            alert(Object.keys(data));
+            root.userDetailsVM.setUser(new User(data.id, data.firstName, data.lastName, data.middleName, data.role,
+                data.company, data.login, data.menu, data.password, data.contactId));
+            //root.userDetailsVM.user().role = new Role(data.role.id, data.role.title);
+            alert(Object.keys(root.userDetailsVM.user().role));
+
             root.contactListVM.checkedContact = data.contactId;
             alert(root.contactListVM.checkedContact);
             location.hash = "userchange";
