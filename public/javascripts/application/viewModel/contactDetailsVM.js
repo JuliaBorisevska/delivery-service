@@ -15,7 +15,12 @@ define([
             reply,
             contact = ko.observable(),
 
-            phones = ko.observableArray(),
+            phones = ko.observableArray([]),
+            addPhone = function (p) {
+                phones.push(p);
+            },
+            checkedPhones = ko.observableArray([]),
+
             submit = function(root){
                 var record = contact(),
                     success = new Callback(function(params){
@@ -65,13 +70,23 @@ define([
             },
             clean = function(){
                 contact(null);
+            },
+            showModalPhone = function (phone, root) {
+                $('#addphone').modal({
+                    keyboard: false
+                });
+                return true;
             };
 
         return {
             submit: submit,
             search: search,
             setContact: setContact,
-            contact: contact
+            contact: contact,
+            phones: phones,
+            addPhone: addPhone,
+            checkedPhones: checkedPhones,
+            showModalPhone: showModalPhone
         }
 
     }

@@ -19,17 +19,11 @@
        </tr>
        <tr>
               <td>Дата рождения</td>
-              <td>
-
-                     <input type="text" class="datepicker" name="birthday" id="birthday" data-bind="datepicker: {'dateFormat': 'yy-mm-dd' }, value: $root.contactDetailsVM.contact().birthday"></td>
+              <td><input type="text" class="datepicker" name="birthday" id="birthday" data-bind="datepicker: {'dateFormat': 'yy-mm-dd' }, value: $root.contactDetailsVM.contact().birthday"></td>
        </tr>
        <tr>
               <td>Email</td>
               <td><input type="text" name="email" id="email" data-bind="value: $root.contactDetailsVM.contact().email"></td>
-       </tr>
-       <tr>
-              <td>Компания</td>
-              <td><input type="text" name="company" id="company" data-bind="value: $root.contactDetailsVM.contact().companyId" disabled></td>
        </tr>
        <tr>
               <td>Город</td>
@@ -49,7 +43,17 @@
        </tr>
 </table>
 
-
+<p>Телефоны:</p>
+<table class="list">
+       <tr data-bind="foreach: $root.contactDetailsVM.contact().phones">
+              <td data-bind="attr: { id: id }, click: function(phone, evt) {$root.contactDetailsVM.showModalPhone(phone, $root)}">
+                     <span data-bind="text: countryCode">1&nbsp;</span>
+                     <span data-bind="text: operatorCode">2&nbsp;</span>
+                     <span data-bind="text: number">3&nbsp;</span>
+                     <span data-bind="text: type"></span>
+              </td>
+       </tr>
+</table>
 
 <!-- /ko -->
 <!-- ko if: $root.chosenSectionId().id == "ctadd" || $root.chosenSectionId().id == "ctchange"  -->
