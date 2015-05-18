@@ -30,8 +30,10 @@ define(["application/service/authService",
                         location.hash = "lgn";
                     }, this, {}),
                     new Callback(function(params) {
-                        var message = params.responseText ? params.responseText : params.statusText;
-                        alert(message);
+                    	//alert(params.reply.responseJSON.data);
+                    	login("");
+                        password("");
+                        location.hash = "lgn";
                     }, this, {})
                 );
             };

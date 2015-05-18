@@ -1,9 +1,10 @@
 define(["application/service/orderService",
     "application/util/callback",
     "application/model/order",
+    "application/model/orderForSearch",
     "application/model/status",
     "application/model/contact",
-    "application/model/user"], function(orderService, Callback, Order, Status, Contact, User) {
+    "application/model/user"], function(orderService, Callback, Order, OrderForSearch, Status, Contact, User) {
     "use strict";
 
     function OrderListVM() {
@@ -17,9 +18,8 @@ define(["application/service/orderService",
             reply,
             numbers = ko.observableArray([]),
         	availableStatuses = ko.observableArray(),
-        	//lastStatus,
-        	//isStatusChanged,
-        	selectedStatus = ko.observable();
+        	selectedStatus = ko.observable(),
+        	searchOrder = ko.observable(null);
         var getStatusList = function(){
         	orderService.getStatusList(
         			new Callback(function(params){
@@ -38,53 +38,47 @@ define(["application/service/orderService",
                     }, self, {})
         	)
         };
-
+        
            var list = function(page, pageSize) {
-                orderService.list(page, pageSize, selectedStatus() ? selectedStatus().title : "",
-                    new Callback(function(params){
-                            reply = params.reply;
-                            if(reply.status === "SUCCESS") {
-                            	//debugger;
-                            	/*if (isStatusChanged){
-                             	   currentPage(1);
-                             	   numbers([]);
-                             	   isStatusChanged = false;
-                         	   }*/
-                                orders([]);
-                                totalPages(reply.data.totalPages);
-                                if (numbers().length==0){
-                                	numbers([]);
-                                	for (k=1; k<=(totalPages()<SHOW_PAGES?totalPages():SHOW_PAGES); k++){
-                            			numbers.push(k);
-                            		}
-                                }
-                                for(var i = 0, lth = reply.data.list.length; i < lth; i++) {
-                                    var order = reply.data.list[i];
-                                    orders.push(new Order(order.id, order.description, null, null, null, null, null, order.orderStatus, order.date, order.price, null));
-                                }
-                            }
-                        }, self, {}
-                    ),
-                    new Callback(function(params){
-                    	alert(params.reply.responseJSON.data);
-                        }, self, {})
-                	)
+        	   var success = new Callback(function(params){
+                   reply = params.reply;
+                   if(reply.status === "SUCCESS") {
+                       orders([]);
+                       totalPages(reply.data.totalPages);
+                       if (numbers().length==0){
+                       	numbers([]);
+                       	for (k=1; k<=(totalPages()<SHOW_PAGES?totalPages():SHOW_PAGES); k++){
+                   			numbers.push(k);
+                   		}
+                       }
+                       for(var i = 0, lth = reply.data.list.length; i < lth; i++) {
+                           var order = reply.data.list[i];
+                           orders.push(new Order(order.id, order.description, null, null, null, null, null, order.orderStatus, order.date, order.price, null));
+                       }
+                   }
+        	   }, self, {}
+               );
+               var error = new Callback(function(params){
+           	          alert(params.reply.responseJSON.data);
+                  }, self, {} 
+               );
+               if(searchOrder()!=null) {
+                   orderService.search(page, pageSize, selectedStatus() ? selectedStatus().title : "",searchOrder(), success, error);
+               }else{
+            	   orderService.list(page, pageSize, selectedStatus() ? selectedStatus().title : "", success, error);
+               }
             };
-            /*
-            self.ordersByStatus = ko.computed(function(){
-            	if (lastStatus!=selectedStatus()){
-                    //numbers();
-                	list(1, PAGE_SIZE);
-            	}
-            	lastStatus=selectedStatus();
-            	isStatusChanged = true;
-            });
-*/
+        
             var changeStatus = function(){
             	numbers([]);
             	currentPage(1);
             	totalPages(0);
             	list(currentPage(), PAGE_SIZE);
+            };
+            
+            var findOrders = function(){
+            	getStatusList();
+        		location.hash = "ordlst";
             };
             
             var goToOrderDetails = function(data, event, root) {
@@ -127,9 +121,11 @@ define(["application/service/orderService",
         return {
             orders: orders,
             list: list,
+            findOrders: findOrders,
             changeStatus: changeStatus,
             availableStatuses: availableStatuses,
             selectedStatus: selectedStatus,
+            searchOrder: searchOrder,
             getStatusList: getStatusList,
             goToOrderDetails: goToOrderDetails,
             numbers: numbers,

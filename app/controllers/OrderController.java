@@ -3,7 +3,9 @@ package controllers;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Pattern;
 import be.objectify.deadbolt.java.actions.Restrict;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import dao.ContactDAO;
 import dao.OrderDAO;
 import dao.UserDAO;
@@ -12,9 +14,12 @@ import dto.OrderDetailsDTO;
 import dto.OrderHistoryDTO;
 import entity.*;
 import handler.ConfigContainer;
+
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDate;
+
 import play.Logger;
 import play.Logger.ALogger;
 import play.db.jpa.JPA;
@@ -22,9 +27,13 @@ import play.db.jpa.Transactional;
 import play.libs.Json;
 import play.mvc.Result;
 import resource.MessageManager;
+import search.OrderSearchBean;
+import search.OrderSearchService;
 
 import javax.persistence.EntityManager;
+
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -34,8 +43,7 @@ import java.util.Map;
 
 public class OrderController extends BaseController {
     private static ALogger logger = Logger.of(OrderController.class);
-    public static final String PROCESS_MNG_ROLE_NAME = "PROCESS_MNG";
-    public static final String DELIVERY_MNG_ROLE_NAME = "DELIVERY_MNG";
+    
 
     @Transactional
     @Pattern("order_selection")
@@ -118,7 +126,97 @@ public class OrderController extends BaseController {
                     new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
         }
     }
+    
+    @Transactional
+    @Pattern("order_search")
+    public static Result searchOrders(Integer pageNumber, Integer pageSize, String status) {
+        try{
+        	final Map<String, String[]> values = request().body().asFormUrlEncoded();
+            if (!values.containsKey("customer") || !values.containsKey("recipient") 
+            		|| !values.containsKey("dateMin") || !values.containsKey("dateMax") 
+            		|| !values.containsKey("priceMin") || !values.containsKey("priceMax")
+            		|| pageNumber == null || pageSize == null || pageNumber <= 0 || pageNumber <= 0){
+                return badRequest(Json.toJson(
+                        new Reply<>(Status.ERROR, MessageManager.getProperty("order.wrong.fields"))));
+            }
+            logger.info("Start searchOrders with parameters: number of page: {}, size of page: {}, status: {}"
+            		+ "customer: {}, recipient: {}, dateMin: {}, dateMax: {}, priceMin: {}, priceMax: {}",
+            		pageNumber, pageSize, status, values.get("customer")[0], values.get("recipient")[0],
+            		values.get("dateMin")[0], values.get("dateMax")[0], values.get("priceMin")[0], values.get("priceMax")[0]);
+            User user = Application.recieveUserByToken();
+            if (user == null) {
+                return badRequest(Json.toJson(
+                        new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
+            }
+            Company company = user.getContactByContactId().getCompanyByCompanyId();
+            OrderSearchBean searchBean = new OrderSearchBean();
+            searchBean.setCompanyId(company.getId());
+            searchBean.setPageNumber(pageNumber);
+            searchBean.setPageSize(pageSize);
+            searchBean.setCustomer(StringUtils.isBlank(values.get("customer")[0]) ? null : values.get("customer")[0]);
+            searchBean.setRecipient(StringUtils.isBlank(values.get("recipient")[0]) ? null : values.get("recipient")[0]);
+            searchBean.setPriceMin(StringUtils.isBlank(values.get("priceMin")[0]) ? null : Double.valueOf(values.get("priceMin")[0]));
+            searchBean.setPriceMax(StringUtils.isBlank(values.get("priceMax")[0]) ? null : Double.valueOf(values.get("priceMax")[0]));
+            searchBean.setDateMin(StringUtils.isBlank(values.get("dateMin")[0]) ? null : new Date(LocalDate.parse(values.get("dateMin")[0]).toDateTimeAtStartOfDay().getMillis()));
+            searchBean.setDateMax(StringUtils.isBlank(values.get("dateMax")[0]) ? null : new Date(LocalDate.parse(values.get("dateMax")[0]).toDateTimeAtStartOfDay().getMillis()));
+            List<String> statusTitleList = takeStatusTitleList(user.getRoleByRoleId().getName(), status);
+            searchBean.setStatusTitleList(statusTitleList);
+            logger.info("SEARCH statusTitleList: {}", statusTitleList);
+            OrderSearchService service = new OrderSearchService();  
+            service.search(searchBean);
+            List<Order> orderList = new ArrayList<Order>();
+            if (!searchBean.getIds().isEmpty()){
+            	EntityManager em = JPA.em();
+                OrderDAO orderDAO = new OrderDAO(em);
+                orderList = orderDAO.getOrderListByIds(searchBean.getIds());
+            }
+            ObjectNode result = formOrderListJsonNode(orderList, searchBean.getTotalPages(), pageSize);
+            return ok(Json.toJson(
+                            new Reply<>(Status.SUCCESS, result))
+            );
+        } catch (IllegalArgumentException ex) {
+        	logger.error("Exception in searchOrders method: {} ", ex);
+        	return badRequest(Json.toJson(
+                    new Reply<>(Status.ERROR, MessageManager.getProperty("status.access.error"))));
+        } catch (IOException | ParseException e) {
+            logger.error("Exception in searchOrders method: {} ", e);
+            return badRequest(Json.toJson(
+                    new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
+        }
+    }
+    
 
+    private static List<String> takeStatusTitleList(String userRoleName, String status) throws IOException, ParseException{
+    	List<String> statusTitleList = null;
+        List<String> statusTitleListFromJson = ConfigContainer.getInstance().getRolesHandler().getOrdersList(userRoleName);
+        if (StringUtils.isBlank(status)) {
+            if (statusTitleListFromJson != null) {
+                statusTitleList = statusTitleListFromJson;
+            }
+        } else {
+            if (statusTitleListFromJson != null && !statusTitleListFromJson.contains(status)) {
+                throw new IllegalArgumentException();
+            } else {
+                statusTitleList = new ArrayList<String>();
+                statusTitleList.add(status);
+            }
+        }
+        return statusTitleList;
+    }
+    
+    private static ObjectNode formOrderListJsonNode(List<Order> orderList, Long total, Integer pageSize){
+    	Integer totalPages = Double.valueOf(Math.ceil((double) total / pageSize)).intValue();
+        List<OrderDTO> dtoList = new ArrayList<>();
+        for (Order ord : orderList) {
+            dtoList.add(OrderDTO.getOrder(ord));
+        }
+
+        ObjectNode result = Json.newObject();
+        result.put("totalPages", totalPages);
+        result.put("list", Json.toJson(dtoList));
+        return result;
+    }
+    
     @Transactional
     @Pattern("order_list")
     public static Result listOrders(Integer pageNumber, Integer pageSize, String status) {
@@ -138,38 +236,15 @@ public class OrderController extends BaseController {
             Company company = user.getContactByContactId().getCompanyByCompanyId();
             Long total;
             List<Order> orderList;
-            List<String> statusTitleList = null;
-            List<String> statusTitleListFromJson = ConfigContainer.getInstance().getRolesHandler().getOrdersList(user.getRoleByRoleId().getName());
-            if (StringUtils.isBlank(status)) {
-                if (statusTitleListFromJson != null) {
-                    statusTitleList = statusTitleListFromJson;
-                }
-            } else {
-                if (statusTitleListFromJson != null && !statusTitleListFromJson.contains(status)) {
-                    return badRequest(Json.toJson(
-                            new Reply<>(Status.ERROR, MessageManager.getProperty("status.access.error"))));
-                } else {
-                    statusTitleList = new ArrayList<String>();
-                    statusTitleList.add(status);
-                }
-            }
+            List<String> statusTitleList = takeStatusTitleList(user.getRoleByRoleId().getName(), status);
             if (statusTitleList != null) {
-                total = orderDAO.getLength(company, statusTitleList);
-                orderList = orderDAO.getOrderList(pageNumber, pageSize, company, statusTitleList);
+                total = orderDAO.getLength(company, statusTitleList, user.getRoleByRoleId());
+                orderList = orderDAO.getOrderList(pageNumber, pageSize, company, statusTitleList, user.getRoleByRoleId());
             } else {
-                total = orderDAO.getLength(company);
-                orderList = orderDAO.getOrderList(pageNumber, pageSize, company);
+                total = orderDAO.getLength(company, user.getRoleByRoleId());
+                orderList = orderDAO.getOrderList(pageNumber, pageSize, company, user.getRoleByRoleId());
             }
-            Integer totalPages = Double.valueOf(Math.ceil((double) total / pageSize)).intValue();
-            List<OrderDTO> dtoList = new ArrayList<>();
-            for (Order ord : orderList) {
-                dtoList.add(OrderDTO.getOrder(ord));
-            }
-
-            ObjectNode result = Json.newObject();
-            result.put("totalPages", totalPages);
-            result.put("list", Json.toJson(dtoList));
-
+            ObjectNode result = formOrderListJsonNode(orderList, total, pageSize);
             return ok(Json.toJson(
                             new Reply<>(Status.SUCCESS, result))
             );
@@ -177,6 +252,9 @@ public class OrderController extends BaseController {
             logger.error("Exception in listOrders method: {} ", e);
             return badRequest(Json.toJson(
                     new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
+        } catch (IllegalArgumentException ex) {
+        	return badRequest(Json.toJson(
+                    new Reply<>(Status.ERROR, MessageManager.getProperty("status.access.error"))));
         }
     }
 
@@ -189,23 +267,15 @@ public class OrderController extends BaseController {
             Long orderId = null;
             String nextStatus = null;
             String comment = null;
-            try {
-                if (!values.containsKey("id") || !values.containsKey("status") || !values.containsKey("comment")) {
-                    throw new IllegalArgumentException("Some parameters are missing");
-                } else {
-                    if (StringUtils.isEmpty(values.get("id")[0]) || "undefined".equals(values.get("id")[0]))
-                        throw new IllegalArgumentException("id of order is empty or undefined");
-                    if (StringUtils.isEmpty(values.get("status")[0]) || "undefined".equals(values.get("status")[0]))
-                        throw new IllegalArgumentException("new status of order is empty or undefined");
-                    orderId = Long.valueOf(values.get("id")[0]);
-                    nextStatus = values.get("status")[0];
-                    comment = values.get("comment")[0];
-                }
-            } catch (IllegalArgumentException e) {
-                logger.error("Incorrect parameters", e);
+            if (!values.containsKey("id") || !values.containsKey("status") || !values.containsKey("comment") ||
+                		StringUtils.isEmpty(values.get("id")[0]) || "undefined".equals(values.get("id")[0])
+                		|| StringUtils.isEmpty(values.get("status")[0]) || "undefined".equals(values.get("status")[0])){
                 return badRequest(Json.toJson(
-                        new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
+                        new Reply<>(Status.ERROR, MessageManager.getProperty("order.wrong.fields"))));
             }
+            orderId = Long.valueOf(values.get("id")[0]);
+            nextStatus = values.get("status")[0];
+            comment = values.get("comment")[0];
             User user = Application.recieveUserByToken();
             if (user == null) {
                 return badRequest(Json.toJson(
@@ -256,9 +326,6 @@ public class OrderController extends BaseController {
     @Pattern("order_addition")
     public static Result createOrder() {
         final Map<String, String[]> values = request().body().asFormUrlEncoded();
-        logger.info("Start createOrder with parameters: description - {}, price - {}, processMngId - {}, deliveryMngId - {}, customerId - {}, recipientId - {}",
-                values.get("description")[0], values.get("price")[0], values.get("processMngId")[0],
-                values.get("deliveryMngId")[0], values.get("customerId")[0], values.get("recipientId")[0]);
         Order order = new Order();
         Reply<String> reply = new Reply<>();
         if (!checkAndSetOrderFields(values, order, reply)) {
@@ -275,9 +342,6 @@ public class OrderController extends BaseController {
     @Restrict({@Group("ORDER_MNG"), @Group("SUPERVISOR")})
     public static Result updateOrder(Long id) {
         final Map<String, String[]> values = request().body().asFormUrlEncoded();
-        logger.info("Start updateOrder with parameters: description - {}, price - {}, processMngId - {}, deliveryMngId - {}, customerId - {}, recipientId - {}",
-                values.get("description")[0], values.get("price")[0], values.get("processMngId")[0],
-                values.get("deliveryMngId")[0], values.get("customerId")[0], values.get("recipientId")[0]);
         OrderDAO orderDAO = new OrderDAO(JPA.em());
         Order order = orderDAO.getOrderById(id);
         Reply<String> reply = new Reply<>();
@@ -292,6 +356,15 @@ public class OrderController extends BaseController {
     @Transactional
     private static boolean checkAndSetOrderFields(Map<String, String[]> values, Order order, Reply<String> reply) {
         try {
+        	if (!values.containsKey("description") || !values.containsKey("price") || !values.containsKey("processMngId")
+        			|| !values.containsKey("deliveryMngId") || !values.containsKey("customerId") 
+        			|| !values.containsKey("recipientId")){
+        		reply.data = MessageManager.getProperty("order.wrong.fields");
+                return false;
+        	}
+        	logger.info("Start checkAndSetOrderFields with parameters: description - {}, price - {}, processMngId - {}, deliveryMngId - {}, customerId - {}, recipientId - {}",
+                    values.get("description")[0], values.get("price")[0], values.get("processMngId")[0],
+                    values.get("deliveryMngId")[0], values.get("customerId")[0], values.get("recipientId")[0]);
             String description = StringUtils.isBlank(values.get("description")[0]) ? null : values.get("description")[0];
             Double price = StringUtils.isBlank(values.get("price")[0]) ? null : Double.valueOf(values.get("price")[0]);
             if (price == null || description == null) {
@@ -325,8 +398,8 @@ public class OrderController extends BaseController {
                     || recipient.getCompanyByCompanyId().getId() != company.getId()
                     || processMng.getContactByContactId().getCompanyByCompanyId().getId() != company.getId()
                     || deliveryMng.getContactByContactId().getCompanyByCompanyId().getId() != company.getId()
-                    || !PROCESS_MNG_ROLE_NAME.equals(processMng.getRoleByRoleId().getName())
-                    || !DELIVERY_MNG_ROLE_NAME.equals(deliveryMng.getRoleByRoleId().getName())) {
+                    || !OrderDAO.PROCESS_MNG_ROLE_NAME.equals(processMng.getRoleByRoleId().getName())
+                    || !OrderDAO.DELIVERY_MNG_ROLE_NAME.equals(deliveryMng.getRoleByRoleId().getName())) {
                 reply.data = MessageManager.getProperty("order.wrong.fields");
                 return false;
             }

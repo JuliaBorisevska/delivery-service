@@ -26,6 +26,17 @@ define(["application/service/baseService"], function(baseService) {
             );
         };
         
+        self.search = function(page, pageSize, status, order, success, error, done) {
+        	baseService.send(
+        		"/order/search/" + page + "/" + pageSize + "/" + status,
+                "POST",
+                order,
+                success,
+                error,
+                done
+            );
+        };
+        
         self.getStatusList = function(success, error, done){
         	baseService.send(
                     "/status/list",
@@ -88,7 +99,8 @@ define(["application/service/baseService"], function(baseService) {
             getOrder: self.getOrder,
             getFirstStatus: self.getFirstStatus,
             changeStatus: self.changeStatus,
-            update: self.update
+            update: self.update,
+            search: self.search
 
         }
     }

@@ -5,7 +5,7 @@ import play.Logger;
 import play.Logger.ALogger;
 import play.data.validation.Constraints;
 import search.ClientProvider;
-import search.SearchContactService;
+import search.OrderSearchService;
 
 import javax.persistence.*;
 
@@ -43,18 +43,21 @@ public class Order {
     private List<OrderHistory> orderHistory;
 
     @PostPersist
+    @PostUpdate
     private void addToElasticSearch() {
-    	//Client client = ClientProvider.instance().getClient();
-    	
-    	logger.info("order with id {} was added to elasticsearch index delivery", this.id);
+    	Client client = ClientProvider.instance().getClient();
+    	OrderSearchService service = new OrderSearchService();
+    	client.prepareIndex(OrderSearchService.INDEX_NAME, OrderSearchService.TYPE_NAME, String.valueOf(this.id))
+        .setSource(service.putJsonDocument(this)).execute().actionGet();
+    	logger.info("order with id {} was added/updated to/in elasticsearch index delivery", this.id);
     }
-    
+    /*
     @PostUpdate
     private void updateInElasticSearch() {
-    	//Client client = ClientProvider.instance().getClient();
+    	Client client = ClientProvider.instance().getClient();
     	
     	logger.info("order with id {} was updated in elasticsearch index delivery", this.id);
-    }
+    }*/
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
