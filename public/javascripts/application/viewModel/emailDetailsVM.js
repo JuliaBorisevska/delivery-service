@@ -79,7 +79,7 @@ define([
                         record = new Object();
                         record.html = text();
                         record.title = title();
-                        alert(record.html);
+                        // alert(record.html);
                     }
                     record.adresses = ko.toJSON(contactsForSending);
                     emailService.sending(record, success, error);

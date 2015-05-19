@@ -66,18 +66,18 @@ define(["application/service/userService",
 
         var goToUserDetails = function (data, event, root) {
             root.rolelistVM.list();
-            alert(Object.keys(data.role));
+            //alert(Object.keys(data.role));
 
 
             root.userDetailsVM.setUser(new User(data.id, data.firstName, data.lastName, data.middleName, new Role(data.role.id, data.role.title),
                 data.company, data.login, data.menu, data.password, data.contactId));
             //root.userDetailsVM.user().role = new Role(data.role.id, data.role.title);
 
-            alert(Object.keys(root.userDetailsVM.user().role));
+            // alert(Object.keys(root.userDetailsVM.user().role));
             root.userDetailsVM.setRole(new Role(data.role.id, data.role.title));
 
             root.contactListVM.checkedContact = data.contactId;
-            alert(root.contactListVM.checkedContact);
+            //  alert(root.contactListVM.checkedContact);
             location.hash = "userchange";
         };
 
