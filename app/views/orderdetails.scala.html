@@ -32,8 +32,8 @@
     				</div>
 				</div>
 				<div class="modal-footer">
-        			<button type="button" data-bind="click: function(data, evt) {$root.orderDetailsVM.changeStatus(data, evt, $root)}">Изменить</button>
-					<button type="button" data-dismiss="modal">Отмена</button>
+        			<button type="button" class="button" data-bind="click: function(data, evt) {$root.orderDetailsVM.changeStatus(data, evt, $root)}">Изменить</button>
+					<button type="button" class="button" data-dismiss="modal">Отмена</button>
 				</div>
 			</div>
 		</div>
@@ -76,7 +76,7 @@
             <span data-bind="text: $root.orderDetailsVM.order().customer().firstName">&nbsp;</span>
             <span data-bind="text: $root.orderDetailsVM.order().customer().middleName"></span>
             <!-- ko if: $root.user().role === "ORDER_MNG" || $root.user().role === "SUPERVISOR" -->
-            	<button type="button" class="choose-btn" data-bind="click: function(data, evt) {$root.orderDetailsVM.showContactModal(data, evt, $root, 'customer')}">Выбрать</button>
+            	<button type="button" class="button choose-btn" data-bind="click: function(data, evt) {$root.orderDetailsVM.showContactModal(data, evt, $root, 'customer')}">Выбрать</button>
         	<!-- /ko -->
         </div>
     </div>
@@ -88,7 +88,7 @@
             <span data-bind="text: $root.orderDetailsVM.order().recipient().firstName">&nbsp;</span>
             <span data-bind="text: $root.orderDetailsVM.order().recipient().middleName"></span>
             <!-- ko if: $root.user().role === "ORDER_MNG" || $root.user().role === "SUPERVISOR" -->
-            	<button type="button" class="choose-btn" data-bind="click: function(data, evt) {$root.orderDetailsVM.showContactModal(data, evt, $root, 'recipient')}">Выбрать</button>
+            	<button type="button" class="button choose-btn" data-bind="click: function(data, evt) {$root.orderDetailsVM.showContactModal(data, evt, $root, 'recipient')}">Выбрать</button>
         	<!-- /ko -->
         </div>
     </div>
@@ -109,7 +109,7 @@
             <span data-bind="text: $root.orderDetailsVM.order().processMng().firstName">&nbsp;</span>
             <span data-bind="text: $root.orderDetailsVM.order().processMng().middleName"></span>
             <!-- ko if: $root.user().role === "ORDER_MNG" || $root.user().role === "SUPERVISOR" -->
-            	<button type="button" class="choose-btn" data-bind="click: function(data, evt) {$root.orderDetailsVM.showUserModal(data, evt, $root, 'PROCESS_MNG')}">Выбрать</button>
+            	<button type="button" class="button choose-btn" data-bind="click: function(data, evt) {$root.orderDetailsVM.showUserModal(data, evt, $root, 'PROCESS_MNG')}">Выбрать</button>
             <!-- /ko -->
         </div>
     </div>
@@ -121,14 +121,14 @@
             <span data-bind="text: $root.orderDetailsVM.order().deliveryMng().firstName">&nbsp;</span>
             <span data-bind="text: $root.orderDetailsVM.order().deliveryMng().middleName"></span>
             <!-- ko if: $root.user().role === "ORDER_MNG" || $root.user().role === "SUPERVISOR" -->
-            	<button type="button" class="choose-btn" data-bind="click: function(data, evt) {$root.orderDetailsVM.showUserModal(data, evt, $root, 'DELIVERY_MNG')}">Выбрать</button>
+            	<button type="button" class="button choose-btn" data-bind="click: function(data, evt) {$root.orderDetailsVM.showUserModal(data, evt, $root, 'DELIVERY_MNG')}">Выбрать</button>
             <!-- /ko -->
         </div>
     </div>
     <div class="clr"></div>
     <!-- ko if: $root.user().role === "ORDER_MNG" || $root.user().role === "SUPERVISOR" -->
     <div class="field">
-        <button type="button" data-bind="click: function(){$root.orderDetailsVM.submit($root)}">Сохранить</button>
+        <button type="button" class="button" data-bind="click: function(){$root.orderDetailsVM.submit($root)}">Сохранить</button>
     </div>
     <div class="clr"></div>
     <!-- /ko -->

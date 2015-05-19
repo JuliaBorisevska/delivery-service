@@ -307,6 +307,8 @@ define(["application/service/initService",
 
         var launch = function () {
             ko.applyBindings(new ViewModel());
+            ko.validation.init();
+            ko.validation.locale('ru-RU');
         };
 
         return {

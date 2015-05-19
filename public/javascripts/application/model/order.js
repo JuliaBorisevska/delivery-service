@@ -18,7 +18,7 @@ define(function(){
         this.recipient = ko.observable();
         this.recipient(recipient);
         this.date = date;
-        this.description = description;
+        this.description = ko.observable(description).extend({ required: true });
         this.price = price;
     }
 

@@ -6,7 +6,7 @@
             </li>
     </ul>
 </div>
-<button data-bind="click: $root.emailDetailsVM.enable">Вкл/откл шаблоны</button>
+<button class="button" data-bind="click: $root.emailDetailsVM.enable">Вкл/откл шаблоны</button>
 <div>
     <label data-bind="attr: { 'disabled': $root.emailDetailsVM.getEnabledState() }"></label> <input data-bind="attr: { 'disabled': $root.emailDetailsVM.getEnabledState() }" type="text" name="theme" id="theme">
 </div>
@@ -25,11 +25,11 @@
 </div>
 
 reloadTemplates
-<button class="choose-btn" type="button" data-bind="click: function(){$root.emailDetailsVM.submit($root);}">
+<button class="button choose-btn" type="button" data-bind="click: function(){$root.emailDetailsVM.submit($root);}">
 
     Отправить</button>
 
-<button class="choose-btn" type="button" data-bind="click: function(){$root.emailDetailsVM.reloadTemplates($root);}">
+<button class="button choose-btn" type="button" data-bind="click: function(){$root.emailDetailsVM.reloadTemplates($root);}">
 
     Перезагрузить шаблоны</button>
 <!-- /ko -->
