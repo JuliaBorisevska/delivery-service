@@ -14,19 +14,20 @@ define([
         var self = this,
             reply,
             contact = ko.observable(),
-
             phones = ko.observableArray([]),
             addPhone = function (p) {
                 phones.push(p);
             },
             checkedPhones = ko.observableArray([]),
-
+            
             submit = function(root){
                 var record = contact(),
                     success = new Callback(function(params){
                             reply = params.reply;
                             if(reply.status === "SUCCESS") {
                                 clean();
+                                root.contactListVM.currentPage(1);
+                            	root.contactListVM.numbers([]);
                                 root.contactListVM.list(root.contactListVM.currentPage(), root.contactListVM.PAGE_SIZE);
                                 location.hash = "ctlst";
                             }
@@ -47,23 +48,11 @@ define([
 
             },
             search = function(root){
-                var record = contact(),
-                    success = new Callback(function(params){
-                            reply = params.reply;
-                            if(reply.status === "SUCCESS") {
-                                clean();
-                                root.contactListVM.list(root.contactListVM.currentPage, root.contactListVM.PAGE_SIZE);
-                                location.hash = "ctlst";
-                            }
-                        }, self, {}
-                    ),
-                    error = new Callback(function(params){
-                            reply = params.reply;
-                            var message = reply.responseText ? reply.responseText : reply.statusText;
-                            alert("Error write to DB");
-                        }, self, {}
-                    );
-                    contactService.search(record, success, error);
+            	var record = contact();
+            	root.contactListVM.setContactForSearch(record);
+            	root.contactListVM.currentPage(1);
+            	root.contactListVM.numbers([]);
+                root.contactListVM.list(root.contactListVM.currentPage(), root.contactListVM.PAGE_SIZE);
             },
             setContact = function(c){
                 contact(c);

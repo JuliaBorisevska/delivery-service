@@ -17,14 +17,31 @@
               <td>Отчество</td>
               <td><input type="text" name="middleName" id="middleName" data-bind="value: $root.contactDetailsVM.contact().middleName"></td>
        </tr>
+       
+       <!-- ko if: $root.chosenSectionId().id == "ctsearch" -->
+       <tr>
+       		<td>Дата рождения</td>
+            <td>
+              <span>от&nbsp;</span>
+        	  <input type="text" class="smallfield" data-bind="value: $root.contactDetailsVM.contact().birthday"/>
+        	  <span>до&nbsp;</span>
+        	  <input type="text" class="smallfield" data-bind="value: $root.contactDetailsVM.contact().dateMax"/>
+            </td>
+              
+       </tr>
+       <!-- /ko -->
+       
+       <!-- ko if: $root.chosenSectionId().id == "ctadd" || $root.chosenSectionId().id == "ctchange"  -->
        <tr>
               <td>Дата рождения</td>
               <td><input type="text" class="datepicker" name="birthday" id="birthday" data-bind="datepicker: {'dateFormat': 'yy-mm-dd' }, value: $root.contactDetailsVM.contact().birthday"></td>
        </tr>
+       
        <tr>
               <td>Email</td>
               <td><input type="text" name="email" id="email" data-bind="value: $root.contactDetailsVM.contact().email"></td>
        </tr>
+       <!-- /ko -->
        <tr>
               <td>Город</td>
               <td><input type="text" name="town" id="town" data-bind="value: $root.contactDetailsVM.contact().town"></td>
@@ -42,8 +59,8 @@
               <td><input type="text" name="flat" id="flat" data-bind="value: $root.contactDetailsVM.contact().flat"></td>
        </tr>
 </table>
-
-<p>Телефоны:</p>
+<!-- ko if: $root.chosenSectionId().id == "ctadd" || $root.chosenSectionId().id == "ctchange"  -->
+<!-- <p>Телефоны:</p>
 <table class="list">
        <tr data-bind="foreach: $root.contactDetailsVM.contact().phones">
               <td data-bind="attr: { id: id }, click: function(phone, evt) {$root.contactDetailsVM.showModalPhone(phone, $root)}">
@@ -53,8 +70,8 @@
                      <span data-bind="text: type"></span>
               </td>
        </tr>
-</table>
-
+</table> -->
+<!-- /ko -->
 <!-- /ko -->
 <!-- ko if: $root.chosenSectionId().id == "ctadd" || $root.chosenSectionId().id == "ctchange"  -->
 <a class="button" href="#" data-bind="click: function(){$root.contactDetailsVM.submit($root)}">Сохранить</a>

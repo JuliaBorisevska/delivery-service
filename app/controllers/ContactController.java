@@ -79,7 +79,7 @@ public class ContactController extends BaseController {
         final Map<String, String[]> values = request().body().asFormUrlEncoded();
         try {
         	if (!values.containsKey("firstName") || !values.containsKey("lastName") 
-            		|| !values.containsKey("middleName") || !values.containsKey("birthday") 
+            		|| !values.containsKey("middleName") || !values.containsKey("birthday") || !values.containsKey("dateMax")
             		|| !values.containsKey("town") || !values.containsKey("street")
             		|| !values.containsKey("house") || !values.containsKey("flat")
             		|| pageNumber == null || pageSize == null || pageNumber <= 0 || pageNumber <= 0){
@@ -93,10 +93,10 @@ public class ContactController extends BaseController {
             }
             Company company = user.getContactByContactId().getCompanyByCompanyId();
             logger.info("Start findContacts with parameters: number of page: {}, size of page: {},"
-            		+ "firstName: {}, lastName: {}, middleName: {}, dateMin: {}, town: {}, street: {},"
+            		+ "firstName: {}, lastName: {}, middleName: {}, dateMin: {}, dateMax: {}, town: {}, street: {},"
             		+ "house: {}, flat: {}",
             		pageNumber, pageSize, values.get("firstName")[0], values.get("lastName")[0],
-            		values.get("middleName")[0], values.get("birthday")[0], values.get("town")[0], 
+            		values.get("middleName")[0], values.get("birthday")[0], values.get("dateMax")[0], values.get("town")[0], 
             		values.get("street")[0], values.get("house")[0], values.get("flat")[0]);
         	ContactSearchService service = new ContactSearchService();
         	ContactSearchBean searchBean = new ContactSearchBean();
@@ -111,17 +111,18 @@ public class ContactController extends BaseController {
             searchBean.setHouse(StringUtils.isBlank(values.get("house")[0]) ? null : Integer.valueOf(values.get("house")[0]));
             searchBean.setFlat(StringUtils.isBlank(values.get("flat")[0]) ? null : Integer.valueOf(values.get("flat")[0]));
             searchBean.setDateMin(StringUtils.isBlank(values.get("birthday")[0]) ? null : new Date(LocalDate.parse(values.get("birthday")[0]).toDateTimeAtStartOfDay().getMillis()));
+            searchBean.setDateMax(StringUtils.isBlank(values.get("dateMax")[0]) ? null : new Date(LocalDate.parse(values.get("dateMax")[0]).toDateTimeAtStartOfDay().getMillis()));
             List<Contact> contactList = new ArrayList<>();
         	service.search(searchBean);
         	if (!searchBean.getIds().isEmpty()){
         		ContactDAO contactDAO = new ContactDAO(JPA.em());
-        		contactDAO.getContactListByIds(searchBean.getIds());
+        		contactList = contactDAO.getContactListByIds(searchBean.getIds());
         	}
         	ObjectNode result = formContactListJsonNode(contactList, searchBean.getTotalPages(), pageSize);
             return ok(Json.toJson(
                     new Reply<>(Status.SUCCESS, result)
             ));
-        } catch (NumberFormatException e) {
+        } catch (IllegalArgumentException e) {
        	 logger.error("Exception in findContacts method: {} ", e);
          return badRequest(Json.toJson(
                  new Reply<>(Status.ERROR, MessageManager.getProperty("order.wrong.fields"))));

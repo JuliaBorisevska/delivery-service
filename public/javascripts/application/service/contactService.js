@@ -46,9 +46,9 @@ define(["application/service/baseService"], function(baseService) {
             );
         };
         
-        self.search = function(contact, success, error, done) {
+        self.search = function(page, pageSize, contact, success, error, done) {
             baseService.send(
-                "/contact/search",
+                "/contact/search/"+ page + "/" + pageSize,
                 "POST",
                 contact,
                 success,
