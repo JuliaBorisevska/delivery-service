@@ -1,17 +1,13 @@
 package controllers;
 
 import be.objectify.deadbolt.java.actions.Pattern;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import dao.ContactDAO;
 import entity.Company;
 import entity.Contact;
 import entity.User;
-
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
-
 import play.Logger;
 import play.Logger.ALogger;
 import play.db.jpa.JPA;
@@ -196,9 +192,7 @@ public class ContactController extends BaseController {
         } else {
             throw new IllegalArgumentException("middle name is missing or empty");
         }
-        if (values.containsKey("birthday")) {
-            contact.setBirthday(Date.valueOf(values.get("birthday")[0]));
-        }
+
 
         if (values.containsKey("email") && StringUtils.isNotEmpty(values.get("email")[0])) {
             contact.setEmail(values.get("email")[0]);
@@ -213,6 +207,9 @@ public class ContactController extends BaseController {
         Integer flat = null;
 
         try {
+            if (values.containsKey("birthday")) {
+                contact.setBirthday(Date.valueOf(values.get("birthday")[0]));
+            }
             if (StringUtils.isNotEmpty(values.get("house")[0])) {
                 house = Integer.valueOf(values.get("house")[0]);
                 contact.setHouse(house);

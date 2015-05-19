@@ -12,10 +12,18 @@
         <label class="title" for="password">Пароль</label>
         <input class="textfield" type="text" name="password" id="password" data-bind="value:  $root.userDetailsVM.user().password"> <br>
     </div>
+        <!-- ko if: ($root.chosenSectionId().id == "userchange" )-->
+    <select data-bind="options: $root.rolelistVM.roles,
+                     optionsText: 'title',
+                     optionsCaption: $root.userDetailsVM.role().title,
+                     value: $root.userDetailsVM.role()"></select>
+        <!-- /ko -->
+        <!-- ko if: ($root.chosenSectionId().id == "useradd" )-->
     <select data-bind="options: $root.rolelistVM.roles,
                      optionsText: 'title',
                      optionsCaption: 'Выберите роль пользователя',
-                     value: $root.userDetailsVM.user().role"></select>
+                     value: $root.userDetailsVM.role()"></select>
+        <!-- /ko -->
 </div>
 
 <button class="choose-btn" type="button" data-bind="click: function(){$root.userDetailsVM.user().contactId = $root.contactListVM.checkedContact; $root.userDetailsVM.submit($root);}">

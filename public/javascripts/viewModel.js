@@ -139,7 +139,7 @@ define(["application/service/initService",
             		location.hash = section.id;
             		break;
                 case "useradd":
-                    self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", ""));
+                    self.userDetailsVM.setUser(new User());
                     self.rolelistVM.list();
 
                     location.hash = section.id;

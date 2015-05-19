@@ -24,7 +24,7 @@ define(["application/service/baseService"], function(baseService) {
             );
         };
 
-        var reloadSettings = function (success, error, done) {
+        var reloadSettings = function(success, error, done) {
             baseService.send(
                 "/settings",
                 "GET",

@@ -8,16 +8,17 @@ define(["application/service/roleService",
 
     function RoleListVM() {
         var self = this,
-            roles = ko.observableArray(),
+            roles = ko.observableArray([]),
 
 
             reply;
         var list = function () {
+            roles([]);
             roleService.list(
                 new Callback(function (params) {
                     reply = params.reply;
                     if (reply.status === "SUCCESS") {
-                        roles([]);
+
                         for (var i = 0, lth = reply.data.list.length; i < lth; i++) {
                             var role = reply.data.list[i];
                             roles.push(new Role(role.id, role.name));

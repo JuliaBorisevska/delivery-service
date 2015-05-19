@@ -7,7 +7,9 @@ define([
             var self = this,
                 reply,
                 contactsForSending = ko.observableArray(),
-                template = ko.observable(),
+                template = ko.observable(""),
+                text = ko.observable(""),
+                title = ko.observable(""),
                 getDisabledState = ko.observable(null),
                 getEnabledState = ko.observable('disabled'),
                 getreadonlyState = ko.observable('readonly'),
@@ -57,24 +59,30 @@ define([
                                 alert(message);
                             }, self, {}
                         );
+                    for (var i = 0, lth = contactsForSending().length; i < lth; i++) {
+                        var contact = contactsForSending()[i];
+                        delete contact.street;
+                        delete contact.house;
+                        delete contact.town;
+                        delete contact.birthday;
+                        delete contact.flat;
+                        delete contact.companyId;
+                        delete contact.id;
+                    }
 
                     if (record) {
-                        for (var i = 0, lth = contactsForSending().length; i < lth; i++) {
-                            var contact = contactsForSending()[i];
-                            delete contact.street;
-                            delete contact.house;
-                            delete contact.town;
-                            delete contact.birthday;
-                            delete contact.flat;
-                            delete contact.companyId;
-                            delete contact.id;
-                        }
-                        record.adresses = ko.toJSON(contactsForSending);
+
+
                         //record.html = '';
-                        emailService.sending(record, success, error);
+
                     } else {
-                        //
+                        record = new Object();
+                        record.html = text();
+                        record.title = title();
+                        alert(record.html);
                     }
+                    record.adresses = ko.toJSON(contactsForSending);
+                    emailService.sending(record, success, error);
                 };
             return {
                 template: template,
@@ -85,7 +93,9 @@ define([
                 enable: enable,
                 getreadonlyState: getreadonlyState,
                 getEnabledState: getEnabledState,
-                reloadTemplates: reloadTemplates
+                reloadTemplates: reloadTemplates,
+                text: text,
+                title: title
             }
         }
 

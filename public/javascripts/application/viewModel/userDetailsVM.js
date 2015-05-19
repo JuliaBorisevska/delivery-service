@@ -3,18 +3,22 @@
  */
 define([
         "application/service/userService",
-        "application/util/callback"],
-    function (userService, Callback) {
+        "application/util/callback",
+        "application/model/role"],
+    function (userService, Callback, Role) {
         "use strict";
 
         function UserDetailsVM() {
             var self = this,
 
                 reply,
+                role = ko.observable(),
+                setRole = function (c) {
+                    role(c);
+                },
 
                 user = ko.observable(),
                 submit = function (root) {
-                    alert("hi");
                     var record = user(),
                         success = new Callback(function (params) {
                                 var reply = params.reply;
@@ -33,10 +37,14 @@ define([
                         );
 
                     if (record.id) {
-                        alert("try to update");
+                        alert(role().title);
+                        record.role = role();
+
+
+
                         userService.update(record, success, error);
                     } else {
-                        alert("try to add");
+
                         userService.add(record, success, error);
                     }
 
@@ -64,7 +72,10 @@ define([
                 setUser: setUser,
                 user: user,
                 showModal: showModal,
-                closeModal: closeModal
+                closeModal: closeModal,
+                role: role,
+                setRole: setRole
+
             }
         }
 
