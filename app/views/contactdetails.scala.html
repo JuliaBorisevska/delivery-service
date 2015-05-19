@@ -5,6 +5,7 @@
 <input type="hidden" name="id" data-bind="attr: {value: $root.contactDetailsVM.contact.id}"/>
 
 <table class="list">
+<<<<<<< HEAD
        <tr>
               <td>Имя</td>
               <td><input type="text" name="firstName" id="firstName" data-bind="value: $root.contactDetailsVM.contact().firstName"></td>
@@ -72,6 +73,48 @@
        </tr>
 </table> -->
 <!-- /ko -->
+=======
+    <tr>
+        <td>Имя</td>
+        <td><input type="text" name="firstName" id="firstName" data-bind="value: $root.contactDetailsVM.contact().firstName"></td>
+    </tr>
+    <tr>
+        <td>Фамилия</td>
+        <td><input type="text" name="lastName" id="lastName" data-bind="value: $root.contactDetailsVM.contact().lastName"></td>
+    </tr>
+    <tr>
+        <td>Отчество</td>
+        <td><input type="text" name="middleName" id="middleName" data-bind="value: $root.contactDetailsVM.contact().middleName"></td>
+    </tr>
+    <tr>
+        <td>Дата рождения</td>
+        <td><input type="text" class="datepicker" name="birthday" id="birthday" data-bind="datepicker: {'dateFormat': 'yy-mm-dd' }, value: $root.contactDetailsVM.contact().birthday"></td>
+    </tr>
+    <tr>
+        <td>Email</td>
+        <td><input type="text" name="email" id="email" data-bind="value: $root.contactDetailsVM.contact().email"></td>
+    </tr>
+    <tr>
+        <td>Город</td>
+        <td><input type="text" name="town" id="town" data-bind="value: $root.contactDetailsVM.contact().town"></td>
+    </tr>
+    <tr>
+        <td>Улица</td>
+        <td><input type="text" name="street" id="street" data-bind="value: $root.contactDetailsVM.contact().street"></td>
+    </tr>
+    <tr>
+        <td>Дом</td>
+        <td><input type="text" name="house" id="house" data-bind="value: $root.contactDetailsVM.contact().house"></td>
+    </tr>
+    <tr>
+        <td>Квартира</td>
+        <td><input type="text" name="flat" id="flat" data-bind="value: $root.contactDetailsVM.contact().flat"></td>
+    </tr>
+</table>
+
+
+
+>>>>>>> 69fa64e7fe1c620d5673e85ac49a63170785445c
 <!-- /ko -->
 <!-- ko if: $root.chosenSectionId().id == "ctadd" || $root.chosenSectionId().id == "ctchange"  -->
 <a class="button" href="#" data-bind="click: function(){$root.contactDetailsVM.submit($root)}">Сохранить</a>

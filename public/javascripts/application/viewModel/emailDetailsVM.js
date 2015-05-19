@@ -49,7 +49,7 @@ define([
                                     root.contactListVM.currentPage(1);
                                     root.contactListVM.numbers([]);
                                     root.contactListVM.list(root.contactListVM.currentPage(), root.contactListVM.PAGE_SIZE);
-                                    location.hash = "ctlst";
+                                    //location.hash = "ctlst";
                                 }
                             }, self, {}
                         ),
@@ -79,7 +79,7 @@ define([
                         record = new Object();
                         record.html = text();
                         record.title = title();
-                        alert(record.html);
+                        // alert(record.html);
                     }
                     record.adresses = ko.toJSON(contactsForSending);
                     emailService.sending(record, success, error);

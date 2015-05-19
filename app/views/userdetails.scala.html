@@ -1,7 +1,7 @@
 @()
 <!-- ko if: ( $root.chosenSectionId().id == "useradd" || $root.chosenSectionId().id == "userchange" ) && $root.userDetailsVM.user -->
 
-<button class="choose-btn" id="show-contacts" data-bind="click: function() {$root.userDetailsVM.showModal($root)};" type="button">
+<button class="button choose-btn" id="show-contacts" data-bind="click: function() {$root.userDetailsVM.showModal($root)};" type="button">
     Выберите контакт</button> <br>
 <div class="details-part">
     <div class="field">
@@ -22,11 +22,11 @@
     <select data-bind="options: $root.rolelistVM.roles,
                      optionsText: 'title',
                      optionsCaption: 'Выберите роль пользователя',
-                     value: $root.userDetailsVM.role()"></select>
+                     value: $root.userDetailsVM.user().role"></select>
         <!-- /ko -->
 </div>
 
-<button class="choose-btn" type="button" data-bind="click: function(){$root.userDetailsVM.user().contactId = $root.contactListVM.checkedContact; $root.userDetailsVM.submit($root);}">
+<button class="button choose-btn" type="button" data-bind="click: function(){$root.userDetailsVM.user().contactId = $root.contactListVM.checkedContact; $root.userDetailsVM.submit($root);}">
 
     Добавить пользователя</button>
 <!-- /ko -->

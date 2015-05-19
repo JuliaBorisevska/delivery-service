@@ -14,8 +14,9 @@ define(["application/service/initService",
         "application/model/Order",
         "application/model/OrderForSearch",
         "application/model/Contact",
-        "application/viewModel/rolelistVM"],
-    function (initService, Callback, Template, User, loginVM, contactListVM, orderlistVM, userlistVM, emaillistVM, contactDetailsVM, userDetailsVM, orderDetailsVM, emailDetailsVM, Order, OrderForSearch, Contact, rolelistVM) {
+        "application/viewModel/rolelistVM",
+        "application/model/role"],
+    function (initService, Callback, Template, User, loginVM, contactListVM, orderlistVM, userlistVM, emaillistVM, contactDetailsVM, userDetailsVM, orderDetailsVM, emailDetailsVM, Order, OrderForSearch, Contact, rolelistVM, Role) {
 
         "use strict";
 
@@ -140,7 +141,7 @@ define(["application/service/initService",
             		location.hash = section.id;
             		break;
                 case "useradd":
-                    self.userDetailsVM.setUser(new User());
+                    self.userDetailsVM.setUser(new User("", "", "", "", "", "", "", "", "", ""));
                     self.rolelistVM.list();
 
                     location.hash = section.id;
@@ -170,6 +171,8 @@ define(["application/service/initService",
                             self.contactListVM.currentPage(1);
                             self.contactListVM.numbers([]);
                             self.contactListVM.list(self.contactListVM.currentPage(), self.contactListVM.PAGE_SIZE);
+
+
                             location.hash = section.id;
 
                         } else {
@@ -312,7 +315,11 @@ define(["application/service/initService",
 
         var launch = function () {
             ko.applyBindings(new ViewModel());
-            ko.validation.init();
+            ko.validation.init({
+                messagesOnModified: false,
+                decorateInputElement: true,
+                decorateElementOnModified: false
+            }, true);
             ko.validation.locale('ru-RU');
         };
 

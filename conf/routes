@@ -23,7 +23,7 @@ GET         /user/list/:page/:pageSize/                controllers.UserControlle
 GET           /user/list/:page/:pageSize/:role           controllers.UserController.listUsers(page: Integer, pageSize: Integer, role: String)
 DELETE        /user/:ids                                 controllers.UserController.deleteUsers(ids: String)
 POST          /user                                      controllers.UserController.createUser()
-POST        /user/update                               controllers.UserController.updateUser()
+POST          /user/update                               controllers.UserController.updateUser()
 
 #Orders
 POST        /order                                     controllers.OrderController.createOrder()
