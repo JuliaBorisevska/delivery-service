@@ -177,7 +177,7 @@ public class OrderController extends BaseController {
         } catch (IllegalArgumentException ex) {
         	logger.error("Exception in searchOrders method: {} ", ex);
         	return badRequest(Json.toJson(
-                    new Reply<>(Status.ERROR, MessageManager.getProperty("status.access.error"))));
+                    new Reply<>(Status.ERROR, MessageManager.getProperty("order.wrong.fields"))));
         } catch (IOException | ParseException e) {
             logger.error("Exception in searchOrders method: {} ", e);
             return badRequest(Json.toJson(

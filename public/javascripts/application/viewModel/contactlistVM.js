@@ -6,6 +6,7 @@ define(["application/service/contactService",
     function ContactListVM() {
         var self = this,
             contacts = ko.observableArray(),
+            contactForSearch = ko.observable(null),
             PAGE_SIZE = 3,
             SHOW_PAGES = 3,
             currentPage = ko.observable(1),
@@ -15,35 +16,41 @@ define(["application/service/contactService",
             reply;
         var checkedContacts = ko.observableArray();
         var list = function (page, pageSize) {
-            contactService.list(page, pageSize,
-                new Callback(function (params) {
-                        reply = params.reply;
-                        if (reply.status === "SUCCESS") {
+        	var success = new Callback(function (params) {
+                reply = params.reply;
+                if (reply.status === "SUCCESS") {
 
-                            totalPages(reply.data.totalPages);
-                            if (numbers().length == 0) {
-                                numbers([]);
-                                for (var k = 1; k <= (totalPages() < SHOW_PAGES ? totalPages() : SHOW_PAGES); k++) {
-                                    numbers.push(k);
-                                }
-                            }
-                            contacts([]);
-                            for (var i = 0, lth = reply.data.list.length; i < lth; i++) {
-                                var contact = reply.data.list[i];
-                                contacts.push(new Contact(contact.id, contact.firstName, contact.lastName, contact.middleName,
-                                    contact.birthday, contact.email, contact.town, contact.street, contact.house, contact.flat,
-                                    contact.companyByCompanyId.id));
-                            }
+                    totalPages(reply.data.totalPages);
+                    if (numbers().length == 0) {
+                        numbers([]);
+                        for (var k = 1; k <= (totalPages() < SHOW_PAGES ? totalPages() : SHOW_PAGES); k++) {
+                            numbers.push(k);
                         }
-                    }, self, {}
-                ),
-                new Callback(function (params) {
-                        reply = params.reply;
-                        var message = reply.responseText ? reply.responseText : reply.statusText;
-                        alert("ctlst something wrong...");
-                    }, self, {}
-                )
-            )
+                    }
+                    contacts([]);
+                    for (var i = 0, lth = reply.data.list.length; i < lth; i++) {
+                        var contact = reply.data.list[i];
+                        contacts.push(new Contact(contact.id, contact.firstName, contact.lastName, contact.middleName,
+                            contact.birthday, contact.email, contact.town, contact.street, contact.house, contact.flat,
+                            contact.companyByCompanyId.id));
+                    }
+                    location.hash="ctlst";
+                }
+            }, self, {}
+        	);
+            var error = new Callback(function(params){
+         	   if(contactForSearch()!=null) {
+                    location.hash="ctsearch";
+                }
+         	  alert(params.reply.responseJSON.data);
+         	  //alert("ctlst something wrong...");
+               }, self, {} 
+            );
+            if(contactForSearch()!=null) {
+            	contactService.search(page, pageSize, contactForSearch(), success, error);
+            }else{
+            	contactService.list(page, pageSize, success, error);
+            }
         };
 
         var goToDetails = function (contact, event, root) {
@@ -115,6 +122,10 @@ define(["application/service/contactService",
             location.hash = "email";
         };
 
+        var setContactForSearch = function(c){
+        	contactForSearch(c);
+        };
+        
         return {
             contacts: contacts,
             numbers: numbers,
@@ -127,7 +138,8 @@ define(["application/service/contactService",
             currentPage: currentPage,
             PAGE_SIZE: PAGE_SIZE,
             SHOW_PAGES: SHOW_PAGES,
-
+            contactForSearch: contactForSearch,
+            setContactForSearch: setContactForSearch,
             goToDetails: goToDetails
         }
     }

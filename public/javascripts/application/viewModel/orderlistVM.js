@@ -59,7 +59,10 @@ define(["application/service/orderService",
         	   }, self, {}
                );
                var error = new Callback(function(params){
-           	          alert(params.reply.responseJSON.data);
+            	   if(searchOrder()!=null) {
+                       location.hash="ordsearch";
+                   }
+            	   alert(params.reply.responseJSON.data);
                   }, self, {} 
                );
                if(searchOrder()!=null) {

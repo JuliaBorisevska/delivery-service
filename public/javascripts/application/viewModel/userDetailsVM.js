@@ -24,7 +24,9 @@ define([
                                 var reply = params.reply;
                                 if (reply.status === "SUCCESS") {
                                     //clean();
-                                    root.userlistVM.list(1, root.userlistVM.PAGE_SIZE);
+                                	root.userlistVM.currentPage(1);
+                                    root.userlistVM.numbers([]);
+                                    root.userlistVM.list(root.userlistVM.currentPage(), root.userlistVM.PAGE_SIZE);
                                     location.hash="lst";
                                 }
                             }, self, {}
@@ -32,7 +34,7 @@ define([
                         error = new Callback(function (params) {
                                 reply = params.reply;
                                 var message = reply.responseText ? reply.responseText : reply.statusText;
-                                alert(message);
+                                alert("error");
                             }, self, {}
                         );
 

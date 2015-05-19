@@ -98,6 +98,7 @@ define(["application/service/initService",
             );
         self.goTo = function(section) {
         	self.orderlistVM.searchOrder(null);
+        	self.contactListVM.contactForSearch(null);
             switch (section.id){
             	case "lst":
             		self.userlistVM.selectedRole("");
@@ -135,7 +136,7 @@ define(["application/service/initService",
             		location.hash = section.id;
             		break;
             	case "ctsearch":
-            		self.contactDetailsVM.setContact(new Contact("", "", "", "", "", "", "", "","", "",""));
+            		self.contactDetailsVM.setContact(new Contact());
             		location.hash = section.id;
             		break;
                 case "useradd":
@@ -154,7 +155,9 @@ define(["application/service/initService",
             		break;
                 case "ctchange":
                 	if (self.chosenSectionId().id=="ctchange"){
-                		self.orderlistVM.getStatusList();
+                		self.contactListVM.currentPage(1);
+                		self.contactListVM.numbers([]);
+                		self.contactListVM.list(self.contactListVM.currentPage(), self.contactListVM.PAGE_SIZE);
                         location.hash  = "ctlst";
                 	}else{
                 		location.hash=self.chosenSectionId().id;
@@ -292,7 +295,9 @@ define(["application/service/initService",
 
 
             $("body").on("authorized", function (evt, user) {
-                setUser(user);
+                self.orderlistVM.searchOrder(null);
+            	self.contactListVM.contactForSearch(null);
+            	setUser(user);
             });
 
             $.ajaxSetup({
