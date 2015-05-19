@@ -45,11 +45,11 @@ public class Application extends BaseController {
         return ok(Json.toJson(
                 new Reply<>(Status.SUCCESS, Json.newObject())));
     }
-    
+
     @Transactional
-    public static User recieveUserByToken(){
-    	logger.info("Start recieveUserByToken method");
-    	User user = null;
+    public static User recieveUserByToken() {
+        logger.info("Start recieveUserByToken method");
+        User user = null;
         if (request().cookie("token") != null) {
             String token = null;
             if (!StringUtils.isEmpty(request().cookie("token").value())) {
@@ -58,9 +58,9 @@ public class Application extends BaseController {
                 user = userDAO.findByToken(token);
             }
         }
-    	return user;
+        return user;
     }
-    
+
     public static Result getSectionsFromJson() {
         logger.info("Start getSectionsFromJson method");
         try {
@@ -79,9 +79,9 @@ public class Application extends BaseController {
             logger.info("Start getCurrentUser method");
             User user = recieveUserByToken();
             if (user == null) {
-    			return badRequest(Json.toJson(
-    		            new Reply<>(Status.ERROR, MessageManager.getProperty("time.error"))));
-    		}
+                return badRequest(Json.toJson(
+                        new Reply<>(Status.ERROR, MessageManager.getProperty("time.error"))));
+            }
             UserDTO userDTO = UserDTO.getUser(user);
             try {
                 if (ConfigContainer.getInstance().getRolesHandler().hasRole(userDTO.getRoleTitle())) {
@@ -118,9 +118,11 @@ public class Application extends BaseController {
 
                 if (values.containsKey("password")) {
                     password = values.get("password")[0];
-                    if (StringUtils.isEmpty(password) || StringUtils.isEmpty(login))
+                    if (StringUtils.isEmpty(password) || StringUtils.isEmpty(login)) {
+                        logger.info("someone try to login with empty login and/or pass");
                         return badRequest(Json.toJson(
                                 new Reply<>(Status.ERROR, MessageManager.getProperty("authentification.error"))));
+                    }
                 } else throw new IllegalArgumentException("parameter 'password' is missing");
             } catch (IllegalArgumentException e) {
                 logger.error("parameters error", e);
@@ -166,15 +168,15 @@ public class Application extends BaseController {
                     new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));
         }
     }
-    
+
     @Transactional
     public static Result logout() {
-    	logger.info("Start logout method");
+        logger.info("Start logout method");
         User user = recieveUserByToken();
         if (user == null) {
-			return badRequest(Json.toJson(
-		            new Reply<>(Status.ERROR, MessageManager.getProperty("time.error"))));
-		}
+            return badRequest(Json.toJson(
+                    new Reply<>(Status.ERROR, MessageManager.getProperty("time.error"))));
+        }
         user.setToken(null);
         EntityManager em = JPA.em();
         UserDAO dao = new UserDAO(em);

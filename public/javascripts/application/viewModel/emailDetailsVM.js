@@ -49,7 +49,7 @@ define([
                                     root.contactListVM.currentPage(1);
                                     root.contactListVM.numbers([]);
                                     root.contactListVM.list(root.contactListVM.currentPage(), root.contactListVM.PAGE_SIZE);
-                                    location.hash = "ctlst";
+                                    //location.hash = "ctlst";
                                 }
                             }, self, {}
                         ),
