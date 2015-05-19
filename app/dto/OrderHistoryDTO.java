@@ -16,7 +16,7 @@ public class OrderHistoryDTO {
     	
 	 OrderHistoryDTO dto = new OrderHistoryDTO();
     	dto.user = PersonDTO.getPerson(orderHistory.getUserByUserId().getContactByContactId());
-     StringBuilder stringDate = new StringBuilder();
+     /*StringBuilder stringDate = new StringBuilder();
         stringDate
         		.append(orderHistory.getModificationDate().toLocalDateTime().getDayOfMonth())
         		.append(" ")
@@ -29,7 +29,7 @@ public class OrderHistoryDTO {
                 .append(orderHistory.getModificationDate().toLocalDateTime().getMinute())
                 .append(":")
                 .append(orderHistory.getModificationDate().toLocalDateTime().getSecond());
-     dto.date = stringDate.toString();
+     dto.date = stringDate.toString();*/
      DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 		LocalDateTime dateTime = LocalDateTime.fromDateFields(orderHistory.getModificationDate());
         dto.date = dateTime.toString(fmt);
