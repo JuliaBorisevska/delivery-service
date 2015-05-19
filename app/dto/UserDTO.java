@@ -8,6 +8,7 @@ public class UserDTO extends PersonDTO{
 	private Long id;
 	private String companyTitle;
 	private String roleTitle;
+	private Integer roleId;
 	private JsonNode menu;
 	private String login;
 	
@@ -21,6 +22,7 @@ public class UserDTO extends PersonDTO{
 		dto.companyTitle = user.getContactByContactId().getCompanyByCompanyId().getTitle();
 		dto.login = user.getIdentifier();
 		dto.roleTitle = user.getRoleByRoleId().getName();
+		dto.roleId = user.getRoleByRoleId().getId();
 		return dto;
     }
 
@@ -69,6 +71,13 @@ public class UserDTO extends PersonDTO{
 	public void setLogin(String login) {
 		this.login = login;
 	}
-	
 
+
+	public Integer getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(Integer roleId) {
+		this.roleId = roleId;
+	}
 }
