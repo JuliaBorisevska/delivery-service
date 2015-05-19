@@ -17,7 +17,6 @@ import play.libs.mailer.MailerPlugin;
 import play.mvc.Result;
 import resource.MessageManager;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +64,23 @@ public class MailController extends BaseController {
             group = new STGroupFile(MailConfigurator.TEMPLATE_NAME,
                     MailConfigurator.FIRST_DELIMETER, MailConfigurator.SECOND_DELIMETER);
             if (!group.getTemplateNames().contains(title)) {
-                throw new IllegalArgumentException("name of ST is incorrect");
+                for (JsonNode objNode : rootNode) {
+
+                    if (!objNode.has("email"))
+                        throw new IllegalArgumentException("email arg. is misssing");
+                    email = new Email();
+                    email.addTo(objNode.path("email").asText());
+                    email.setSubject(title.substring(1));   //remove slash before title of template
+                    email.setFrom(MailConfigurator.SERVICE_NAME);
+
+                    email.setBodyHtml(values.get("html")[0]);
+                    String id = MailerPlugin.send(email);
+                }
+
+
+                return ok(Json.toJson(
+                        new Reply<>(Status.SUCCESS, Json.newObject())
+                ));
             }
             for (JsonNode objNode : rootNode) {
                 if (!objNode.has("firstName"))
@@ -101,7 +116,7 @@ public class MailController extends BaseController {
                 String id = MailerPlugin.send(email);
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("Exception during sending mail", e);
             return badRequest(Json.toJson(
                     new Reply<>(Status.ERROR, MessageManager.getProperty("message.error"))));

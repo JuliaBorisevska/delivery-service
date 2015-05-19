@@ -8,7 +8,7 @@
 </div>
 <button data-bind="click: $root.emailDetailsVM.enable">Вкл/откл шаблоны</button>
 <div>
-    <label data-bind="attr: { 'disabled': $root.emailDetailsVM.getEnabledState() }"></label> <input data-bind="attr: { 'disabled': $root.emailDetailsVM.getEnabledState() }" type="text" name="theme" id="theme">
+    <label data-bind="attr: { 'disabled': $root.emailDetailsVM.getEnabledState() }"></label> <input data-bind="value: $root.emailDetailsVM.title ,attr: { 'disabled': $root.emailDetailsVM.getEnabledState() }" type="text" name="theme" id="theme">
 </div>
 
 
@@ -21,10 +21,10 @@
 <div class="clr"></div>
 <div class="field">
 
-    <textarea cols="100" rows="7" id="mailtext" data-bind="value: Object.keys($root.emailDetailsVM.template), attr: { 'readonly': $root.emailDetailsVM.getreadonlyState() }" name="mail" id="mail">></textarea>
+    <textarea cols="100" rows="7" id="mailtext" data-bind="value: $root.emailDetailsVM.text, attr: { 'readonly': $root.emailDetailsVM.getreadonlyState() }" name="mail" id="mail">></textarea>
 </div>
 
-reloadTemplates
+
 <button class="choose-btn" type="button" data-bind="click: function(){$root.emailDetailsVM.submit($root);}">
 
     Отправить</button>
