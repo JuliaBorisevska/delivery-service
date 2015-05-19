@@ -3,8 +3,9 @@ define([
     "application/util/callback",
     "application/model/orderHistory",
     "application/model/contact",
-    "application/model/orderForSave"],
-    function(orderService, Callback, OrderHistory, Contact, OrderForSave) {
+    "application/model/orderForSave",
+    "application/model/order"],
+    function(orderService, Callback, OrderHistory, Contact, OrderForSave, Order) {
     "use strict";
 
     function OrderDetailsVM() {
@@ -137,7 +138,9 @@ define([
         };
         
         var submit = function(root){
-            var record = new OrderForSave(order().id, order().user.id,
+        	var errors = ko.validation.group(order(), { deep: true });
+        	if (errors().length==0){
+        		var record = new OrderForSave(order().id, order().user.id,
             							  order().processMng().id, 
             							  order().deliveryMng().id, 
             							  order().customer().id, 
@@ -154,11 +157,12 @@ define([
                 	alert(params.reply.responseJSON.data);
                     }, self, {}
                 );
-            if(record.id) {
-                orderService.update(record, success, error);
-            }else{
-                orderService.add(record, success, error);
-            }
+        		if(record.id) {
+        			orderService.update(record, success, error);
+        		}else{
+        			orderService.add(record, success, error);
+        		}
+        	}
         }
 
         return {

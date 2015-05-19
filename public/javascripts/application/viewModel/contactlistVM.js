@@ -34,7 +34,7 @@ define(["application/service/contactService",
                             contact.birthday, contact.email, contact.town, contact.street, contact.house, contact.flat,
                             contact.companyByCompanyId.id));
                     }
-                    location.hash="ctlst";
+                    //location.hash="ctlst";
                 }
             }, self, {}
         	);
@@ -48,6 +48,7 @@ define(["application/service/contactService",
             );
             if(contactForSearch()!=null) {
             	contactService.search(page, pageSize, contactForSearch(), success, error);
+            	location.hash="ctlst";
             }else{
             	contactService.list(page, pageSize, success, error);
             }

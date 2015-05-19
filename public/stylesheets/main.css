@@ -333,4 +333,18 @@ input.smallfield{
 	  color: #808080;
 }
 	
-	
+.validationMessage {
+	clear: both;
+	margin-left: 35%;
+    color: #b94a48;
+}
+
+input.validationMessage {
+	clear: both;
+	margin-left: 25%;
+    color: #b94a48;
+}
+
+.validationElement, input.validationElement {
+    border: 1px solid #b94a48;
+}	

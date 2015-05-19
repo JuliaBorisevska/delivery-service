@@ -312,7 +312,11 @@ define(["application/service/initService",
 
         var launch = function () {
             ko.applyBindings(new ViewModel());
-            ko.validation.init();
+            ko.validation.init({
+                messagesOnModified: false,
+                decorateInputElement: true,
+                decorateElementOnModified: false
+            }, true);
             ko.validation.locale('ru-RU');
         };
 
