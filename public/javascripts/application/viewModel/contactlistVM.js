@@ -34,7 +34,7 @@ define(["application/service/contactService",
                             contact.birthday, contact.email, contact.town, contact.street, contact.house, contact.flat,
                             contact.companyByCompanyId.id));
                     }
-                    location.hash="ctlst";
+                    // location.hash="ctlst";
                 }
             }, self, {}
         	);

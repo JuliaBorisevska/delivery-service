@@ -57,6 +57,7 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
         logger.warn("access failure on uri {}", context.request().uri());
         return F.Promise.promise(new F.Function0() {
             public Result apply() throws Throwable {
+
                 return Results.unauthorized(accesserror.render());
             }
         });
