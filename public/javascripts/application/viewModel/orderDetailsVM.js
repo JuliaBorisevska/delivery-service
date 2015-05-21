@@ -162,6 +162,8 @@ define([
         		}else{
         			orderService.add(record, success, error);
         		}
+        	} else {
+        		errors.showAllMessages();
         	}
         }
 

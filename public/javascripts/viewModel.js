@@ -41,12 +41,6 @@ define(["application/service/initService",
             var app = Sammy(function () {
                 this.get('#:section', function () {
                     var sectionId = this.params.section;
-                    //alert(sectionId);
-                    /*if (sectionId==="lgn"){
-                     self.contactListVM.numbers([]);
-                     self.orderlistVM.numbers([]);
-                     self.userlistVM.numbers([]);
-                     }*/
                     for (var ind in self.sections) {
                         if (self.sections.hasOwnProperty(ind) && self.sections[ind].id === sectionId) {
                             self.chosenSectionId(self.sections[ind]);
@@ -100,6 +94,7 @@ define(["application/service/initService",
         self.goTo = function(section) {
         	self.orderlistVM.searchOrder(null);
         	self.contactListVM.contactForSearch(null);
+        	self.orderDetailsVM.order(null);
             switch (section.id){
             	case "lst":
             		self.userlistVM.selectedRole("");
@@ -119,12 +114,10 @@ define(["application/service/initService",
             		break;
             	case "ordlst":
             		self.orderlistVM.getStatusList();
-            		//self.orderlistVM.changeStatus();
             		location.hash = section.id;
             		break;
             	case "ordsearch":
             		self.orderlistVM.searchOrder(new OrderForSearch("", "", "", "", "", ""));
-            		//self.orderlistVM.changeStatus();
             		location.hash = section.id;
             		break;
             	case "ordadd":
@@ -151,6 +144,7 @@ define(["application/service/initService",
                 		self.orderlistVM.getStatusList();
                         location.hash  = "ordlst";
                 	}else{
+                		self.orderDetailsVM.setOrder(new Order("", "", "", "", self.user(), "", "", "","", ""), [],[]);
                 		location.hash=self.chosenSectionId().id;
                 	}
             		break;
@@ -316,9 +310,11 @@ define(["application/service/initService",
         var launch = function () {
             ko.applyBindings(new ViewModel());
             ko.validation.init({
-                messagesOnModified: false,
+            	registerExtenders: true,
+                messagesOnModified: true,
+                insertMessages: true,
                 decorateInputElement: true,
-                decorateElementOnModified: false
+                decorateElementOnModified: true
             }, true);
             ko.validation.locale('ru-RU');
         };

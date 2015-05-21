@@ -81,6 +81,7 @@
         </div>
     </div>
     <div class="clr"></div>
+    <input type="text" class="not-visible" data-bind="value: $root.orderDetailsVM.order().customer"/>
     <div class="field">
         <label class="title">Получатель:</label>
         <div class="textfield">
@@ -93,6 +94,7 @@
         </div>
     </div>
     <div class="clr"></div>
+    <input type="text" class="not-visible" data-bind="value: $root.orderDetailsVM.order().recipient"/>
     <div class="field">
         <label class="title">Менеджер по приему заказа:</label>
         <div class="textfield">
@@ -114,6 +116,7 @@
         </div>
     </div>
     <div class="clr"></div>
+    <input type="text" class="not-visible" data-bind="value: $root.orderDetailsVM.order().processMng"/>
     <div class="field">
         <label class="title">Менеджер службы доставки:</label>
         <div class="textfield">
@@ -126,6 +129,7 @@
         </div>
     </div>
     <div class="clr"></div>
+    <input type="text" class="not-visible" data-bind="value: $root.orderDetailsVM.order().deliveryMng"/>
     <!-- ko if: $root.user().role === "ORDER_MNG" || $root.user().role === "SUPERVISOR" -->
     <div class="field">
         <button type="button" class="button" data-bind="click: function(){$root.orderDetailsVM.submit($root)}">Сохранить</button>

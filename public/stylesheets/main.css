@@ -302,6 +302,10 @@ div.pagination a.disabled {
 	color: #ccc;
 	display: none;
 }
+
+.not-visible{
+	display: none;
+}
 	
 .actions{
 	padding: 0% 0 0% 0;
@@ -309,7 +313,8 @@ div.pagination a.disabled {
 }
 
 .field{
-	margin-bottom:3%;
+	margin-bottom:2%;
+	margin-top:2%;
 	position:relative;
 }
 
@@ -332,18 +337,22 @@ input.smallfield{
 	  margin: 0 5% 0 5%;
 	  color: #808080;
 }
+
+.modal-dialog {
+  width: 600px;
+}
+
+.modal-sm {
+  width: 600px;
+}
 	
 .validationMessage {
 	clear: both;
-	margin-left: 35%;
+	margin-left: 30%;
     color: #b94a48;
+    margin-bottom: 1%;
 }
 
-input.validationMessage {
-	clear: both;
-	margin-left: 25%;
-    color: #b94a48;
-}
 
 .validationElement, input.validationElement {
     border: 1px solid #b94a48;
