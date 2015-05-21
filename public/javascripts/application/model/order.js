@@ -38,7 +38,7 @@ define(function(){
             }
         });
         this.date = date;
-        this.description = ko.observable(description).extend({ required: true });
+        this.description = ko.observable(description).extend({ required: true, maxLength: 100 });
         this.price = ko.observable(price).extend({ required: true, number: true });
     }
 

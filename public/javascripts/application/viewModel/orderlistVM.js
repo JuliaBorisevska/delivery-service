@@ -66,7 +66,7 @@ define(["application/service/orderService",
                   }, self, {} 
                );
                if(searchOrder()!=null) {
-                   orderService.search(page, pageSize, selectedStatus() ? selectedStatus().title : "",searchOrder(), success, error);
+            	   orderService.search(page, pageSize, selectedStatus() ? selectedStatus().title : "",searchOrder(), success, error); 
                }else{
             	   orderService.list(page, pageSize, selectedStatus() ? selectedStatus().title : "", success, error);
                }
@@ -80,8 +80,13 @@ define(["application/service/orderService",
             };
             
             var findOrders = function(){
-            	getStatusList();
-        		location.hash = "ordlst";
+            	var errors = ko.validation.group(searchOrder(), { deep: true });
+            	if (errors().length==0){
+            		getStatusList();
+            		location.hash = "ordlst";
+            	}else{
+         		   errors.showAllMessages();
+         	    }
             };
             
             var goToOrderDetails = function(data, event, root) {

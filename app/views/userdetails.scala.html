@@ -6,12 +6,18 @@
 <div class="details-part">
     <div class="field">
         <label class="title" for="login">Логин</label>
-        <input class="textfield" type="text" name="login" id="login" data-bind="value: $root.userDetailsVM.user().login">
+        <div class="textfield">
+        	<input class="textfield" type="text" name="login" id="login" data-bind="value: $root.userDetailsVM.user().login">
+    	</div>
     </div>
+    <div class="clr"></div>
     <div class="field">
         <label class="title" for="password">Пароль</label>
-        <input class="textfield" type="text" name="password" id="password" data-bind="value:  $root.userDetailsVM.user().password"> <br>
+        <div class="textfield">
+        	<input class="textfield" type="text" name="password" id="password" data-bind="value:  $root.userDetailsVM.user().password"> <br>
+        </div>
     </div>
+    <div class="clr"></div>
         <!-- ko if: ($root.chosenSectionId().id == "userchange" )-->
     <select data-bind="options: $root.rolelistVM.roles,
                      optionsText: 'title',

@@ -22,12 +22,15 @@
        <tr>
        		<td>Дата рождения</td>
             <td>
-              <span>от&nbsp;</span>
-        	  <input type="text" class="smallfield" data-bind="value: $root.contactDetailsVM.contact().birthday"/>
-        	  <span>до&nbsp;</span>
-        	  <input type="text" class="smallfield" data-bind="value: $root.contactDetailsVM.contact().dateMax"/>
-            </td>
-              
+        		<div class="left-col">
+        			<span>от</span>
+        	    	<input type="text" class="smallfield" data-bind="value: $root.contactDetailsVM.contact().birthday"/>
+        		</div>
+        		<div class="right-col">
+        			<span>до</span>
+        	    	<input type="text" class="smallfield" data-bind="value: $root.contactDetailsVM.contact().dateMax"/>
+            	</div>
+            </td>   
        </tr>
        <!-- /ko -->
        

@@ -326,29 +326,21 @@ div.pagination a.disabled {
 }
 
 input.textfield, textarea.textfield{
-	width: 65%;
+	width: 95%;
 }
 input.smallfield{
-	margin-right: 5%;
-	width: 20%;
+	width: 80%;
+	padding: 2%;
 }
 
 .hint{
 	  margin: 0 5% 0 5%;
 	  color: #808080;
 }
-
-.modal-dialog {
-  width: 600px;
-}
-
-.modal-sm {
-  width: 600px;
-}
 	
 .validationMessage {
 	clear: both;
-	margin-left: 30%;
+	margin-left: 10%;
     color: #b94a48;
     margin-bottom: 1%;
 }
@@ -357,3 +349,20 @@ input.smallfield{
 .validationElement, input.validationElement {
     border: 1px solid #b94a48;
 }	
+
+.textfield{
+	float: right;
+	width: 65%;
+}
+
+.left-col{
+	float: left;
+	width: 45%;
+	margin-left: 5%;
+}
+
+.right-col{
+	float: right;
+	width: 45%;
+	margin-right: 5%;
+}
