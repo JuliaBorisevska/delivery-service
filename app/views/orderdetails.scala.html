@@ -61,12 +61,16 @@
     <div class="clr"></div>
     <div class="field">
         <label class="title">Оценочная стоимость:</label>
-        <input type="text" class="textfield" data-bind="value: $root.orderDetailsVM.order().price, enable: $root.user().role === 'ORDER_MNG' || $root.user().role === 'SUPERVISOR'"/>
-    </div>
+        <div class="textfield">
+        	<input type="text" class="textfield" data-bind="value: $root.orderDetailsVM.order().price, enable: $root.user().role === 'ORDER_MNG' || $root.user().role === 'SUPERVISOR'"/>
+        </div>
+        </div>
     <div class="clr"></div>
     <div class="field">
         <label class="title">Описание заказа:</label>
-        <textarea class="textfield" data-bind="value: $root.orderDetailsVM.order().description, enable: $root.user().role === 'ORDER_MNG' || $root.user().role === 'SUPERVISOR'"></textarea>
+        <div class="textfield">
+        	<textarea class="textfield" data-bind="value: $root.orderDetailsVM.order().description, enable: $root.user().role === 'ORDER_MNG' || $root.user().role === 'SUPERVISOR'"></textarea>
+    	</div>
     </div>
     <div class="clr"></div>
     <div class="field">

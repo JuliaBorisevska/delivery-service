@@ -216,13 +216,13 @@ button:active, .button:active {
 	}
 	
 	#menu ul li:hover{
-		color: #fff;
-		border-bottom: 2px solid #fff;
+		color: #03ad8f;
+		/*border-bottom: 2px solid #fff;*/
 	}
 	
 	#menu ul li.selected {
-		color: #02594a; 
-		border-bottom: 2px solid #02594a;
+		color: #03ad8f; 
+		/*border-bottom: 2px solid #02594a;*/
 	}
 
 .clr{

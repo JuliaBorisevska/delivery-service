@@ -131,7 +131,7 @@ define(["application/service/initService",
             		break;
             	case "ctsearch":
             		self.contactDetailsVM.setContact(new Contact(-1));
-            		alert(self.contactDetailsVM.contact().id);
+            		//alert(self.contactDetailsVM.contact().id);
             		location.hash = section.id;
             		break;
                 case "useradd":
